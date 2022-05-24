@@ -1,6 +1,4 @@
 plugins {
-    id("java")
-    id("groovy")
     id("org.springframework.boot") version "2.6.6"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("com.coditory.integration-test") version "1.3.0"
