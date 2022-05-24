@@ -1,5 +1,6 @@
 package net.catenax.traceability.api
 
+import net.catenax.traceability.IntegrationSpec
 import org.hamcrest.text.MatchesPattern
 import org.springframework.http.MediaType
 

@@ -24,11 +24,6 @@ repositories {
     mavenCentral()
 }
 
-val swaggerAnnotationsVersion = "1.6.6"
-val jsr305Version = "3.0.2"
-val mapstructVersion = "1.4.2.Final"
-val lombokMapstructBindingVersion = "0.2.0"
-
 dependencies {
     // development dependecies
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -48,8 +43,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-tasks {
-    test {
-        useJUnitPlatform()
-    }
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

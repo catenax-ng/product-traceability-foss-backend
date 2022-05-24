@@ -1,4 +1,6 @@
-package net.catenax.traceability.api
+package net.catenax.traceability
+
+import net.catenax.traceability.UnitSpec
 
 class DummySpec extends UnitSpec {
 

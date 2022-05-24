@@ -1,4 +1,4 @@
-package net.catenax.traceability.api
+package net.catenax.traceability
 
 import spock.lang.Specification
 
