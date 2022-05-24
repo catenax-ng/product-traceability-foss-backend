@@ -18,6 +18,7 @@ jobs:
         run: ./gradlew test
 
   Publish-unit-test-reports:
+    needs: "Unit-test"
     runs-on: ubuntu-latest
     permissions:
       checks: write
