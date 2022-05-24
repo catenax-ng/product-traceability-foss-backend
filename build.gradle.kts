@@ -1,7 +1,9 @@
 plugins {
+    id("java")
+    id("groovy")
     id("org.springframework.boot") version "2.6.6"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    java
+    id("com.coditory.integration-test") version "1.3.0"
 }
 
 group = "net.catenax.traceability"
@@ -37,7 +39,12 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    // test dependencies
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    testImplementation("org.codehaus.groovy:groovy-all:3.0.10")
+    testImplementation(platform("org.spockframework:spock-bom:2.0-groovy-3.0"))
+    testImplementation("org.spockframework:spock-core")
+    testImplementation("org.spockframework:spock-spring")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
