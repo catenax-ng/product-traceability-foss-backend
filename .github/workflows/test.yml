@@ -24,7 +24,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
-          junit_files: "./build/test-results/test/*.xml"
+          files: "./build/test-results/test/*.xml"
           check_name: "Unit Test Results"
 
   Integration-test:
@@ -47,5 +47,5 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
-          files: "./build/test-results/test/*.xml"
+          files: "./build/test-results/integrationTest/*.xml"
           check_name: "Integration Test Results"
