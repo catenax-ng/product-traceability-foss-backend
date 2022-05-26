@@ -47,7 +47,7 @@ podAnnotations: { }
 
 podSecurityContext:
   seccompProfile:
-    type: Runtime/Default
+    type: RuntimeDefault
 
 # Following Catena-X Helm Best Practices @url: https://catenax-ng.github.io/docs/kubernetes-basics/helm
 # @url: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
