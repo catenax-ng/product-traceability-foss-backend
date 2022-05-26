@@ -55,6 +55,8 @@ securityContext:
   runAsNonRoot: true
   runAsUser: 1000
   runAsGroup: 3000
+  seccompProfile:
+    type: RuntimeDefault
   capabilities:
     drop:
       - ALL
