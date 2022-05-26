@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "product-traceability-foss-backend.labels" . | nindent 4 }}
 spec:
-  automountServiceAccountToken: true
+  automountServiceAccountToken: false
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
@@ -23,6 +23,7 @@ spec:
       labels:
         {{- include "product-traceability-foss-backend.selectorLabels" . | nindent 8 }}
     spec:
+      automountServiceAccountToken: false
       {{- if .Values.imagePullSecret.dockerconfigjson }}
       imagePullSecrets:
         - name: {{ include "product-traceability-foss-backend.fullname" . }}-imagepullsecret
