@@ -6,6 +6,7 @@ metadata:
   labels:
     {{- include "product-traceability-foss-backend.labels" . | nindent 4 }}
 spec:
+  automountServiceAccountToken: true
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
