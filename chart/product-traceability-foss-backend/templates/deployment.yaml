@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: {{ include "product-traceability-foss-backend.namespace" . }}
   name: {{ include "product-traceability-foss-backend.fullname" . }}
   labels:
     {{- include "product-traceability-foss-backend.labels" . | nindent 4 }}
@@ -13,6 +14,7 @@ spec:
       {{- include "product-traceability-foss-backend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      namespace: {{ include "product-traceability-foss-backend.namespace" . }}
       {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
