@@ -28,12 +28,16 @@ repositories {
 
 val commonsCodecVersion = "1.15"
 val groovyVersion = "3.0.10"
-val spockBomVersion = "2.0-groovy-3.0"
+val spockBomVersion = "2.1-groovy-3.0"
+val testContainersVersion = "1.17.1"
+val restAssuredVersion = "4.1.2"
 
 dependencies {
     // development dependecies
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     implementation("commons-codec:commons-codec:$commonsCodecVersion")
@@ -47,6 +51,10 @@ dependencies {
     testImplementation("org.spockframework:spock-core")
     testImplementation("org.spockframework:spock-spring")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    integrationImplementation("org.testcontainers:spock:$testContainersVersion")
+    integrationImplementation("io.rest-assured:rest-assured:$restAssuredVersion")
+
 }
 
 tasks.withType<Test> {
