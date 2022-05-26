@@ -15,7 +15,7 @@ apiVersion: extensions/v1beta1
   {{- end }}
 kind: Ingress
 metadata:
-  namespace: {{ include "product-traceability-foss-backend.namespace" . }}
+  namespace: {{ .Release.Namespace }}
   name: {{ $fullName }}
   labels:
     {{- include "product-traceability-foss-backend.labels" . | nindent 4 }}
