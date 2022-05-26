@@ -46,6 +46,7 @@ serviceAccount:
 podAnnotations: { }
 
 podSecurityContext:
+  runAsUser: 10001
   seccompProfile:
     type: RuntimeDefault
 
