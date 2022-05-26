@@ -129,4 +129,4 @@ readinessProbe:
   timeoutSeconds: 1
 
 healthCheck:
-  enabled: false
+  enabled: true

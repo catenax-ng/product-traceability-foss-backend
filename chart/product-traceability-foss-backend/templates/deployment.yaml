@@ -49,8 +49,8 @@ spec:
         {{- if .Values.healthCheck.enabled }}
           livenessProbe:
             httpGet:
-              path: "/actuator/health/readiness"
-              port: 8080
+              path: "/actuator/health/liveness"
+              port: 8081
               scheme: HTTP
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
@@ -61,7 +61,7 @@ spec:
           readinessProbe:
             httpGet:
               path: "/actuator/health/readiness"
-              port: 8080
+              port: 8081
               scheme: HTTP
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
