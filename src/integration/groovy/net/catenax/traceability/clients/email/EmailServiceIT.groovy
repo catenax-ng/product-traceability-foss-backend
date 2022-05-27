@@ -22,7 +22,7 @@ class EmailServiceIT extends IntegrationSpec implements MailhogSupport {
             assertMailbox()
                 .hasTotalSize(1)
                 .hasRecipient(recipient)
-                .hasMessage(message + "failure")
+                .hasMessage(message)
                 .hasSubject(subject)
     }
 
