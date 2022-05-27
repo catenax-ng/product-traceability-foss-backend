@@ -16,7 +16,7 @@ trait MailhogSupport {
     private static final int HTTP_PORT = 8025
     private static final int SMTP_PORT = 1025
 
-    private static GenericContainer<?> mailhog = new GenericContainer<>("mailhog/mailhog")
+    private static GenericContainer<?> mailhog = new GenericContainer<>("mailhog/mailhog:v1.0.1")
             .withExposedPorts(HTTP_PORT, SMTP_PORT)
             .waitingFor(Wait.forHttp("/").forPort(HTTP_PORT))
 
