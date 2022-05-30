@@ -124,4 +124,4 @@ healthCheck:
   enabled: false
 
 mailserver:
-  password: <path:traceability-foss-backend/data/int#mailserver-password>
+  password: <path:traceability-foss-backend/data/int#mailserverPassword>
