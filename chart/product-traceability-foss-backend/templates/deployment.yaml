@@ -40,7 +40,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: MAILSERVER_PASSWORD
-              value: { { .Values.mailserver.password } }
+              value: {{ .Values.mailserver.password }}
           ports:
             - name: http
               containerPort: 8080
