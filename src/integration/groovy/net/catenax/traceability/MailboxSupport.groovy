@@ -16,7 +16,7 @@ trait MailboxSupport {
 
     static class MailboxAssertion {
 
-        private final GreenMailBean greenMailBean;
+        private final GreenMailBean greenMailBean
 
         private MailboxAssertion(GreenMailBean greenMailBean) {
             this.greenMailBean = greenMailBean
