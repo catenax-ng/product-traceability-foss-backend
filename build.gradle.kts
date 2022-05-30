@@ -29,8 +29,7 @@ repositories {
 val commonsCodecVersion = "1.15"
 val groovyVersion = "3.0.10"
 val spockBomVersion = "2.1-groovy-3.0"
-val testContainersVersion = "1.17.1"
-val restAssuredVersion = "4.1.2"
+val greenmailVersion = "1.6.9"
 
 dependencies {
     // development dependecies
@@ -52,8 +51,7 @@ dependencies {
     testImplementation("org.spockframework:spock-spring")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-    integrationImplementation("org.testcontainers:spock:$testContainersVersion")
-    integrationImplementation("io.rest-assured:rest-assured:$restAssuredVersion")
+    integrationImplementation("com.icegreen:greenmail-spring:$greenmailVersion")
 
 }
 
