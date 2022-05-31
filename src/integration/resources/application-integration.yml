@@ -3,7 +3,8 @@ spring:
     allow-bean-definition-overriding: true
   mail:
     host: localhost
-    username: notifications@catena-x.net
+    port: 3025
+    username: notifications
     password: password
     properties:
       mail.smtp.auth: true
