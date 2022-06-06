@@ -19,7 +19,7 @@ spec:
     spec:
       source:
         repoURL: '{{ .Values.repoURL }}'
-        targetRevision: HEAD
+        targetRevision: '{{head_sha}}'
         path: {{ .Values.helmPath }}
         helm:
           parameters:
