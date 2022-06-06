@@ -11,8 +11,8 @@ spec:
       github:
         owner: catenax-ng
         repo: {{ include "product-traceability-foss-backend.fullname" . }}
-        labels:
-        - dev-deploy
+#        labels:
+#        - dev-deploy
   template:
     metadata:
       name: {{ include "product-traceability-foss-backend.fullname" . }}
