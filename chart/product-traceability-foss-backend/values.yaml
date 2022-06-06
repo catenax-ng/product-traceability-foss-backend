@@ -133,3 +133,6 @@ healthCheck:
 
 mailserver:
   password: <path:traceability-foss-backend/data/int#mailserverPassword>
+
+pullRequestDeployment:
+  enabled: true
