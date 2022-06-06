@@ -26,6 +26,10 @@ spec:
           - name: "image.tag"
             value: "pull-498f137f886c16e86cc37ab38cec373c9245ebe2"
       project: {{ .Values.project }}
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
       destination:
         name: in-cluster
         namespace: {{ .Values.namespace | default .Release.Namespace }}
