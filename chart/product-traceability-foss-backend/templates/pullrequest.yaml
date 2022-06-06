@@ -7,6 +7,7 @@ metadata:
 spec:
   generators:
   - pullRequest:
+      requeueAfterSeconds: 1800
       github:
         owner: catenax-ng
         repo: {{ include "product-traceability-foss-backend.fullname" . }}
