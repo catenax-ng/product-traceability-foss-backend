@@ -24,7 +24,7 @@ spec:
         helm:
           parameters:
           - name: "image.tag"
-            value: "latest"
+            value: "test"
       project: {{ .Values.project }}
       syncPolicy:
         automated:
