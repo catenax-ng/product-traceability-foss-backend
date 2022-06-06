@@ -8,11 +8,11 @@ spec:
   generators:
   - pullRequest:
       github:
+        requeueAfterSeconds: 1800
         owner: catenax-ng
         repo: {{ include "product-traceability-foss-backend.fullname" . }}
         labels:
         - dev-deploy
-  requeueAfterSeconds: 1800
   template:
     metadata:
       name: {{ include "product-traceability-foss-backend.fullname" . }}
