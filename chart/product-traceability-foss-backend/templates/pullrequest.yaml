@@ -19,7 +19,7 @@ spec:
     spec:
       source:
         repoURL: '{{ .Values.repoURL }}'
-        targetRevision: '0223cf0baff11caa206fbdc37f83813447dbf796'
+        targetRevision: '9bfaeb153c5552576e2eb460e1173a45c2334cd3'
         path: {{ .Values.helmPath }}
         helm:
           parameters:
