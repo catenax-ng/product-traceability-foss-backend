@@ -27,6 +27,6 @@ spec:
             value: "pull-498f137f886c16e86cc37ab38cec373c9245ebe2"
       project: {{ .Values.project }}
       destination:
-        server: https://kubernetes.default.svc
+        name: in-cluster
         namespace: {{ .Values.namespace | default .Release.Namespace }}
 {{- end }}
