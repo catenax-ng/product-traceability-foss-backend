@@ -19,12 +19,12 @@ spec:
     spec:
       source:
         repoURL: '{{ .Values.repoURL }}'
-        targetRevision: 498f137f886c16e86cc37ab38cec373c9245ebe2
+        targetRevision: HEAD
         path: {{ .Values.helmPath }}
         helm:
           parameters:
           - name: "image.tag"
-            value: "pull-498f137f886c16e86cc37ab38cec373c9245ebe2"
+            value: "latest"
       project: {{ .Values.project }}
       syncPolicy:
         automated:
