@@ -6,6 +6,7 @@ namespace: product-traceability-foss
 project: project-traceability-foss
 replicaCount: 1
 repoURL: https://github.com/catenax-ng/product-traceability-foss-backend.git
+helmPath: chart/product-traceability-foss-backend
 
 image:
   repository: ghcr.io/catenax-ng/product-traceability-foss-backend

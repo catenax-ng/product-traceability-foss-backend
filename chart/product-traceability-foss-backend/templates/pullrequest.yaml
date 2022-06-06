@@ -20,7 +20,7 @@ spec:
       source:
         repoURL: '{{ .Values.repoURL }}'
         targetRevision: 498f137f886c16e86cc37ab38cec373c9245ebe2
-        path: kubernetes/
+        path: {{ .Values.helmPath }}
         helm:
           parameters:
           - name: "image.tag"
