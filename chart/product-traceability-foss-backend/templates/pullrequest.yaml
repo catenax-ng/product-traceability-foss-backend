@@ -1,0 +1,32 @@
+{{- if .Values.pullRequestDeployment.enabled -}}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: {{ include "product-traceability-foss-backend.fullname" . }}
+spec:
+  generators:
+  - pullRequest:
+      github:
+        owner: catenax-ng
+        repo: {{ include "product-traceability-foss-backend.fullname" . }}
+        labels:
+        - dev-deploy
+  requeueAfterSeconds: 1800
+  template:
+    metadata:
+      name: {{ include "product-traceability-foss-backend.fullname" . }}
+    spec:
+      source:
+        repoURL: '{{ .Values.repoURL }}'
+        targetRevision: 498f137f886c16e86cc37ab38cec373c9245ebe2
+        path: kubernetes/
+        helm:
+          parameters:
+          - name: "image.tag"
+            value: "pull-498f137f886c16e86cc37ab38cec373c9245ebe2"
+      project: {{ .Values.project }}
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: {{ .Values.namespace | default .Release.Namespace }}
+{{- end }}
