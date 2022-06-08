@@ -1,0 +1,36 @@
+{{- if .Values.pullRequestDeployment.enabled -}}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: {{ include "product-traceability-foss-backend.fullname" . }}
+spec:
+  generators:
+  - pullRequest:
+      requeueAfterSeconds: 60
+      github:
+        owner: catenax-ng
+        repo: {{ include "product-traceability-foss-backend.fullname" . }}
+#        labels:
+#        - dev-deploy
+  template:
+    metadata:
+      name: {{ include "product-traceability-foss-backend.fullname" . }}
+    spec:
+      source:
+        repoURL: '{{ .Values.repoURL }}'
+        targetRevision: HEAD
+        path: {{ .Values.helmPath }}
+        helm:
+          parameters:
+          - name: "image.tag"
+            value: "{{head_sha}}"
+      project: {{ .Values.project }}
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+      destination:
+        name: in-cluster
+        namespace: {{ .Values.namespace | default .Release.Namespace }}
+{{- end }}
