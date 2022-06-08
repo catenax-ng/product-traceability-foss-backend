@@ -24,3 +24,4 @@ file for the details.
 * IntelliJ IDEA ships with built-in support for .editorconfig files
 * [Eclipse plugin](https://github.com/ncjones/editorconfig-eclipse#readme)
 * [Visual studio code plugin](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+
