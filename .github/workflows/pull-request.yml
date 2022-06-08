@@ -75,7 +75,7 @@ jobs:
           check_name: "Integration Test Results"
 
   Publish-docker-image:
-    needs: ["Unit-test", "Integration-test"]
+#    needs: ["Unit-test", "Integration-test"]
     runs-on: ubuntu-latest
     permissions:
       contents: read
