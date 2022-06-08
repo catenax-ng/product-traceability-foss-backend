@@ -24,7 +24,7 @@ spec:
         helm:
           parameters:
           - name: "image.tag"
-            value: "{{head_sha}}"
+            value: {{ .Values.image.tag }}
       project: {{ .Values.project }}
       syncPolicy:
         automated:
