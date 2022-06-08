@@ -16,6 +16,9 @@ spec:
   template:
     metadata:
       name: {{ include "product-traceability-foss-backend.fullname" . }}
+      namespace: {{ .Values.namespace | default .Release.Namespace }}
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
     spec:
       source:
         repoURL: '{{ .Values.repoURL }}'
