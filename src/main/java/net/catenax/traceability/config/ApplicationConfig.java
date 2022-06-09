@@ -1,6 +1,7 @@
 package net.catenax.traceability.config;
 
 import net.catenax.traceability.docs.SwaggerPageable;
+import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,11 @@ public class ApplicationConfig {
 	@Bean
 	public InternalResourceViewResolver defaultViewResolver() {
 		return new InternalResourceViewResolver();
+	}
+
+	@Bean
+	public KeycloakSpringBootConfigResolver keycloakConfigResolver() {
+		return new KeycloakSpringBootConfigResolver();
 	}
 
 	@Bean

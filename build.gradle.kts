@@ -36,8 +36,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-mail")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 
 	implementation("org.springframework.data:spring-data-commons")
+
+	implementation("org.keycloak:keycloak-spring-boot-starter:18.0.0")
 
 	implementation("io.springfox:springfox-boot-starter:3.0.0")
 

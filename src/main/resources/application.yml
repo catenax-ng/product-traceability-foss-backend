@@ -27,3 +27,9 @@ spring:
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
+
+keycloak:
+  auth-server-url: https://centralidp.dev.demo.catena-x.net/auth/
+  realm: CX-Central
+  resource: Cl10-CX-Part
+  public-client: true
