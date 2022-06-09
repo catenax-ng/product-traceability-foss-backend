@@ -12,6 +12,3 @@ swagger:
       params:
         assetId: "Unique ID of an asset"
         childId: "Unique ID of a child asset"
-  models:
-    Asset:
-
