@@ -3,8 +3,7 @@
 # Declare variables to be passed into your templates.
 
 namespace: product-traceability-foss
-project: project-traceability-foss
-repoURL: https://github.com/catenax-ng/product-traceability-foss-backend.git
+
 replicaCount: 1
 
 image:

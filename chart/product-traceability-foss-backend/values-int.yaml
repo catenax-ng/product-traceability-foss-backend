@@ -3,9 +3,6 @@ image:
 
 springprofile: int
 
-pullRequestDeployment:
-  enabled: false
-
 ingress:
   enabled: true
   className: "nginx"
