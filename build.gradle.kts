@@ -44,6 +44,10 @@ dependencies {
 
 	implementation("io.springfox:springfox-boot-starter:3.0.0")
 
+	implementation("org.springframework.data:spring-data-commons")
+
+	implementation("io.springfox:springfox-boot-starter:3.0.0")
+
 	// for demo purposes, to be removed once EDC works
 	implementation("com.github.javafaker:javafaker:1.0.2") {
 		exclude("org.yaml")
