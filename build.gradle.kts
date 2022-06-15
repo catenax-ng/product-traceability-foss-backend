@@ -61,8 +61,6 @@ dependencies {
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-
     testImplementation("org.codehaus.groovy:groovy-all:$groovyVersion")
     testImplementation(platform("org.spockframework:spock-bom:$spockBomVersion"))
     testImplementation("org.spockframework:spock-core")
