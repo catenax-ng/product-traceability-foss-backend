@@ -32,13 +32,13 @@ import java.util.List;
 @EnableWebMvc
 public class ApplicationConfig {
 
-	@Value("${keycloak.realm}")
+	@Value("${keycloak.realm:}")
 	private String realm;
 
-	@Value("${keycloak.resource}")
+	@Value("${keycloak.resource:}")
 	private String clientId;
 
-	@Value("${keycloak.auth-server-url}")
+	@Value("${keycloak.auth-server-url:}")
 	private String authServerUrl;
 
 	@Bean
