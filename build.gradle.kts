@@ -30,6 +30,8 @@ val commonsCodecVersion = "1.15"
 val groovyVersion = "3.0.10"
 val spockBomVersion = "2.1-groovy-3.0"
 val greenmailVersion = "1.6.9"
+val springfoxVersion = "3.0.0"
+val keycloakVersion = "18.0.0"
 
 dependencies {
     // development dependecies
@@ -40,13 +42,13 @@ dependencies {
 
 	implementation("org.springframework.data:spring-data-commons")
 
-	implementation("org.keycloak:keycloak-spring-boot-starter:18.0.0")
+	implementation("org.keycloak:keycloak-spring-boot-starter:$keycloakVersion")
 
-	implementation("io.springfox:springfox-boot-starter:3.0.0")
+	implementation("io.springfox:springfox-boot-starter:$springfoxVersion")
 
 	implementation("org.springframework.data:spring-data-commons")
 
-	implementation("io.springfox:springfox-boot-starter:3.0.0")
+	implementation("io.springfox:springfox-boot-starter:$springfoxVersion")
 
 	// for demo purposes, to be removed once EDC works
 	implementation("com.github.javafaker:javafaker:1.0.2") {
@@ -66,6 +68,7 @@ dependencies {
     testImplementation("org.spockframework:spock-core")
     testImplementation("org.spockframework:spock-spring")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.security:spring-security-test")
 
     integrationImplementation("com.icegreen:greenmail-spring:$greenmailVersion")
 }
