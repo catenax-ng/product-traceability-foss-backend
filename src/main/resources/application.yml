@@ -17,6 +17,18 @@ management:
     port: 8081
 
 spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: "changeme"
+            client-secret: "changeme"
+            authorization-grant-type: client_credentials
+            scope: catena
+        provider:
+          keycloak:
+            token-uri: https://centralidp.dev.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token # TODO externalize
   config:
     import: swagger.yml
   mail:
@@ -27,3 +39,15 @@ spring:
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
+
+feign:
+  okhttp:
+    enabled: true
+  hystrix:
+    enabled: false
+  bpnApi:
+    url: "TODO"
+    connectionTimeoutMillis: 200
+    readTimeoutMillis: 500
+    maxIdleConnections: 10
+    keepAliveDurationMinutes: 5

@@ -3,6 +3,7 @@ package net.catenax.traceability.api;
 import net.catenax.traceability.assets.Asset;
 import net.catenax.traceability.assets.AssetRepository;
 import net.catenax.traceability.assets.PageResult;
+import net.catenax.traceability.clients.openapi.bpn.BpnApiClient;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,8 +16,11 @@ public class TraceabilityController {
 
 	private AssetRepository assetRepository;
 
-	public TraceabilityController(AssetRepository assetRepository) {
+	private BpnApiClient bpnApiClient;
+
+	public TraceabilityController(AssetRepository assetRepository, BpnApiClient bpnApiClient) {
 		this.assetRepository = assetRepository;
+		this.bpnApiClient = bpnApiClient;
 	}
 
 	@GetMapping("/assets")
@@ -34,4 +38,10 @@ public class TraceabilityController {
 		return assetRepository.getAssetByChildId(assetId, childId);
 	}
 
+	@GetMapping("/demo")
+	public String assets() {
+		return bpnApiClient.getBusinessPartner("BPNL000000000001", "").getBpn();
+
+//		return "";
+	}
 }
