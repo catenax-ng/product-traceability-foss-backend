@@ -46,9 +46,9 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 			.cors()
 			.and()
 			.authorizeRequests()
+			.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 			.antMatchers(WHITELIST_URLS).permitAll()
-			.antMatchers("/api/**").authenticated()
-			.antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll();
+			.antMatchers("/api/**").authenticated();
 	}
 
 	@Bean
