@@ -33,3 +33,9 @@ cors:
     - "http://localhost:4200/"
     - "https://traceability-portal.dev.demo.catena-x.net/"
     - "https://traceability-portal.int.demo.catena-x.net/"
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
