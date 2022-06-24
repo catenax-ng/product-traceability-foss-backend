@@ -6,4 +6,4 @@ keycloak:
 
 feign:
   bpnApi:
-    url: "https://catenax-bpdm-dev.germanywestcentral.cloudapp.azure.com/"
+    url: "https://catenax-bpdm-dev.demo.catena-x.net/"

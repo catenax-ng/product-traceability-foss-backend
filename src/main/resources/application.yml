@@ -22,13 +22,13 @@ spring:
       client:
         registration:
           keycloak:
-            client-id: "changeme"
-            client-secret: "changeme"
+            client-id: ${KEYCLOAK_OAUTH2_CLIENT_ID}
+            client-secret: ${KEYCLOAK_OAUTH2_CLIENT_SECRET}
             authorization-grant-type: client_credentials
-            scope: catena
+            scope: openid
         provider:
           keycloak:
-            token-uri: https://centralidp.dev.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token # TODO externalize
+            token-uri: ${KEYCLOAK_OAUTH2_CLIENT_TOKEN_URI}
   config:
     import: swagger.yml
   mail:
@@ -46,7 +46,6 @@ feign:
   hystrix:
     enabled: false
   bpnApi:
-    url: "TODO"
     connectionTimeoutMillis: 200
     readTimeoutMillis: 500
     maxIdleConnections: 10
