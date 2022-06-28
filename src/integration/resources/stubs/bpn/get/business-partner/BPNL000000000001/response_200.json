@@ -1,0 +1,161 @@
+{
+	"bpn": "BPNL000000000001",
+	"identifiers": [
+		{
+			"uuid": "9dd4e5c3-0bcb-449d-a707-dc1574eae788",
+			"value": "CX.POOL:623D9AA56E73054B143D480D0",
+			"type": {
+				"technicalKey": "CX_POOL_ID",
+				"name": "",
+				"url": null
+			},
+			"issuingBody": null,
+			"status": null
+		},
+		{
+			"uuid": "167ef686-be99-4fe1-bae4-5d90a51b3f4a",
+			"value": "DE145002697",
+			"type": {
+				"technicalKey": "EU_VAT_ID_DE",
+				"name": "Umsatzsteuer-Identifikationsnummer",
+				"url": "https://meta.cdq.com/European_value_added_tax_identifier_(Germany)"
+			},
+			"issuingBody": null,
+			"status": null
+		},
+		{
+			"uuid": "2b5b6893-83b9-4c93-adf7-d5e4e6725b2f",
+			"value": "BPNL000000000001",
+			"type": {
+				"technicalKey": "BPN",
+				"name": "Business Partner Number",
+				"url": ""
+			},
+			"issuingBody": {
+				"technicalKey": "CATENAX",
+				"name": "Catena-X",
+				"url": ""
+			},
+			"status": {
+				"technicalKey": "UNKNOWN",
+				"name": "Unknown"
+			}
+		},
+		{
+			"uuid": "82ed7995-d332-4f0f-8dec-fb5de34a5705",
+			"value": "62457a3f3fd2374f924ef839",
+			"type": {
+				"technicalKey": "CDQID",
+				"name": "CDQ Identifier",
+				"url": ""
+			},
+			"issuingBody": {
+				"technicalKey": "CDQ",
+				"name": "CDQ AG",
+				"url": ""
+			},
+			"status": {
+				"technicalKey": "CDQ_IMPORTED",
+				"name": "Imported from CDQ but not synchronized"
+			}
+		}
+	],
+	"names": [
+		{
+			"uuid": "760ea1f0-a4da-44a9-b30c-6c378eb3ba90",
+			"value": "Karl Wildermuth GmbH & Co. KG",
+			"shortName": null,
+			"type": {
+				"technicalKey": "LOCAL",
+				"name": "The business partner name identifies a business partner in a given context, e.g. a country or region.",
+				"url": ""
+			},
+			"language": {
+				"technicalKey": "undefined",
+				"name": "Undefined"
+			}
+		}
+	],
+	"legalForm": null,
+	"status": null,
+	"addresses": [
+		{
+			"uuid": "c9a6c381-9af4-45db-868a-337d83486d19",
+			"bpn": "BPNA000000000001",
+			"version": {
+				"characterSet": {
+					"technicalKey": "LATIN",
+					"name": "Latin"
+				},
+				"language": {
+					"technicalKey": "en",
+					"name": "English"
+				}
+			},
+			"careOf": null,
+			"contexts": [],
+			"country": {
+				"technicalKey": "DE",
+				"name": "Germany"
+			},
+			"administrativeAreas": [],
+			"postCodes": [
+				{
+					"uuid": "81d15e45-b061-4bd8-acb2-d649919c25aa",
+					"value": "74321",
+					"type": {
+						"technicalKey": "OTHER",
+						"name": "Other type",
+						"url": ""
+					}
+				}
+			],
+			"localities": [
+				{
+					"uuid": "0c01f6e4-ef13-4417-8b05-5852f1b08311",
+					"value": "Bietigheim-Bissingen",
+					"shortName": null,
+					"type": {
+						"technicalKey": "OTHER",
+						"name": "Other",
+						"url": ""
+					},
+					"language": {
+						"technicalKey": "en",
+						"name": "English"
+					}
+				}
+			],
+			"thoroughfares": [
+				{
+					"uuid": "a041e489-c29a-4516-a76c-ccfaf4f06984",
+					"value": "Carl-Benz-Straße",
+					"name": null,
+					"shortName": null,
+					"number": "46",
+					"direction": null,
+					"type": {
+						"technicalKey": "OTHER",
+						"name": "Other type",
+						"url": ""
+					},
+					"language": {
+						"technicalKey": "en",
+						"name": "English"
+					}
+				}
+			],
+			"premises": [],
+			"postalDeliveryPoints": [],
+			"geographicCoordinates": null,
+			"types": []
+		}
+	],
+	"sites": [],
+	"profileClassifications": [],
+	"types": [],
+	"bankAccounts": [],
+	"roles": [],
+	"relations": [],
+	"currentness": "2022-06-03T11:46:03.029158Z"
+}

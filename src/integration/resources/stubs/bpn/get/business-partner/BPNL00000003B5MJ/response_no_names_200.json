@@ -1,0 +1,146 @@
+{
+	"bpn": "BPNL00000003B5MJ",
+	"identifiers": [
+		{
+			"uuid": "58bff693-525a-4603-85ef-22f0cd555271",
+			"value": "624ee8a4885d863690cf7b51",
+			"type": {
+				"technicalKey": "CDQID",
+				"name": "CDQ Identifier",
+				"url": ""
+			},
+			"issuingBody": {
+				"technicalKey": "CDQ",
+				"name": "CDQ AG",
+				"url": ""
+			},
+			"status": {
+				"technicalKey": "CDQ_IMPORTED",
+				"name": "Imported from CDQ but not synchronized"
+			}
+		},
+		{
+			"uuid": "be87d5f6-bf1e-4e7f-b37a-068307a2b4e4",
+			"value": "BPNL00000003B5MJ",
+			"type": {
+				"technicalKey": "BPN",
+				"name": "Business Partner Number",
+				"url": ""
+			},
+			"issuingBody": {
+				"technicalKey": "CATENAX",
+				"name": "Catena-X",
+				"url": ""
+			},
+			"status": {
+				"technicalKey": "UNKNOWN",
+				"name": "Unknown"
+			}
+		},
+		{
+			"uuid": "f5f73dba-eeb8-4e87-8767-eef7b2679ca1",
+			"value": "DE339750933",
+			"type": {
+				"technicalKey": "EU_VAT_ID_DE",
+				"name": "Umsatzsteuer-Identifikationsnummer",
+				"url": "https://meta.cdq.com/European_value_added_tax_identifier_(Germany)"
+			},
+			"issuingBody": null,
+			"status": null
+		},
+		{
+			"uuid": "52bba2ee-1bf9-4baa-9d7f-928796f556b0",
+			"value": "CX.POOL:624EE571399AE27F57F27B150",
+			"type": {
+				"technicalKey": "CX_POOL_ID",
+				"name": "",
+				"url": null
+			},
+			"issuingBody": null,
+			"status": null
+		}
+	],
+	"names": [],
+	"legalForm": null,
+	"status": null,
+	"addresses": [
+		{
+			"uuid": "df7e9ba2-ff38-4769-bf89-ceff0cb99d8f",
+			"bpn": "BPNA00000003B5MJ",
+			"version": {
+				"characterSet": {
+					"technicalKey": "LATIN",
+					"name": "Latin"
+				},
+				"language": {
+					"technicalKey": "en",
+					"name": "English"
+				}
+			},
+			"careOf": null,
+			"contexts": [],
+			"country": {
+				"technicalKey": "DE",
+				"name": "Germany"
+			},
+			"administrativeAreas": [],
+			"postCodes": [
+				{
+					"uuid": "4729314c-e762-4e13-b9a4-37d99d68e045",
+					"value": "80995",
+					"type": {
+						"technicalKey": "OTHER",
+						"name": "Other type",
+						"url": ""
+					}
+				}
+			],
+			"localities": [
+				{
+					"uuid": "d5b4870d-27dc-4d7a-9381-cc9bf8990330",
+					"value": "München",
+					"shortName": null,
+					"type": {
+						"technicalKey": "OTHER",
+						"name": "Other",
+						"url": ""
+					},
+					"language": {
+						"technicalKey": "en",
+						"name": "English"
+					}
+				}
+			],
+			"thoroughfares": [
+				{
+					"uuid": "3f2a0db3-29ac-490c-87ef-8edc9469ebea",
+					"value": "Am Blütenanger",
+					"name": null,
+					"shortName": null,
+					"number": "95",
+					"direction": null,
+					"type": {
+						"technicalKey": "OTHER",
+						"name": "Other type",
+						"url": ""
+					},
+					"language": {
+						"technicalKey": "en",
+						"name": "English"
+					}
+				}
+			],
+			"premises": [],
+			"postalDeliveryPoints": [],
+			"geographicCoordinates": null,
+			"types": []
+		}
+	],
+	"sites": [],
+	"profileClassifications": [],
+	"types": [],
+	"bankAccounts": [],
+	"roles": [],
+	"relations": [],
+	"currentness": "2022-06-03T11:47:21.137001Z"
+}

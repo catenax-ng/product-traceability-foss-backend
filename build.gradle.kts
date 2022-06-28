@@ -44,6 +44,7 @@ val springCloudVersion = "2021.0.1"
 val jacksonDatabindNullableVersion = "0.2.2"
 val scribejavaVersion = "8.0.0"
 val findBugsVersion = "3.0.2"
+val restitoVersion = "0.9.4"
 
 dependencyManagement {
 	imports {
@@ -61,11 +62,13 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+	implementation("org.springframework.boot:spring-boot-starter-cache")
 
 	implementation("org.springframework.data:spring-data-commons")
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 	implementation("org.openapitools:jackson-databind-nullable:$jacksonDatabindNullableVersion")
 	implementation("com.google.code.findbugs:jsr305:$findBugsVersion")
+	implementation("com.github.ben-manes.caffeine:caffeine")
 
 	implementation("io.github.openfeign:feign-okhttp:$feignVersion")
 	implementation("io.github.openfeign:feign-jackson:$feignVersion")
@@ -87,10 +90,12 @@ dependencies {
     testImplementation(platform("org.spockframework:spock-bom:$spockBomVersion"))
     testImplementation("org.spockframework:spock-core")
     testImplementation("org.spockframework:spock-spring")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.springframework.security:spring-security-test")
+
+	integrationImplementation("org.springframework.boot:spring-boot-starter-test")
+	integrationImplementation("org.springframework.security:spring-security-test")
 
     integrationImplementation("com.icegreen:greenmail-spring:$greenmailVersion")
+	integrationImplementation("com.xebialabs.restito:restito:$restitoVersion")
 }
 
 tasks.withType<Test> {
