@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.ClientAuthorizationException;
 import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
@@ -26,7 +27,8 @@ public class KeycloakAuthorizationInterceptor implements RequestInterceptor {
 	@Override
 	public void apply(RequestTemplate template) {
 		if (!template.headers().containsKey(HttpHeaders.AUTHORIZATION)) {
-			OAuth2AccessToken accessToken = getAccessToken().orElseThrow(() -> new RuntimeException("TODO"));
+			OAuth2AccessToken accessToken = getAccessToken()
+				.orElseThrow(() -> new KeycloakTechnicalUserAuthorizationException("Couldn't obtain access token for keycloak technical user"));
 
 			logger.debug("Injecting access token value {} of type {}", accessToken.getTokenValue(), accessToken.getTokenType());
 
@@ -40,7 +42,15 @@ public class KeycloakAuthorizationInterceptor implements RequestInterceptor {
 				.getAuthentication())
 			.build();
 
-		OAuth2AuthorizedClient oAuth2AuthorizedClient = oAuth2AuthorizedClientManager.authorize(keycloak);
+		final OAuth2AuthorizedClient oAuth2AuthorizedClient;
+
+		try {
+			oAuth2AuthorizedClient = oAuth2AuthorizedClientManager.authorize(keycloak);
+		} catch (ClientAuthorizationException e) {
+			logger.error("Couldn't retrieve keycloak token for technical user", e);
+
+			throw new KeycloakTechnicalUserAuthorizationException(e);
+		}
 
 		return Optional.ofNullable(oAuth2AuthorizedClient)
 			.map(OAuth2AuthorizedClient::getAccessToken);

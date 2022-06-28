@@ -35,9 +35,11 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 	public void configure(HttpSecurity http) throws Exception {
 		super.configure(http);
 
-		http.authorizeRequests()
+		http
+			.anonymous().disable()
+			.authorizeRequests()
 			.antMatchers(WHITELIST_URLS).permitAll()
-			.antMatchers("/api/*").authenticated();
+			.antMatchers("/api/**").authenticated();
 	}
 
 	@Bean
