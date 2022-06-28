@@ -64,7 +64,8 @@ public class AssetsReader {
 				.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
 				.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-			Map<String, RawAsset> rawAssets = mapper.readValue(file, RawAssets.class).data().stream().collect(Collectors.toMap(RawAsset::catenaXId, Function.identity()));
+			Map<String, RawAsset> rawAssets = mapper.readValue(file, RawAssets.class).data().stream()
+				.collect(Collectors.toMap(RawAsset::catenaXId, Function.identity()));
 
 			return rawAssets.values().stream()
 				.map(raw -> new Asset(
