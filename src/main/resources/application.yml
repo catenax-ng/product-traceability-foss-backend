@@ -53,3 +53,9 @@ cache:
     name: "bpn-mappings"
     maximumSize: 500
     expireAfterWrite: 1d
+
+cors:
+  origins: >
+    http://localhost:4200/,
+    https://traceability-portal.dev.demo.catena-x.net/,
+    https://traceability-portal.int.demo.catena-x.net/

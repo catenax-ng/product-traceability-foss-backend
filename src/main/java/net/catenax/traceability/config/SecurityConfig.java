@@ -42,6 +42,8 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 		super.configure(http);
 
 		http
+			.cors()
+			.and()
 			.anonymous().disable()
 			.authorizeRequests()
 			.antMatchers(WHITELIST_URLS).permitAll()
