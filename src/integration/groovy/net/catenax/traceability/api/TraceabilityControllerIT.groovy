@@ -119,6 +119,7 @@ class TraceabilityControllerIT extends IntegrationSpec {
 	def "should get a page of assets"() {
 		given:
 			authenticatedUser(KeycloakRole.UMA_ROLE)
+			keycloakApiReturnsToken()
 
 		expect:
 			mvc.perform(get("/api/assets")
