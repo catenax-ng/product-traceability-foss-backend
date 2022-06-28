@@ -126,6 +126,6 @@ tasks.withType<org.openapitools.generator.gradle.plugin.tasks.GenerateTask> {
 	}
 }
 
-task("compile") {
-	dependsOn.add(listOf("generateBpnApi"))
+tasks.withType<JavaCompile> {
+	dependsOn("generateBpnApi")
 }
