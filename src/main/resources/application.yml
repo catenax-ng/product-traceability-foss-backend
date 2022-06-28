@@ -26,9 +26,6 @@ spring:
             client-secret: ${KEYCLOAK_OAUTH2_CLIENT_SECRET}
             authorization-grant-type: client_credentials
             scope: openid
-        provider:
-          keycloak:
-            token-uri: ${KEYCLOAK_OAUTH2_CLIENT_TOKEN_URI}
   config:
     import: swagger.yml
   mail:
@@ -50,3 +47,9 @@ feign:
     readTimeoutMillis: 500
     maxIdleConnections: 10
     keepAliveDurationMinutes: 5
+
+cache:
+  bpn:
+    name: "bpn-mappings"
+    maximumSize: 500
+    expireAfterWrite: 1d

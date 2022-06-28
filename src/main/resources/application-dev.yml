@@ -1,3 +1,11 @@
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            token-uri: https://centralidp.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token
+
 keycloak:
   auth-server-url: https://centralidp.dev.demo.catena-x.net/auth
   realm: CX-Central
