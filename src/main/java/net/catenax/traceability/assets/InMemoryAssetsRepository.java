@@ -59,6 +59,9 @@ public class InMemoryAssetsRepository implements AssetRepository {
 			});
 		}
 
+		pageListHolder.setPage(pageable.getPageNumber());
+		pageListHolder.setPageSize(pageable.getPageSize());
+
 		return new PageResult<>(pageListHolder);
 	}
 
