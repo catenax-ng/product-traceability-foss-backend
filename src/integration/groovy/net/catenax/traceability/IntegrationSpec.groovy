@@ -2,6 +2,7 @@ package net.catenax.traceability
 
 import com.xebialabs.restito.server.StubServer
 import net.catenax.traceability.clients.cache.bpn.BpnCache
+import net.catenax.traceability.config.MailboxConfig
 import net.catenax.traceability.config.OAuth2Config
 import net.catenax.traceability.config.RestitoConfig
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +17,7 @@ import spock.lang.Specification
 @ActiveProfiles(profiles = ["integration"])
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(
-	classes = [RestitoConfig.class, OAuth2Config.class],
+	classes = [MailboxConfig.class, RestitoConfig.class, OAuth2Config.class],
 	initializers = [RestitoConfig.Initializer.class]
 )
 abstract class IntegrationSpec extends Specification implements KeycloakSupport, BpnApiSupport, KeycloakApiSupport {
