@@ -6,25 +6,28 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class InMemoryAssetsRepository implements AssetRepository {
 
-	private Map<String, Asset> assets = new HashMap<>();
+	private final Map<String, Asset> assets;
 
-	@PostConstruct
-	public void initializeRepository() {
-		assets = AssetRandomizer.generateAssets(1000);
+	private final BpnRepository bpnRepository;
+
+	public InMemoryAssetsRepository(BpnRepository bpnRepository) {
+		this.bpnRepository = bpnRepository;
+		this.assets = AssetRandomizer.generateAssets(1000);
 	}
 
 	@Override
 	public Asset getAssetById(String assetId) {
-		return assets.get(assetId);
+		return Optional.ofNullable(assets.get(assetId))
+			.map(this::addManufacturerName)
+			.orElse(null);
 	}
 
 	@Override
@@ -33,17 +36,20 @@ public class InMemoryAssetsRepository implements AssetRepository {
 			.filter(childDescription -> childDescription.id().equals(childId))
 			.map(childDescription -> assets.get(childDescription.id()))
 			.findFirst()
+			.map(this::addManufacturerName)
 			.orElse(null);
 	}
 
 	@Override
 	public List<Asset> getAssets() {
-		return new ArrayList<>(assets.values());
+		return assets.values().stream()
+			.map(this::addManufacturerName)
+			.toList();
 	}
 
 	@Override
 	public PageResult<Asset> getAssets(Pageable pageable) {
-		PagedListHolder<Asset> pageListHolder = new PagedListHolder<>(new ArrayList<>(assets.values()));
+		PagedListHolder<Asset> pageListHolder = new PagedListHolder<>(new ArrayList<>(getAssets()));
 		Sort sort = pageable.getSortOr(Sort.unsorted());
 
 		if (sort.isSorted()) {
@@ -54,5 +60,11 @@ public class InMemoryAssetsRepository implements AssetRepository {
 		}
 
 		return new PageResult<>(pageListHolder);
+	}
+
+	private Asset addManufacturerName(Asset asset) {
+		return bpnRepository.findManufacturerName(asset.manufacturerId())
+			.map(asset::withManufacturerName)
+			.orElse(asset);
 	}
 }
