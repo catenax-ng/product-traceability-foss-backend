@@ -14,19 +14,4 @@ keycloak:
 
 feign:
   bpnApi:
-    url: "https://catenax-bpdm-dev.demo.catena-x.net/"
-
-
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
-    net:
-      catenax:
-        traceability:
-          clients:
-            openapi:
-              bpn: TRACE
-          config:
-            interceptor: DEBUG
+    url: "https://catenax-bpdm-int.demo.catena-x.net/"
