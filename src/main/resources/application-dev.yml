@@ -22,3 +22,11 @@ logging:
     org:
       springframework:
         security: DEBUG
+    net:
+      catenax:
+        traceability:
+          clients:
+            openapi:
+              bpn: TRACE
+          config:
+            interceptor: DEBUG
