@@ -20,7 +20,7 @@ public class InMemoryAssetsRepository implements AssetRepository {
 
 	public InMemoryAssetsRepository(BpnRepository bpnRepository) {
 		this.bpnRepository = bpnRepository;
-		this.assets = AssetRandomizer.generateAssets(1000);
+		assets = AssetsReader.readAssets();
 	}
 
 	@Override
