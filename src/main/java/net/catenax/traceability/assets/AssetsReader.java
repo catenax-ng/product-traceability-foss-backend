@@ -49,7 +49,7 @@ public class AssetsReader {
 					raw.nameAtManufacturer(),
 					raw.manufacturerPartId(),
 					raw.manufacturerId(),
-					null,
+					"--",
 					raw.nameAtCustomer(),
 					raw.customerPartId(),
 					raw.manufacturingDate(),
