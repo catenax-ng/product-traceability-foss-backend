@@ -1,27 +1,9 @@
 {
-	"bpn": "BPNL00000003B5MJ",
+	"bpn": "BPNL00000003B0Q0",
 	"identifiers": [
 		{
-			"uuid": "58bff693-525a-4603-85ef-22f0cd555271",
-			"value": "624ee8a4885d863690cf7b51",
-			"type": {
-				"technicalKey": "CDQID",
-				"name": "CDQ Identifier",
-				"url": ""
-			},
-			"issuingBody": {
-				"technicalKey": "CDQ",
-				"name": "CDQ AG",
-				"url": ""
-			},
-			"status": {
-				"technicalKey": "CDQ_IMPORTED",
-				"name": "Imported from CDQ but not synchronized"
-			}
-		},
-		{
-			"uuid": "be87d5f6-bf1e-4e7f-b37a-068307a2b4e4",
-			"value": "BPNL00000003B5MJ",
+			"uuid": "2d71843d-fc89-49e3-9fc3-4dd1da92cdc8",
+			"value": "BPNL00000003B0Q0",
 			"type": {
 				"technicalKey": "BPN",
 				"name": "Business Partner Number",
@@ -38,19 +20,8 @@
 			}
 		},
 		{
-			"uuid": "f5f73dba-eeb8-4e87-8767-eef7b2679ca1",
-			"value": "DE339750933",
-			"type": {
-				"technicalKey": "EU_VAT_ID_DE",
-				"name": "Umsatzsteuer-Identifikationsnummer",
-				"url": "https://meta.cdq.com/European_value_added_tax_identifier_(Germany)"
-			},
-			"issuingBody": null,
-			"status": null
-		},
-		{
-			"uuid": "52bba2ee-1bf9-4baa-9d7f-928796f556b0",
-			"value": "CX.POOL:624EE571399AE27F57F27B150",
+			"uuid": "24fe7f57-4979-4728-a45d-2af0672b7b4c",
+			"value": "CX.POOL:624ED7C1885D863690CF6E360",
 			"type": {
 				"technicalKey": "CX_POOL_ID",
 				"name": "",
@@ -58,6 +29,35 @@
 			},
 			"issuingBody": null,
 			"status": null
+		},
+		{
+			"uuid": "8949759e-1330-49d0-8280-f8cce54e5731",
+			"value": "ATU19400404",
+			"type": {
+				"technicalKey": "EU_VAT_ID_AT",
+				"name": "Umsatzsteuer-Identifikationsnummer",
+				"url": "https://meta.cdq.com/European_value_added_tax_identifier_(Austria)"
+			},
+			"issuingBody": null,
+			"status": null
+		},
+		{
+			"uuid": "cc5532c9-611c-4a89-8cb5-50c3f6bc113b",
+			"value": "624eda97399ae27f57f27004",
+			"type": {
+				"technicalKey": "CDQID",
+				"name": "CDQ Identifier",
+				"url": ""
+			},
+			"issuingBody": {
+				"technicalKey": "CDQ",
+				"name": "CDQ AG",
+				"url": ""
+			},
+			"status": {
+				"technicalKey": "CDQ_IMPORTED",
+				"name": "Imported from CDQ but not synchronized"
+			}
 		}
 	],
 	"names": [],
@@ -65,8 +65,8 @@
 	"status": null,
 	"addresses": [
 		{
-			"uuid": "df7e9ba2-ff38-4769-bf89-ceff0cb99d8f",
-			"bpn": "BPNA00000003B5MJ",
+			"uuid": "d3154963-5018-4d3b-a156-93a2e7cdcd35",
+			"bpn": "BPNA00000003B0Q0",
 			"version": {
 				"characterSet": {
 					"technicalKey": "LATIN",
@@ -80,14 +80,14 @@
 			"careOf": null,
 			"contexts": [],
 			"country": {
-				"technicalKey": "DE",
-				"name": "Germany"
+				"technicalKey": "AT",
+				"name": "Austria"
 			},
 			"administrativeAreas": [],
 			"postCodes": [
 				{
-					"uuid": "4729314c-e762-4e13-b9a4-37d99d68e045",
-					"value": "80995",
+					"uuid": "231d2c8c-8f8e-46ca-a17e-587ab6bc28f0",
+					"value": "8055",
 					"type": {
 						"technicalKey": "OTHER",
 						"name": "Other type",
@@ -97,8 +97,8 @@
 			],
 			"localities": [
 				{
-					"uuid": "d5b4870d-27dc-4d7a-9381-cc9bf8990330",
-					"value": "München",
+					"uuid": "66e2d46a-1996-461a-a01c-8faa5dfe90e6",
+					"value": "Wien",
 					"shortName": null,
 					"type": {
 						"technicalKey": "OTHER",
@@ -113,11 +113,11 @@
 			],
 			"thoroughfares": [
 				{
-					"uuid": "3f2a0db3-29ac-490c-87ef-8edc9469ebea",
-					"value": "Am Blütenanger",
+					"uuid": "159cb06b-c8db-44dc-a393-46ec2458e7d3",
+					"value": "Eyslergasse",
 					"name": null,
 					"shortName": null,
-					"number": "95",
+					"number": "17",
 					"direction": null,
 					"type": {
 						"technicalKey": "OTHER",
@@ -142,5 +142,5 @@
 	"bankAccounts": [],
 	"roles": [],
 	"relations": [],
-	"currentness": "2022-06-03T11:47:21.137001Z"
+	"currentness": "2022-06-03T11:47:21.121015Z"
 }

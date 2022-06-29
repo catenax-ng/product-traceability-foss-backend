@@ -1,49 +1,9 @@
 {
-	"bpn": "BPNL000000000001",
+	"bpn": "BPNL00000003B2OM",
 	"identifiers": [
 		{
-			"uuid": "9dd4e5c3-0bcb-449d-a707-dc1574eae788",
-			"value": "CX.POOL:623D9AA56E73054B143D480D0",
-			"type": {
-				"technicalKey": "CX_POOL_ID",
-				"name": "",
-				"url": null
-			},
-			"issuingBody": null,
-			"status": null
-		},
-		{
-			"uuid": "167ef686-be99-4fe1-bae4-5d90a51b3f4a",
-			"value": "DE145002697",
-			"type": {
-				"technicalKey": "EU_VAT_ID_DE",
-				"name": "Umsatzsteuer-Identifikationsnummer",
-				"url": "https://meta.cdq.com/European_value_added_tax_identifier_(Germany)"
-			},
-			"issuingBody": null,
-			"status": null
-		},
-		{
-			"uuid": "2b5b6893-83b9-4c93-adf7-d5e4e6725b2f",
-			"value": "BPNL000000000001",
-			"type": {
-				"technicalKey": "BPN",
-				"name": "Business Partner Number",
-				"url": ""
-			},
-			"issuingBody": {
-				"technicalKey": "CATENAX",
-				"name": "Catena-X",
-				"url": ""
-			},
-			"status": {
-				"technicalKey": "UNKNOWN",
-				"name": "Unknown"
-			}
-		},
-		{
-			"uuid": "82ed7995-d332-4f0f-8dec-fb5de34a5705",
-			"value": "62457a3f3fd2374f924ef839",
+			"uuid": "d1efed5e-5886-4778-af6f-e3b1abee2236",
+			"value": "624eda97399ae27f57f27006",
 			"type": {
 				"technicalKey": "CDQID",
 				"name": "CDQ Identifier",
@@ -58,6 +18,46 @@
 				"technicalKey": "CDQ_IMPORTED",
 				"name": "Imported from CDQ but not synchronized"
 			}
+		},
+		{
+			"uuid": "8898db79-3af6-4355-8134-be7c052720bb",
+			"value": "CX.POOL:624ED7C429B7A338C3E865860",
+			"type": {
+				"technicalKey": "CX_POOL_ID",
+				"name": "",
+				"url": null
+			},
+			"issuingBody": null,
+			"status": null
+		},
+		{
+			"uuid": "a312a496-f1e7-48c7-9d84-44bd2e490cd5",
+			"value": "DE129273398",
+			"type": {
+				"technicalKey": "EU_VAT_ID_DE",
+				"name": "Umsatzsteuer-Identifikationsnummer",
+				"url": "https://meta.cdq.com/European_value_added_tax_identifier_(Germany)"
+			},
+			"issuingBody": null,
+			"status": null
+		},
+		{
+			"uuid": "695f265b-2466-4ad4-92e2-95ed2cb1e53e",
+			"value": "BPNL00000003B2OM",
+			"type": {
+				"technicalKey": "BPN",
+				"name": "Business Partner Number",
+				"url": ""
+			},
+			"issuingBody": {
+				"technicalKey": "CATENAX",
+				"name": "Catena-X",
+				"url": ""
+			},
+			"status": {
+				"technicalKey": "UNKNOWN",
+				"name": "Unknown"
+			}
 		}
 	],
 	"names": [],
@@ -65,8 +65,8 @@
 	"status": null,
 	"addresses": [
 		{
-			"uuid": "c9a6c381-9af4-45db-868a-337d83486d19",
-			"bpn": "BPNA000000000001",
+			"uuid": "75ea46d8-dc64-4fd7-a2c7-62c02cbaa06f",
+			"bpn": "BPNA00000003B2OM",
 			"version": {
 				"characterSet": {
 					"technicalKey": "LATIN",
@@ -86,8 +86,8 @@
 			"administrativeAreas": [],
 			"postCodes": [
 				{
-					"uuid": "81d15e45-b061-4bd8-acb2-d649919c25aa",
-					"value": "74321",
+					"uuid": "0fc25fd8-dd9c-4b4f-988e-5d3d18d1d8a4",
+					"value": "70597",
 					"type": {
 						"technicalKey": "OTHER",
 						"name": "Other type",
@@ -97,8 +97,8 @@
 			],
 			"localities": [
 				{
-					"uuid": "0c01f6e4-ef13-4417-8b05-5852f1b08311",
-					"value": "Bietigheim-Bissingen",
+					"uuid": "68f19c8d-b5d0-42d5-83ce-faa366dba89a",
+					"value": "Stuttgart",
 					"shortName": null,
 					"type": {
 						"technicalKey": "OTHER",
@@ -113,11 +113,11 @@
 			],
 			"thoroughfares": [
 				{
-					"uuid": "a041e489-c29a-4516-a76c-ccfaf4f06984",
-					"value": "Carl-Benz-Straße",
+					"uuid": "86d6131d-fad0-47d0-8e70-b086f1ddb6a5",
+					"value": "Untere Waldplätze",
 					"name": null,
 					"shortName": null,
-					"number": "46",
+					"number": "2A",
 					"direction": null,
 					"type": {
 						"technicalKey": "OTHER",
@@ -142,5 +142,5 @@
 	"bankAccounts": [],
 	"roles": [],
 	"relations": [],
-	"currentness": "2022-06-03T11:46:03.029158Z"
+	"currentness": "2022-06-03T11:47:21.127377Z"
 }

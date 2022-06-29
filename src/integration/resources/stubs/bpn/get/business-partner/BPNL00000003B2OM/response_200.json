@@ -1,9 +1,9 @@
 {
-	"bpn": "BPNL00000003B5MJ",
+	"bpn": "BPNL00000003B2OM",
 	"identifiers": [
 		{
-			"uuid": "58bff693-525a-4603-85ef-22f0cd555271",
-			"value": "624ee8a4885d863690cf7b51",
+			"uuid": "d1efed5e-5886-4778-af6f-e3b1abee2236",
+			"value": "624eda97399ae27f57f27006",
 			"type": {
 				"technicalKey": "CDQID",
 				"name": "CDQ Identifier",
@@ -20,8 +20,30 @@
 			}
 		},
 		{
-			"uuid": "be87d5f6-bf1e-4e7f-b37a-068307a2b4e4",
-			"value": "BPNL00000003B5MJ",
+			"uuid": "8898db79-3af6-4355-8134-be7c052720bb",
+			"value": "CX.POOL:624ED7C429B7A338C3E865860",
+			"type": {
+				"technicalKey": "CX_POOL_ID",
+				"name": "",
+				"url": null
+			},
+			"issuingBody": null,
+			"status": null
+		},
+		{
+			"uuid": "a312a496-f1e7-48c7-9d84-44bd2e490cd5",
+			"value": "DE129273398",
+			"type": {
+				"technicalKey": "EU_VAT_ID_DE",
+				"name": "Umsatzsteuer-Identifikationsnummer",
+				"url": "https://meta.cdq.com/European_value_added_tax_identifier_(Germany)"
+			},
+			"issuingBody": null,
+			"status": null
+		},
+		{
+			"uuid": "695f265b-2466-4ad4-92e2-95ed2cb1e53e",
+			"value": "BPNL00000003B2OM",
 			"type": {
 				"technicalKey": "BPN",
 				"name": "Business Partner Number",
@@ -36,34 +58,12 @@
 				"technicalKey": "UNKNOWN",
 				"name": "Unknown"
 			}
-		},
-		{
-			"uuid": "f5f73dba-eeb8-4e87-8767-eef7b2679ca1",
-			"value": "DE339750933",
-			"type": {
-				"technicalKey": "EU_VAT_ID_DE",
-				"name": "Umsatzsteuer-Identifikationsnummer",
-				"url": "https://meta.cdq.com/European_value_added_tax_identifier_(Germany)"
-			},
-			"issuingBody": null,
-			"status": null
-		},
-		{
-			"uuid": "52bba2ee-1bf9-4baa-9d7f-928796f556b0",
-			"value": "CX.POOL:624EE571399AE27F57F27B150",
-			"type": {
-				"technicalKey": "CX_POOL_ID",
-				"name": "",
-				"url": null
-			},
-			"issuingBody": null,
-			"status": null
 		}
 	],
 	"names": [
 		{
-			"uuid": "b9b89907-e1d3-40f5-9792-5bfdf802dfe7",
-			"value": "Tier B",
+			"uuid": "20070224-7d23-4492-9c76-cabc1d7c5a9f",
+			"value": "Tier A",
 			"shortName": null,
 			"type": {
 				"technicalKey": "LOCAL",
@@ -80,8 +80,8 @@
 	"status": null,
 	"addresses": [
 		{
-			"uuid": "df7e9ba2-ff38-4769-bf89-ceff0cb99d8f",
-			"bpn": "BPNA00000003B5MJ",
+			"uuid": "75ea46d8-dc64-4fd7-a2c7-62c02cbaa06f",
+			"bpn": "BPNA00000003B2OM",
 			"version": {
 				"characterSet": {
 					"technicalKey": "LATIN",
@@ -101,8 +101,8 @@
 			"administrativeAreas": [],
 			"postCodes": [
 				{
-					"uuid": "4729314c-e762-4e13-b9a4-37d99d68e045",
-					"value": "80995",
+					"uuid": "0fc25fd8-dd9c-4b4f-988e-5d3d18d1d8a4",
+					"value": "70597",
 					"type": {
 						"technicalKey": "OTHER",
 						"name": "Other type",
@@ -112,8 +112,8 @@
 			],
 			"localities": [
 				{
-					"uuid": "d5b4870d-27dc-4d7a-9381-cc9bf8990330",
-					"value": "München",
+					"uuid": "68f19c8d-b5d0-42d5-83ce-faa366dba89a",
+					"value": "Stuttgart",
 					"shortName": null,
 					"type": {
 						"technicalKey": "OTHER",
@@ -128,11 +128,11 @@
 			],
 			"thoroughfares": [
 				{
-					"uuid": "3f2a0db3-29ac-490c-87ef-8edc9469ebea",
-					"value": "Am Blütenanger",
+					"uuid": "86d6131d-fad0-47d0-8e70-b086f1ddb6a5",
+					"value": "Untere Waldplätze",
 					"name": null,
 					"shortName": null,
-					"number": "95",
+					"number": "2A",
 					"direction": null,
 					"type": {
 						"technicalKey": "OTHER",
@@ -157,5 +157,5 @@
 	"bankAccounts": [],
 	"roles": [],
 	"relations": [],
-	"currentness": "2022-06-03T11:47:21.137001Z"
+	"currentness": "2022-06-03T11:47:21.127377Z"
 }

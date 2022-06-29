@@ -28,10 +28,11 @@ class TraceabilityControllerIT extends IntegrationSpec {
 
 		and:
 			bpnApiReturnsBusinessPartnerDataFor(
-				"BPNL000000000001",
 				"BPNL00000003AXS3",
-				"BPNL00000003B3NX",
-				"BPNL00000003B5MJ"
+				"BPNL00000003AYRE",
+				"BPNL00000003B0Q0",
+				"BPNL00000003B2OM",
+				"BPNL00000003B3NX"
 			)
 
 		expect:
@@ -41,7 +42,7 @@ class TraceabilityControllerIT extends IntegrationSpec {
 
 		and:
 			verifyKeycloakApiCalledOnceForToken()
-			verifyBpnApiCalledForBusinessPartnerDetails(4)
+			verifyBpnApiCalledForBusinessPartnerDetails(5)
 	}
 
 	def "should return assets with manufacturer name using values from cache"() {
@@ -51,10 +52,11 @@ class TraceabilityControllerIT extends IntegrationSpec {
 
 		and:
 			bpnApiReturnsBusinessPartnerDataFor(
-				"BPNL000000000001",
 				"BPNL00000003AXS3",
-				"BPNL00000003B3NX",
-				"BPNL00000003B5MJ"
+				"BPNL00000003AYRE",
+				"BPNL00000003B0Q0",
+				"BPNL00000003B2OM",
+				"BPNL00000003B3NX"
 			)
 
 		when:
@@ -66,7 +68,7 @@ class TraceabilityControllerIT extends IntegrationSpec {
 
 		then:
 			verifyKeycloakApiCalledOnceForToken()
-			verifyBpnApiCalledForBusinessPartnerDetails(4)
+			verifyBpnApiCalledForBusinessPartnerDetails(5)
 	}
 
 	def "should return assets without manufacturer name when name was not returned by BPN API"() {
@@ -76,10 +78,11 @@ class TraceabilityControllerIT extends IntegrationSpec {
 
 		and:
 			bpnApiReturnsBusinessPartnerDataWithoutNamesFor(
-				"BPNL000000000001",
 				"BPNL00000003AXS3",
-				"BPNL00000003B3NX",
-				"BPNL00000003B5MJ"
+				"BPNL00000003AYRE",
+				"BPNL00000003B0Q0",
+				"BPNL00000003B2OM",
+				"BPNL00000003B3NX"
 			)
 
 		expect:
@@ -95,10 +98,11 @@ class TraceabilityControllerIT extends IntegrationSpec {
 
 		and:
 			bpnApiReturnsNoBusinessPartnerDataFor(
-				"BPNL000000000001",
 				"BPNL00000003AXS3",
-				"BPNL00000003B3NX",
-				"BPNL00000003B5MJ"
+				"BPNL00000003AYRE",
+				"BPNL00000003B0Q0",
+				"BPNL00000003B2OM",
+				"BPNL00000003B3NX"
 			)
 
 		expect:

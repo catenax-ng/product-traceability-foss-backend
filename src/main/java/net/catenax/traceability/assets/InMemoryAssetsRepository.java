@@ -41,15 +41,8 @@ public class InMemoryAssetsRepository implements AssetRepository {
 	}
 
 	@Override
-	public List<Asset> getAssets() {
-		return assets.values().stream()
-			.map(this::addManufacturerName)
-			.toList();
-	}
-
-	@Override
 	public PageResult<Asset> getAssets(Pageable pageable) {
-		PagedListHolder<Asset> pageListHolder = new PagedListHolder<>(new ArrayList<>(getAssets()));
+		PagedListHolder<Asset> pageListHolder = new PagedListHolder<>(new ArrayList<>(assets.values()));
 		Sort sort = pageable.getSortOr(Sort.unsorted());
 
 		if (sort.isSorted()) {
@@ -62,7 +55,24 @@ public class InMemoryAssetsRepository implements AssetRepository {
 		pageListHolder.setPage(pageable.getPageNumber());
 		pageListHolder.setPageSize(pageable.getPageSize());
 
+		List<Asset> updatedPageListHolder = getAssetsWithUpdatedNamesForPage(pageListHolder);
+		pageListHolder.setSource(updatedPageListHolder);
+
 		return new PageResult<>(pageListHolder);
+	}
+
+	private List<Asset> getAssetsWithUpdatedNamesForPage(PagedListHolder<Asset> originPageListHolder) {
+		List<Asset> updatedAssets = originPageListHolder.getPageList().stream()
+			.map(this::addManufacturerName)
+			.toList();
+
+		List<Asset> sourceAssets = originPageListHolder.getSource();
+
+		for (int i = originPageListHolder.getFirstElementOnPage(), j = 0; i < originPageListHolder.getLastElementOnPage() + 1; i++, j++) {
+			sourceAssets.add(i, updatedAssets.get(j));
+		}
+
+		return sourceAssets;
 	}
 
 	private Asset addManufacturerName(Asset asset) {

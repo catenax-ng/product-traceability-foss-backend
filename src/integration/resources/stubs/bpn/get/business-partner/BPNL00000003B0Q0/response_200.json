@@ -1,31 +1,9 @@
 {
-	"bpn": "BPNL000000000001",
+	"bpn": "BPNL00000003B0Q0",
 	"identifiers": [
 		{
-			"uuid": "9dd4e5c3-0bcb-449d-a707-dc1574eae788",
-			"value": "CX.POOL:623D9AA56E73054B143D480D0",
-			"type": {
-				"technicalKey": "CX_POOL_ID",
-				"name": "",
-				"url": null
-			},
-			"issuingBody": null,
-			"status": null
-		},
-		{
-			"uuid": "167ef686-be99-4fe1-bae4-5d90a51b3f4a",
-			"value": "DE145002697",
-			"type": {
-				"technicalKey": "EU_VAT_ID_DE",
-				"name": "Umsatzsteuer-Identifikationsnummer",
-				"url": "https://meta.cdq.com/European_value_added_tax_identifier_(Germany)"
-			},
-			"issuingBody": null,
-			"status": null
-		},
-		{
-			"uuid": "2b5b6893-83b9-4c93-adf7-d5e4e6725b2f",
-			"value": "BPNL000000000001",
+			"uuid": "2d71843d-fc89-49e3-9fc3-4dd1da92cdc8",
+			"value": "BPNL00000003B0Q0",
 			"type": {
 				"technicalKey": "BPN",
 				"name": "Business Partner Number",
@@ -42,8 +20,30 @@
 			}
 		},
 		{
-			"uuid": "82ed7995-d332-4f0f-8dec-fb5de34a5705",
-			"value": "62457a3f3fd2374f924ef839",
+			"uuid": "24fe7f57-4979-4728-a45d-2af0672b7b4c",
+			"value": "CX.POOL:624ED7C1885D863690CF6E360",
+			"type": {
+				"technicalKey": "CX_POOL_ID",
+				"name": "",
+				"url": null
+			},
+			"issuingBody": null,
+			"status": null
+		},
+		{
+			"uuid": "8949759e-1330-49d0-8280-f8cce54e5731",
+			"value": "ATU19400404",
+			"type": {
+				"technicalKey": "EU_VAT_ID_AT",
+				"name": "Umsatzsteuer-Identifikationsnummer",
+				"url": "https://meta.cdq.com/European_value_added_tax_identifier_(Austria)"
+			},
+			"issuingBody": null,
+			"status": null
+		},
+		{
+			"uuid": "cc5532c9-611c-4a89-8cb5-50c3f6bc113b",
+			"value": "624eda97399ae27f57f27004",
 			"type": {
 				"technicalKey": "CDQID",
 				"name": "CDQ Identifier",
@@ -62,8 +62,8 @@
 	],
 	"names": [
 		{
-			"uuid": "760ea1f0-a4da-44a9-b30c-6c378eb3ba90",
-			"value": "Karl Wildermuth GmbH & Co. KG",
+			"uuid": "bbeed84a-7b69-461b-aedd-bf7421a01e22",
+			"value": "N-Tier A",
 			"shortName": null,
 			"type": {
 				"technicalKey": "LOCAL",
@@ -80,8 +80,8 @@
 	"status": null,
 	"addresses": [
 		{
-			"uuid": "c9a6c381-9af4-45db-868a-337d83486d19",
-			"bpn": "BPNA000000000001",
+			"uuid": "d3154963-5018-4d3b-a156-93a2e7cdcd35",
+			"bpn": "BPNA00000003B0Q0",
 			"version": {
 				"characterSet": {
 					"technicalKey": "LATIN",
@@ -95,14 +95,14 @@
 			"careOf": null,
 			"contexts": [],
 			"country": {
-				"technicalKey": "DE",
-				"name": "Germany"
+				"technicalKey": "AT",
+				"name": "Austria"
 			},
 			"administrativeAreas": [],
 			"postCodes": [
 				{
-					"uuid": "81d15e45-b061-4bd8-acb2-d649919c25aa",
-					"value": "74321",
+					"uuid": "231d2c8c-8f8e-46ca-a17e-587ab6bc28f0",
+					"value": "8055",
 					"type": {
 						"technicalKey": "OTHER",
 						"name": "Other type",
@@ -112,8 +112,8 @@
 			],
 			"localities": [
 				{
-					"uuid": "0c01f6e4-ef13-4417-8b05-5852f1b08311",
-					"value": "Bietigheim-Bissingen",
+					"uuid": "66e2d46a-1996-461a-a01c-8faa5dfe90e6",
+					"value": "Wien",
 					"shortName": null,
 					"type": {
 						"technicalKey": "OTHER",
@@ -128,11 +128,11 @@
 			],
 			"thoroughfares": [
 				{
-					"uuid": "a041e489-c29a-4516-a76c-ccfaf4f06984",
-					"value": "Carl-Benz-Straße",
+					"uuid": "159cb06b-c8db-44dc-a393-46ec2458e7d3",
+					"value": "Eyslergasse",
 					"name": null,
 					"shortName": null,
-					"number": "46",
+					"number": "17",
 					"direction": null,
 					"type": {
 						"technicalKey": "OTHER",
@@ -157,5 +157,5 @@
 	"bankAccounts": [],
 	"roles": [],
 	"relations": [],
-	"currentness": "2022-06-03T11:46:03.029158Z"
+	"currentness": "2022-06-03T11:47:21.121015Z"
 }

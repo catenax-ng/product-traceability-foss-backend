@@ -2,6 +2,24 @@
 	"bpn": "BPNL00000003AXS3",
 	"identifiers": [
 		{
+			"uuid": "bb6fa60a-4f17-4f1c-b3ef-41d41334d26d",
+			"value": "624d9a105c16531c2e944f63",
+			"type": {
+				"technicalKey": "CDQID",
+				"name": "CDQ Identifier",
+				"url": ""
+			},
+			"issuingBody": {
+				"technicalKey": "CDQ",
+				"name": "CDQ AG",
+				"url": ""
+			},
+			"status": {
+				"technicalKey": "CDQ_IMPORTED",
+				"name": "Imported from CDQ but not synchronized"
+			}
+		},
+		{
 			"uuid": "0e19bc18-5fe5-4b2b-a316-98d4203e85aa",
 			"value": "BPNL00000003AXS3",
 			"type": {
@@ -29,24 +47,6 @@
 			},
 			"issuingBody": null,
 			"status": null
-		},
-		{
-			"uuid": "bb6fa60a-4f17-4f1c-b3ef-41d41334d26d",
-			"value": "624d9a105c16531c2e944f63",
-			"type": {
-				"technicalKey": "CDQID",
-				"name": "CDQ Identifier",
-				"url": ""
-			},
-			"issuingBody": {
-				"technicalKey": "CDQ",
-				"name": "CDQ AG",
-				"url": ""
-			},
-			"status": {
-				"technicalKey": "CDQ_IMPORTED",
-				"name": "Imported from CDQ but not synchronized"
-			}
 		},
 		{
 			"uuid": "52ae8919-b3b7-473d-adbd-0ececfce18fd",
