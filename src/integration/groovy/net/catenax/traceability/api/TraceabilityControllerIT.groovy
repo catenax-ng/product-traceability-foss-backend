@@ -6,6 +6,7 @@ import org.springframework.http.MediaType
 
 import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.hasItems
+import static org.hamcrest.Matchers.not
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -38,7 +39,7 @@ class TraceabilityControllerIT extends IntegrationSpec {
 		expect:
 			mvc.perform(get("/api/assets").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath('$.content[*].manufacturerName').isNotEmpty())
+				.andExpect(jsonPath('$.content[*].manufacturerName', not(equalTo("--"))))
 
 		and:
 			verifyKeycloakApiCalledOnceForToken()
@@ -63,7 +64,7 @@ class TraceabilityControllerIT extends IntegrationSpec {
 			0..3.each {
 				mvc.perform(get("/api/assets").contentType(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk())
-					.andExpect(jsonPath('$.content[*].manufacturerName').isNotEmpty())
+					.andExpect(jsonPath('$.content[*].manufacturerName', not(equalTo("--"))))
 			}
 
 		then:
