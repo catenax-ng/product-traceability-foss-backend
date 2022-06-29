@@ -15,3 +15,10 @@ keycloak:
 feign:
   bpnApi:
     url: "https://catenax-bpdm-dev.demo.catena-x.net/"
+
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
