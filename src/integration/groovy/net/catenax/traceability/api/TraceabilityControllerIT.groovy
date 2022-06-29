@@ -4,8 +4,8 @@ import net.catenax.traceability.IntegrationSpec
 import org.hamcrest.Matchers
 import org.springframework.http.MediaType
 
+import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.hasItems
-import static org.hamcrest.Matchers.nullValue
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -88,7 +88,7 @@ class TraceabilityControllerIT extends IntegrationSpec {
 		expect:
 			mvc.perform(get("/api/assets").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath('$.content[*].manufacturerName', hasItems(nullValue())))
+				.andExpect(jsonPath('$.content[*].manufacturerName', hasItems(equalTo("--"))))
 	}
 
 	def "should return assets without manufacturer name when BPN API has no data"() {
@@ -108,7 +108,7 @@ class TraceabilityControllerIT extends IntegrationSpec {
 		expect:
 			mvc.perform(get("/api/assets").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath('$.content[*].manufacturerName', hasItems(nullValue())))
+				.andExpect(jsonPath('$.content[*].manufacturerName', hasItems(equalTo("--"))))
 	}
 
 	def "should not return assets when user is not authenticated"() {
