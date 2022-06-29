@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.javafaker.Faker;
 import net.catenax.traceability.assets.Asset.ChildDescriptions;
 
 import java.io.IOException;
@@ -12,22 +13,51 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class AssetsReader {
 
-	private AssetsReader() {
-	}
+	private static final String EMPTY_TEXT = "--";
 
-	public static Map<String, Asset> readAssets() {
+	private final Map<String, String> manufacturers = new HashMap<>();
+
+	private final Faker faker = new Faker();
+
+	public static Map<String, Asset> readAssets()  {
 		return new AssetsReader().readAndConvertAssets();
 	}
 
-	private Map<String, Asset> readAndConvertAssets() {
+	private AssetsReader() {
+		manufacturers.put("BPNL00000003AYRE", "BMW EDC");
+		manufacturers.put("BPNL00000003AVTH", "Mercedes-Benz EDC");
+		manufacturers.put("BPNL00000003AZQP", "SAP (VW EDC)");
+		manufacturers.put("BPNL00000003B2OM", "ZF");
+		manufacturers.put("BPNL00000003B3NX", "ZF");
+		manufacturers.put("BPNL00000003B5MJ", "Bosch");
+		manufacturers.put("BPNL00000003B0Q0", "BASF");
+		manufacturers.put("BPNL00000003AXS3", "Henkel");
+		manufacturers.put("PNL00000003B6LU", "LRP");
+		manufacturers.put("BPNL00000003AWSS", "IRS-Test");
+	}
+
+	private String manufacturerName(String manufacturerId) {
+		String name = manufacturers.get(manufacturerId);
+
+		if (name == null) {
+			name = faker.company().name();
+			manufacturers.put(manufacturerId, name);
+		}
+
+		return name;
+	}
+
+	private Map<String, Asset> readAndConvertAssets()  {
 		try {
 			InputStream file = AssetsReader.class.getResourceAsStream("/data/assets.json");
 
@@ -39,17 +69,18 @@ public class AssetsReader {
 				.collect(Collectors.toMap(RawAsset::catenaXId, Function.identity()));
 
 			return rawAssets.values().stream()
+				.filter(raw -> Objects.nonNull(raw.serialPartTypization))
 				.map(raw -> new Asset(
 					raw.catenaXId(),
 					raw.shortId(),
 					raw.nameAtManufacturer(),
 					raw.manufacturerPartId(),
 					raw.manufacturerId(),
-					null,
+					manufacturerName(raw.manufacturerId()),
 					raw.nameAtCustomer(),
 					raw.customerPartId(),
 					raw.manufacturingDate(),
-					raw.manufacturingCountry(),
+					faker.country().countryCode3().toUpperCase(),
 					Collections.emptySortedMap(),
 					raw.childParts().stream()
 						.map(child -> new ChildDescriptions(child.childCatenaXId(), rawAssets.get(child.childCatenaXId).shortId()))
@@ -66,13 +97,11 @@ public class AssetsReader {
 		String nameAtCustomer,
 		String manufacturerPartID,
 		String customerPartId
-	) {
-	}
+	) {}
 
 	public record ChildPart(
 		String childCatenaXId
-	) {
-	}
+	) {}
 
 	public record SerialPartTypization(
 		PartTypeInformation partTypeInformation,
@@ -82,18 +111,18 @@ public class AssetsReader {
 
 		public String manufacturerId() {
 			if (localIdentifiers == null) {
-				return null;
+				return EMPTY_TEXT;
 			}
 			return localIdentifiers.stream()
 				.filter(localId -> localId.type == LocalIdType.ManufacturerID)
 				.findFirst()
 				.map(LocalId::value)
-				.orElse(null);
+				.orElse(EMPTY_TEXT);
 		}
 
 		public String manufacturingCountry() {
 			if (manufacturingInformation == null) {
-				return null;
+				return EMPTY_TEXT;
 			}
 			return manufacturingInformation.country;
 		}
@@ -110,14 +139,12 @@ public class AssetsReader {
 
 	public record AssemblyPartRelationship(
 		List<ChildPart> childParts
-	) {
-	}
+	) {}
 
 	public record ManufacturingInformation(
 		String country,
 		@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss", timezone = "CET") Date date
-	) {
-	}
+	) {}
 
 	public enum LocalIdType {
 		ManufacturerID,
@@ -129,19 +156,16 @@ public class AssetsReader {
 	public record LocalId(
 		@JsonProperty("key") LocalIdType type,
 		String value
-	) {
-	}
+	) {}
 
 	public record AASData(
 		String identification,
 		String idShort
-	) {
-	}
+	) {}
 
 	public record RawAssets(
 		@JsonProperty("https://catenax.io/schema/TestDataContainer/1.0.0") List<RawAsset> data
-	) {
-	}
+	) {}
 
 	public record RawAsset(
 		String catenaXId,
@@ -162,55 +186,51 @@ public class AssetsReader {
 
 		public String nameAtManufacturer() {
 			if (serialPartTypization == null) {
-				return null;
+				return EMPTY_TEXT;
 			}
 			return serialPartTypization.stream().findFirst()
 				.map(SerialPartTypization::partTypeInformation)
 				.map(PartTypeInformation::nameAtManufacturer)
-				.orElse(null);
+				.orElse(EMPTY_TEXT);
 		}
 
 		public String manufacturerPartId() {
 			if (serialPartTypization == null) {
-				return null;
+				return EMPTY_TEXT;
 			}
 			return serialPartTypization.stream().findFirst()
 				.map(SerialPartTypization::partTypeInformation)
 				.map(PartTypeInformation::manufacturerPartID)
-				.orElse(null);
+				.orElse(EMPTY_TEXT);
 		}
 
 		public String manufacturerId() {
 			if (serialPartTypization == null) {
-				return null;
+				return EMPTY_TEXT;
 			}
 			return serialPartTypization.stream().findFirst()
 				.map(SerialPartTypization::manufacturerId)
-				.orElse(null);
-		}
-
-		public String manufacturerName() {
-			return "TO BE IMPLEMENTED";
+				.orElse(EMPTY_TEXT);
 		}
 
 		public String nameAtCustomer() {
 			if (serialPartTypization == null) {
-				return null;
+				return EMPTY_TEXT;
 			}
 			return serialPartTypization.stream().findFirst()
 				.map(SerialPartTypization::partTypeInformation)
 				.map(PartTypeInformation::nameAtCustomer)
-				.orElse(null);
+				.orElse(EMPTY_TEXT);
 		}
 
 		public String customerPartId() {
 			if (serialPartTypization == null) {
-				return null;
+				return EMPTY_TEXT;
 			}
 			return serialPartTypization.stream().findFirst()
 				.map(SerialPartTypization::partTypeInformation)
 				.map(PartTypeInformation::customerPartId)
-				.orElse(null);
+				.orElse(EMPTY_TEXT);
 		}
 
 		public Instant manufacturingDate() {
@@ -224,20 +244,20 @@ public class AssetsReader {
 
 		public String manufacturingCountry() {
 			if (serialPartTypization == null) {
-				return null;
+				return EMPTY_TEXT;
 			}
 			return serialPartTypization.stream().findFirst()
 				.map(SerialPartTypization::manufacturingCountry)
-				.orElse(null);
+				.orElse(EMPTY_TEXT);
 		}
 
 		public String shortId() {
 			if (aasData == null) {
-				return null;
+				return EMPTY_TEXT;
 			}
 			return aasData.stream().findFirst()
 				.map(AASData::idShort)
-				.orElse(null);
+				.orElse(EMPTY_TEXT);
 		}
 	}
 
