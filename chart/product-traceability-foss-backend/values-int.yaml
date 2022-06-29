@@ -27,4 +27,3 @@ keycloak:
   oauth2:
     clientId: <path:traceability-foss/data/int/keycloak/oauth2#clientId>
     clientSecret: <path:traceability-foss/data/int/keycloak/oauth2#clientSecret>
-    clientTokenUri: <path:traceability-foss/data/int/keycloak/oauth2#tokenUri>
