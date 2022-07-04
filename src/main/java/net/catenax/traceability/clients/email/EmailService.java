@@ -20,16 +20,22 @@ public class EmailService {
 
 	private final SpringTemplateEngine templateEngine;
 
-	@Value("classpath:/mail-templates/divider_lines.png")
-	private Resource dividerLineImage;
+	private final Resource dividerLineImage;
 
-	@Value("classpath:/mail-templates/question_mark_icon.png")
-	private Resource questionMarkImage;
+	private final Resource questionMarkImage;
 
-    public EmailService(JavaMailSender mailSender, SpringTemplateEngine templateEngine, @Value("${spring.mail.username}") String from) {
+    public EmailService(
+		JavaMailSender mailSender,
+		SpringTemplateEngine templateEngine,
+		@Value("${spring.mail.username}") String from,
+		@Value("classpath:/mail-templates/divider_lines.png") Resource dividerLineImage,
+		@Value("classpath:/mail-templates/question_mark_icon.png") Resource questionMarkImage
+	) {
         this.mailSender = mailSender;
         this.from = from;
 		this.templateEngine = templateEngine;
+		this.dividerLineImage = dividerLineImage;
+		this.questionMarkImage = questionMarkImage;
 	}
 
     public void sendMail(String to, String subject, String content) throws MessagingException {
