@@ -1,6 +1,7 @@
 package net.catenax.traceability.clients.email;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,12 @@ public class EmailService {
     private final String from;
 
 	private final SpringTemplateEngine templateEngine;
+
+	@Value("classpath:/mail-templates/divider_lines.png")
+	private Resource dividerLineImage;
+
+	@Value("classpath:/mail-templates/question_mark_icon.png")
+	private Resource questionMarkImage;
 
     public EmailService(JavaMailSender mailSender, SpringTemplateEngine templateEngine, @Value("${spring.mail.username}") String from) {
         this.mailSender = mailSender;
@@ -39,6 +46,9 @@ public class EmailService {
         helper.setTo(to);
         helper.setSubject(subject);
 		helper.setText(textBody, htmlBody);
+
+		helper.addInline("divider_lines.png", dividerLineImage);
+		helper.addInline("question_mark_icon.png", questionMarkImage);
 
         mailSender.send(message);
     }
