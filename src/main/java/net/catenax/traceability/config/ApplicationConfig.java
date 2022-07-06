@@ -4,12 +4,23 @@ import net.catenax.traceability.docs.SwaggerPageable;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import org.thymeleaf.templateresolver.ITemplateResolver;
 import springfox.documentation.builders.OAuth2SchemeBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.oas.annotations.EnableOpenApi;
@@ -30,6 +41,7 @@ import java.util.List;
 @ConfigurationPropertiesScan
 @EnableOpenApi
 @EnableWebMvc
+@EnableConfigurationProperties
 public class ApplicationConfig {
 
 	public static final AuthorizationScope[] DEFAULT_SCOPES = {
@@ -45,6 +57,9 @@ public class ApplicationConfig {
 	@Value("${keycloak.auth-server-url:}")
 	private String authServerUrl;
 
+	@Value("${spring.mail.templates.path}")
+	private String mailTemplatesPath;
+
 	@Bean
 	public InternalResourceViewResolver defaultViewResolver() {
 		return new InternalResourceViewResolver();
@@ -53,6 +68,32 @@ public class ApplicationConfig {
 	@Bean
 	public KeycloakSpringBootConfigResolver keycloakConfigResolver() {
 		return new KeycloakSpringBootConfigResolver();
+	}
+
+	@Bean
+	public SpringTemplateEngine thymeleafTemplateEngine() {
+		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+		templateEngine.addTemplateResolver(htmlTemplateResolver());
+		templateEngine.addTemplateResolver(textTemplateResolver());
+		return templateEngine;
+	}
+
+	public ITemplateResolver htmlTemplateResolver() {
+		ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+		templateResolver.setPrefix(mailTemplatesPath + "/");
+		templateResolver.setSuffix(".html");
+		templateResolver.setTemplateMode(TemplateMode.HTML);
+		templateResolver.setCharacterEncoding("UTF-8");
+		return templateResolver;
+	}
+
+	public ITemplateResolver textTemplateResolver() {
+		ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+		templateResolver.setPrefix(mailTemplatesPath + "/");
+		templateResolver.setSuffix(".txt");
+		templateResolver.setTemplateMode(TemplateMode.TEXT);
+		templateResolver.setCharacterEncoding("UTF-8");
+		return templateResolver;
 	}
 
 	@Bean
@@ -104,4 +145,18 @@ public class ApplicationConfig {
 			.build();
 	}
 
+	@Bean
+	public OAuth2AuthorizedClientManager auth2AuthorizedClientManager(ClientRegistrationRepository clientRegistrationRepository,
+																	  OAuth2AuthorizedClientRepository oAuth2AuthorizedClientRepository) {
+		OAuth2AuthorizedClientProvider oAuth2AuthorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
+			.clientCredentials()
+			.build();
+
+		DefaultOAuth2AuthorizedClientManager authorizedClientManager =
+			new DefaultOAuth2AuthorizedClientManager(clientRegistrationRepository, oAuth2AuthorizedClientRepository);
+
+		authorizedClientManager.setAuthorizedClientProvider(oAuth2AuthorizedClientProvider);
+
+		return authorizedClientManager;
+	}
 }

@@ -1,11 +1,8 @@
 package net.catenax.traceability.clients.email
 
-import com.icegreen.greenmail.spring.GreenMailBean
 import net.catenax.traceability.IntegrationSpec
 import net.catenax.traceability.MailboxSupport
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.context.annotation.Bean
 
 class EmailServiceIT extends IntegrationSpec implements MailboxSupport {
 
@@ -25,18 +22,11 @@ class EmailServiceIT extends IntegrationSpec implements MailboxSupport {
             assertMailbox()
                 .hasTotalSize(1)
                 .hasRecipient(recipient)
-                .hasMessage(message)
                 .hasSubject(subject)
-    }
-
-    @TestConfiguration
-    static class EmailServiceConfig {
-
-        @Bean
-        GreenMailBean greenMailBean() {
-            GreenMailBean mailBean = new GreenMailBean()
-            mailBean.setUsers(["notifications:password@catena-x.net"])
-            mailBean
-        }
+				.hasMessage()
+					.withContentType("multipart/alternative")
+					.withContentType("image/png")
+					.withContent("text/plain", message)
+					.withContent("text/html", message)
     }
 }
