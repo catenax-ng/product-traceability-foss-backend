@@ -1,0 +1,120 @@
+---
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+serviceAccount:
+  ##
+  ## Specifies whether a service account should be created per release
+  ##
+  create: false
+  ##
+  ## Annotations to add to the service account
+  ##
+  annotations: {}
+  ##
+  ## The name of the service account to use.
+  ## If not set and create is true, a name is generated using the fullname template
+  ##
+  name: ""
+
+##
+## Whether to enable kubernetes liveness-probes
+##
+livenessProbe:
+  enabled: false
+
+##
+## Whether to enable kubernetes readiness-probes
+##
+readinessProbe:
+  enabled: false
+
+##
+## Whether to enable kubernetes startup-probes
+##
+startupProbe:
+  enabled: false
+
+##
+## EDC endpoints exposed by the data-plane
+##
+edc:
+  endpoints:
+    # Default api for client communications
+    default:
+      port: "9191"
+      path: /api
+      ingress: true
+    # Callback endpoint for EDC
+    callback:
+      port: "9192"
+      path: /callback
+      ingress: false
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+#   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+## EDC logging.properties configuring the java.util.logging subsystem
+##
+logging:
+  properties: |-
+    .level=INFO
+    org.eclipse.dataspaceconnector.level=ALL
+    handlers=java.util.logging.ConsoleHandler
+    java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter
+    java.util.logging.ConsoleHandler.level=ALL
+    java.util.logging.SimpleFormatter.format=[%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS] [%4$-7s] %5$s%6$s%n
+
+##
+## EDC & API-Wrapper configuration.properties
+##
+## For the EDC configuration consult the eclipse-dataspaceconnector documentation for further details: https://github.com/eclipse-dataspaceconnector/DataSpaceConnector
+##
+configuration:
+  properties: |-
+    edc.api.control.auth.apikey.key=X-Api-Key
+    edc.api.control.auth.apikey.value=<path:traceability-foss/data/dev/edc/api-wrapper#edc.api.control.auth.apikey.value>
+    # edc.core.retry.backoff.max=
+    # edc.core.retry.backoff.min=
+    # edc.core.retry.retries.max=
+    # edc.core.system.health.check.liveness-period=
+    # edc.core.system.health.check.readiness-period=
+    # edc.core.system.health.check.startup-period=
+    # edc.core.system.health.check.threadpool-size=
+    # edc.fs.config=
+    edc.hostname=edc-controlplane
+    # edc.web.rest.cors.enabled=
+    # edc.web.rest.cors.headers=
+    # edc.web.rest.cors.methods=
+    # edc.web.rest.cors.origins=
+    # wrapper.auth.basic.user-x=password-x
+    wrapper.consumer.edc.control.url=http://edc-controlplane:9999/api/controlplane/control
+    wrapper.consumer.edc.datamanagement.url=http://edc-controlplane:8181/data
+    wrapper.consumer.edc.apikey.name=X-Api-Key
+    wrapper.consumer.edc.apikey.value=<path:traceability-foss/data/dev/edc/api-wrapper#wrapper.consumer.edc.apikey.value>
+    wrapper.callback.timeout=30
+    wrapper.auth.basic.tracefoss=<path:traceability-foss/data/dev/edc/api-wrapper#wrapper.auth.basic.tracefoss>
