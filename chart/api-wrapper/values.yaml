@@ -9,7 +9,7 @@ image:
   ##
   ## Which api-wrapper container image to use.
   ##
-  repository: ghcr.io/catenax-ng/catenax-at-home/api-wrapper
+  repository: ghcr.io/catenax-ng/catenax-at-home/consumer-api-wrapper
   pullPolicy: IfNotPresent
   ##
   ## Overrides the image tag whose default is the chart appVersion.
