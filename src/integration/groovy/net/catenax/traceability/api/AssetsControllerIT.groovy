@@ -119,7 +119,7 @@ class AssetsControllerIT extends IntegrationSpec {
 			authenticatedUser()
 
 		expect:
-			mvc.perform(get("/api/assets/countries").contentType(MediaType.APPLICATION_JSON))
+			mvc.perform(get("/assets/countries").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 	}
 
@@ -128,7 +128,7 @@ class AssetsControllerIT extends IntegrationSpec {
 			unauthenticatedUser()
 
 		expect:
-			mvc.perform(get("/api/assets/countries").contentType(MediaType.APPLICATION_JSON))
+			mvc.perform(get("/assets/countries").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())
 	}
 
