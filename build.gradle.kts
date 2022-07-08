@@ -7,6 +7,7 @@ plugins {
 	id("com.google.cloud.tools.jib") version "3.2.1"
 	id("com.coditory.integration-test") version "1.4.0"
 	id("org.openapi.generator") version "6.0.0"
+	id("org.sonarqube") version "3.4.0.2513"
 }
 
 group = "net.catenax.traceability"
@@ -31,6 +32,14 @@ configurations {
 repositories {
 	maven { url = uri("https://repo.spring.io/release") }
 	mavenCentral()
+}
+
+sonarqube {
+	properties {
+		property("sonar.organization", "catenax-ng")
+		property("sonar.host.url", "https://sonarcloud.io")
+		property("sonar.projectKey", "catenax-ng_product-traceability-foss-backend")
+	}
 }
 
 val commonsCodecVersion = "1.15"
