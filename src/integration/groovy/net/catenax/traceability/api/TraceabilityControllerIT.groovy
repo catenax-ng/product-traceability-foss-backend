@@ -118,7 +118,7 @@ class TraceabilityControllerIT extends IntegrationSpec {
 			authenticatedUser()
 
 		expect:
-			mvc.perform(get("/api/assets/map").contentType(MediaType.APPLICATION_JSON))
+			mvc.perform(get("/api/assets/countries").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 	}
 
@@ -127,7 +127,7 @@ class TraceabilityControllerIT extends IntegrationSpec {
 			unauthenticatedUser()
 
 		expect:
-			mvc.perform(get("/api/assets/map").contentType(MediaType.APPLICATION_JSON))
+			mvc.perform(get("/api/assets/countries").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized())
 	}
 

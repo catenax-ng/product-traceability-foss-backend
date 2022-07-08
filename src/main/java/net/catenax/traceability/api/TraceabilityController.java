@@ -33,7 +33,7 @@ public class TraceabilityController {
 		return assetRepository.getAssets(pageable);
 	}
 
-	@GetMapping("/assets/map")
+	@GetMapping("/assets/countries")
 	public Map<String, Long> assetsCountryMap() {
 		return assetService.getAssetsCountryMap();
 	}
