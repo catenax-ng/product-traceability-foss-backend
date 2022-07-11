@@ -142,14 +142,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         if: steps.jacoco-cache.outputs.cache-hit != 'true'
-        run: |
-          - echo "Cache miss for JaCoCo reports"
-          - ./gradlew build -x integrationTest sonarqube --info
+        run: >
+          echo "Cache miss for JaCoCo reports" \
+          ./gradlew build -x integrationTest sonarqube --info
 
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         if: steps.jacoco-cache.outputs.cache-hit == 'true'
-        run: |
-          - ./gradlew build -x test -x integrationTest sonarqube --info
+        run: ./gradlew build -x test -x integrationTest sonarqube --info
