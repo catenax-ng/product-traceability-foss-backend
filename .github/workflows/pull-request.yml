@@ -42,12 +42,6 @@ jobs:
           distribution: 'adopt'
           cache: 'gradle'
 
-      - name: Cache JacoCo tests report
-        id: jacoco-cache
-        with:
-          path: "./build/jacoco"
-          key: ${{ runner.os }}-jacoco-cache
-
       - name: Run unit tests
         run: ./gradlew test
 
@@ -130,25 +124,8 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: Use cached JacoCo tests report
-        id: jacoco-cache
-        uses: actions/cache@v2
-        with:
-          path: "./build/jacoco"
-          key: ${{ runner.os }}-jacoco-cache
-
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        if: steps.jacoco-cache.outputs.cache-hit != 'true'
-        run: >
-          echo "Cache miss for JaCoCo reports" \
-          ./gradlew build -x integrationTest sonarqube --info
-
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        if: steps.jacoco-cache.outputs.cache-hit == 'true'
-        run: ./gradlew build -x test -x integrationTest sonarqube --info
+        run: ./gradlew build -x integrationTest sonarqube --info
