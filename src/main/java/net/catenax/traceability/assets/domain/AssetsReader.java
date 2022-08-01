@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.catenax.traceability.assets.Asset.ChildDescriptions;
+import net.catenax.traceability.assets.domain.Asset.ChildDescriptions;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
