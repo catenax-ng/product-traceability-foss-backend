@@ -4,6 +4,8 @@
 
 replicaCount: 1
 
+fullnameOverride: "trace-api-wrapper"
+
 serviceAccount:
   ##
   ## Specifies whether a service account should be created per release
@@ -52,6 +54,18 @@ edc:
       port: "9192"
       path: /callback
       ingress: false
+
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  tls: true
+  className: "nginx"
+  hostname: trace-api-wrapper.dev.demo.catena-x.net
+  certManager:
+    clusterIssuer: letsencrypt-prod
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
