@@ -120,14 +120,14 @@ configuration:
     # edc.core.system.health.check.startup-period=
     # edc.core.system.health.check.threadpool-size=
     # edc.fs.config=
-    edc.hostname=edc-controlplane
+    edc.hostname=trace-consumer-controlplane
     # edc.web.rest.cors.enabled=
     # edc.web.rest.cors.headers=
     # edc.web.rest.cors.methods=
     # edc.web.rest.cors.origins=
     # wrapper.auth.basic.user-x=password-x
-    wrapper.consumer.edc.control.url=http://edc-controlplane:9999/api/controlplane/control
-    wrapper.consumer.edc.datamanagement.url=http://edc-controlplane:8181/data
+    wrapper.consumer.edc.control.url=http://trace-consumer-controlplane:9999/api/controlplane/control
+    wrapper.consumer.edc.datamanagement.url=http://trace-consumer-controlplane:8181/data
     wrapper.consumer.edc.apikey.name=X-Api-Key
     wrapper.consumer.edc.apikey.value=<path:traceability-foss/data/dev/edc/api-wrapper#wrapper.consumer.edc.apikey.value>
     wrapper.callback.timeout=30
