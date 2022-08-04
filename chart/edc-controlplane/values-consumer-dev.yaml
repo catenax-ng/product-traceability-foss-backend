@@ -235,7 +235,7 @@ configuration:
     edc.ids.security.profile=base
     edc.ids.title="Eclipse Dataspace Connector"
     edc.receiver.http.endpoint=http://trace-api-wrapper:9192/callback/endpoint-data-reference
-    edc.transfer.proxy.endpoint=https://trace-consumer-controlplane.dev.demo.catena-x.net/api/public
+    edc.transfer.proxy.endpoint=https://trace-consumer-dataplane.dev.demo.catena-x.net/api/public
     edc.transfer.proxy.token.verifier.publickey.alias=token-signer-cert-dev
     edc.transfer.proxy.token.signer.privatekey.alias=token-signer-cert-key-dev
     edc.vault.hashicorp.url=https://vault.demo.catena-x.net
