@@ -55,7 +55,7 @@ resources:
 configuration:
   properties: |-
     edc.api.control.auth.apikey.key=X-Api-Key
-    edc.api.control.auth.apikey.value=<path:traceability-foss/data/dev/edc/api-wrapper#edc.api.control.auth.apikey.value>
+    edc.api.control.auth.apikey.value=<path:traceability-foss/data/dev/edc/controlplane#edc.api.control.auth.apikey.value>
     # edc.core.retry.backoff.max=
     # edc.core.retry.backoff.min=
     # edc.core.retry.retries.max=
@@ -73,6 +73,6 @@ configuration:
     wrapper.consumer.edc.control.url=http://trace-consumer-controlplane:9999/api/controlplane/control
     wrapper.consumer.edc.datamanagement.url=http://trace-consumer-controlplane:8181/data
     wrapper.consumer.edc.apikey.name=X-Api-Key
-    wrapper.consumer.edc.apikey.value=<path:traceability-foss/data/dev/edc/api-wrapper#wrapper.consumer.edc.apikey.value>
+    wrapper.consumer.edc.apikey.value=<path:traceability-foss/data/dev/edc/controlplane#edc.api.control.auth.apikey.value>
     wrapper.callback.timeout=30
     wrapper.auth.basic.tracefoss=<path:traceability-foss/data/dev/edc/api-wrapper#wrapper.auth.basic.tracefoss>
