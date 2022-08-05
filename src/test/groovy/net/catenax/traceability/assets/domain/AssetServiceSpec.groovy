@@ -2,7 +2,7 @@ package net.catenax.traceability.assets.domain
 
 import net.catenax.traceability.UnitSpec
 
-class AssetServiceSpec extends UnitSpec {
+class inAssetServiceSpec extends UnitSpec {
 
 	AssetRepository repository = Mock()
 
