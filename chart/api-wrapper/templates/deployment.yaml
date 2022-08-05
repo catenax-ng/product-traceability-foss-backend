@@ -12,6 +12,7 @@ spec:
   selector:
     matchLabels:
       {{- include "api-wrapper.selectorLabels" . | nindent 6 }}
+  revisionHistoryLimit: 2
   template:
     metadata:
       annotations:

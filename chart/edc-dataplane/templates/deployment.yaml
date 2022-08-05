@@ -13,6 +13,7 @@ spec:
   selector:
     matchLabels:
       {{- include "edc-dataplane.selectorLabels" . | nindent 6 }}
+  revisionHistoryLimit: 2
   template:
     metadata:
       annotations:
