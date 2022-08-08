@@ -52,6 +52,8 @@ public class InjectedKeycloakAuthenticationHandler implements HandlerMethodArgum
 
 			AccessToken.Access access = resourceAccess.get(resourceRealm);
 
+			String userId = simpleKeycloakAccount.getPrincipal().getName();
+
 			if (access != null) {
 				Set<KeycloakRole> keycloakRoles = access.getRoles().stream()
 					.map(KeycloakRole::parse)
@@ -59,11 +61,11 @@ public class InjectedKeycloakAuthenticationHandler implements HandlerMethodArgum
 					.map(Optional::get)
 					.collect(Collectors.toSet());
 
-				return new KeycloakAuthentication(keycloakRoles);
+				return new KeycloakAuthentication(userId, keycloakRoles);
 			} else {
 				logger.warn("Keycloak token didn't contain {} resource realm roles", resourceRealm);
 
-				return KeycloakAuthentication.NO_ROLES;
+				return KeycloakAuthentication.noRoles(userId);
 			}
 		}
 
