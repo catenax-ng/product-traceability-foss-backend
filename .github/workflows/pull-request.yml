@@ -2,10 +2,10 @@ name: "Pull request"
 
 on:
   pull_request:
-    branches: [ main ]
     paths-ignore:
       - '**.md'
       - 'docs/**'
+      - '/chart/**'
 
 env:
   REGISTRY: ghcr.io
