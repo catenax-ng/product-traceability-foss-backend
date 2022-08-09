@@ -1,0 +1,77 @@
+/*
+ * Copyright (c) 2021,2022 Contributors to the CatenaX (ng) GitHub Organisation
+ *
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License, Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+package net.catenax.traceability.assets.infrastructure.adapters.registry;
+
+import net.catenax.traceability.assets.infrastructure.adapters.openapi.aas.AssetAdministrationShellDescriptorCollectionBase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+@Component
+public class RegistryAdapter {
+	private static final Logger logger = LoggerFactory.getLogger(RegistryAdapter.class);
+
+	private final RegistryApiClient registryApiClient;
+	private final ShellDescriptorStore shellDescriptorStore;
+
+	public RegistryAdapter(RegistryApiClient registryApiClient, ShellDescriptorStore shellDescriptorStore) {
+		this.registryApiClient = registryApiClient;
+		this.shellDescriptorStore = shellDescriptorStore;
+	}
+
+	public void store(String bpn) {
+		List<ShellDescriptor> descriptors = findAssetsByBpn(bpn);
+		shellDescriptorStore.store(descriptors);
+	}
+
+	public List<ShellDescriptor> findAssetsByBpn(String bpn) {
+		logger.info("Fetching all shell descriptor IDs for BPN {}.", bpn);
+
+		Map<String, Object> filter = new HashMap<>();
+		filter.put("ManufacturerID", bpn);
+
+		List<String> assetIds = registryApiClient.getAllAssetAdministrationShellIdsByAssetLink(filter);
+
+		logger.info("Received {} shell descriptor IDs.", assetIds.size());
+
+		logger.info("Fetching shell descriptors.");
+		AssetAdministrationShellDescriptorCollectionBase descriptors = registryApiClient.postFetchAssetAdministrationShellDescriptor(assetIds);
+
+		logger.info("Received {} shell descriptors for {} IDs.", descriptors.getItems().size(), assetIds.size());
+
+		List<ShellDescriptor> shellDescriptors = descriptors.getItems().stream().map(i -> {
+			if (i.getGlobalAssetId() != null) {
+				String globalAssetId = i.getGlobalAssetId().getValue().get(0);
+				return new ShellDescriptor(i.getIdentification(), globalAssetId);
+			}
+			return null;
+		}).filter(Objects::nonNull).collect(Collectors.toList());
+
+		logger.info("Found {} shell descriptors containing a global asset ID.", shellDescriptors.size());
+
+		return shellDescriptors;
+	}
+}

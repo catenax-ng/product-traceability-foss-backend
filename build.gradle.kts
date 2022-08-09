@@ -144,6 +144,20 @@ tasks.create<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("gener
 	configOptions.put("sourceFolder", "src/main/java")
 }
 
+tasks.create<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("generateAasRegistryApi") {
+	inputSpec.set("${project.rootDir}/openapi/aas-registry-openapi.yaml")
+	outputDir.set("${buildDir}/openapi")
+	validateSpec.set(false)
+
+	groupId.set("${project.group}")
+
+	library.set("feign")
+	generatorName.set("java")
+	apiPackage.set("net.catenax.traceability.assets.infrastructure.adapters.openapi.aas")
+	modelPackage.set("net.catenax.traceability.assets.infrastructure.adapters.openapi.aas")
+	configOptions.put("sourceFolder", "src/main/java")
+}
+
 tasks.withType<org.openapitools.generator.gradle.plugin.tasks.GenerateTask> {
 	doLast {
 		delete(fileTree("$buildDir/generated/sources/openapi"))
@@ -155,7 +169,7 @@ tasks.withType<org.openapitools.generator.gradle.plugin.tasks.GenerateTask> {
 }
 
 tasks.withType<JavaCompile> {
-	dependsOn("generateBpnApi")
+	dependsOn("generateBpnApi", "generateAasRegistryApi")
 }
 
 tasks.jacocoTestReport {
