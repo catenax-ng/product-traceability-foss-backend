@@ -3,7 +3,6 @@ package net.catenax.traceability.assets.infrastructure.adapters.openapi.irs;
 import net.catenax.traceability.assets.domain.Asset;
 import net.catenax.traceability.assets.domain.AssetRepository;
 import net.catenax.traceability.assets.domain.AssetsConverter;
-import net.catenax.traceability.assets.infrastructure.adapters.openapi.bpn.BpnService;
 import net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.IRSApiClient.JobResponse;
 import net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.IRSApiClient.StartJobRequest;
 import net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.IRSApiClient.StartJobResponse;
@@ -17,7 +16,7 @@ import java.util.List;
 @Service
 public class IrsService {
 
-	private static final Logger logger = LoggerFactory.getLogger(BpnService.class);
+	private static final Logger logger = LoggerFactory.getLogger(IrsService.class);
 
 	private IRSApiClient irsClient;
 
@@ -43,6 +42,8 @@ public class IrsService {
 			logger.warn("Submodels not found in job details. Using defaults...");
 			assets = assetsConverter.readAndConvertAssets();
 		}
+
+		logger.info("Assets synchronization for globalAssetId: {} COMPLETED. Found {} assets.", globalAssetId, assets.size());
 
 		assetRepository.saveAll(assets);
 	}
