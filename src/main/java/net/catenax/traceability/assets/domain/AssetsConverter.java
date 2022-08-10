@@ -120,7 +120,7 @@ public class AssetsConverter {
 				return EMPTY_TEXT;
 			}
 			return localIdentifiers.stream()
-				.filter(localId -> localId.type == LocalIdType.ManufacturerID)
+				.filter(localId -> localId.type == LocalIdType.MANUFACTURER_ID)
 				.findFirst()
 				.map(LocalId::value)
 				.orElse(EMPTY_TEXT);
@@ -154,10 +154,13 @@ public class AssetsConverter {
 	) {}
 
 	public enum LocalIdType {
-		ManufacturerID,
-		ManufacturerPartID,
-		PartInstanceID,
-		@JsonEnumDefaultValue Unknown
+		@JsonProperty("ManufacturerID")
+		MANUFACTURER_ID,
+		@JsonProperty("ManufacturerPartID")
+		MANUFACTURER_PART_ID,
+		@JsonProperty("PartInstanceID")
+		PART_INSTANCE_ID,
+		@JsonEnumDefaultValue UNKNOWN
 	}
 
 	public record LocalId(
