@@ -3,3 +3,4 @@
 /build/
 /out/
 .env
+application-local.yml
