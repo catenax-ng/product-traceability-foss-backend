@@ -17,7 +17,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package net.catenax.traceability.assets.infrastructure.adapters.registry;
+package net.catenax.traceability.assets.infrastructure.db;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;

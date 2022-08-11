@@ -1,6 +1,6 @@
 package net.catenax.traceability.assets.infrastructure.adapters.rest.assets;
 
-import net.catenax.traceability.assets.infrastructure.adapters.registry.RegistryService;
+import net.catenax.traceability.assets.domain.RegistryService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

@@ -19,6 +19,7 @@
 
 package net.catenax.traceability.assets.infrastructure.adapters.registry;
 
+import net.catenax.traceability.assets.domain.ShellDescriptor;
 import net.catenax.traceability.assets.infrastructure.adapters.openapi.aas.AssetAdministrationShellDescriptorCollectionBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,16 +36,9 @@ public class RegistryAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(RegistryAdapter.class);
 
 	private final RegistryApiClient registryApiClient;
-	private final ShellDescriptorStore shellDescriptorStore;
 
-	public RegistryAdapter(RegistryApiClient registryApiClient, ShellDescriptorStore shellDescriptorStore) {
+	public RegistryAdapter(RegistryApiClient registryApiClient) {
 		this.registryApiClient = registryApiClient;
-		this.shellDescriptorStore = shellDescriptorStore;
-	}
-
-	public void store(String bpn) {
-		List<ShellDescriptor> descriptors = findAssetsByBpn(bpn);
-		shellDescriptorStore.store(descriptors);
 	}
 
 	public List<ShellDescriptor> findAssetsByBpn(String bpn) {

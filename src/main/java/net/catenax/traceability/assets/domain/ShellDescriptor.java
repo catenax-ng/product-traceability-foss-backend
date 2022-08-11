@@ -17,9 +17,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package net.catenax.traceability.assets.infrastructure.adapters.registry;
+package net.catenax.traceability.assets.domain;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface ShellDescriptorRepository extends JpaRepository<ShellDescriptorEntity, Long> {
-}
+public record ShellDescriptor(String shellDescriptorId, String globalAssetId) {}

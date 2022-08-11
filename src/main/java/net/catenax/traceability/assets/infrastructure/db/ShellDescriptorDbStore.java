@@ -17,8 +17,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package net.catenax.traceability.assets.infrastructure.adapters.registry;
+package net.catenax.traceability.assets.infrastructure.db;
 
+import net.catenax.traceability.assets.domain.ShellDescriptor;
+import net.catenax.traceability.assets.domain.ShellDescriptorStore;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;

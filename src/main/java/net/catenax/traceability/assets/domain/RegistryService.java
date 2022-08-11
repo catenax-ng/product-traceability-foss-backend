@@ -17,8 +17,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package net.catenax.traceability.assets.infrastructure.adapters.registry;
+package net.catenax.traceability.assets.domain;
 
+import net.catenax.traceability.assets.infrastructure.adapters.registry.RegistryAdapter;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

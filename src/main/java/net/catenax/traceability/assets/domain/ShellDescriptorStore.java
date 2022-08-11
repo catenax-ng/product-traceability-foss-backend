@@ -17,6 +17,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package net.catenax.traceability.assets.infrastructure.adapters.registry;
+package net.catenax.traceability.assets.domain;
 
-public record ShellDescriptor(String shellDescriptorId, String globalAssetId) {}
+import net.catenax.traceability.assets.domain.ShellDescriptor;
+
+import java.util.List;
+
+public interface ShellDescriptorStore {
+	void store(List<ShellDescriptor> globalAssetIds);
+}
