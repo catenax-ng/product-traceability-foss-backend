@@ -110,6 +110,8 @@ dependencies {
 
 	integrationImplementation("org.springframework.boot:spring-boot-starter-test")
 	integrationImplementation("org.springframework.security:spring-security-test")
+	integrationImplementation("io.zonky.test:embedded-database-spring-test:2.1.1")
+	integrationImplementation("io.zonky.test:embedded-postgres:2.0.0")
 
     integrationImplementation("com.icegreen:greenmail-spring:$greenmailVersion")
 	integrationImplementation("com.xebialabs.restito:restito:$restitoVersion")
