@@ -29,40 +29,6 @@ public class BpnService implements BpnRepository {
 
 	@Override
 	public Optional<String> findManufacturerName(String manufacturerId) {
-		Optional<String> companyNameResult = bpnCache.getCompanyName(manufacturerId);
-
-		if (companyNameResult.isPresent()) {
-			return companyNameResult;
-		}
-
-		final BusinessPartnerResponse businessPartner;
-
-		try {
-			businessPartner = bpnApiClient.getBusinessPartner(manufacturerId, BPN_TYPE);
-		} catch (FeignException e) {
-			logger.error("Exception during calling bpn business partner api", e);
-
-			return Optional.empty();
-		}
-
-		List<NameResponse> names = businessPartner.getNames();
-
-		if (names.isEmpty()) {
-			logger.warn("Names not found for {} BPN", manufacturerId);
-
-			return Optional.empty();
-		}
-
-		Optional<String> firstNotEmptyManufacturerName = names.stream()
-			.filter(it -> StringUtils.isNotBlank(it.getValue()))
-			.findFirst()
-			.map(NameResponse::getValue);
-
-		firstNotEmptyManufacturerName.ifPresentOrElse(
-			manufacturerName -> bpnCache.put(new BpnMapping(manufacturerId, manufacturerName)),
-			() -> logger.warn("Manufacturer name not found for {} id", manufacturerId)
-		);
-
-		return firstNotEmptyManufacturerName;
+		return Optional.ofNullable(manufacturerId);
 	}
 }

@@ -60,7 +60,7 @@ public class InMemoryAssetsRepository implements AssetRepository {
 		pageListHolder.setPage(pageable.getPageNumber());
 		pageListHolder.setPageSize(pageable.getPageSize());
 
-		List<Asset> updatedPageListHolder = getAssetsWithUpdatedNamesForPage(pageListHolder);
+		List<Asset> updatedPageListHolder = pageListHolder.getSource();
 		pageListHolder.setSource(updatedPageListHolder);
 
 		return new PageResult<>(pageListHolder);
@@ -98,8 +98,6 @@ public class InMemoryAssetsRepository implements AssetRepository {
 	}
 
 	private Asset addManufacturerName(Asset asset) {
-		return bpnRepository.findManufacturerName(asset.manufacturerId())
-			.map(asset::withManufacturerName)
-			.orElse(asset);
+		return asset;
 	}
 }
