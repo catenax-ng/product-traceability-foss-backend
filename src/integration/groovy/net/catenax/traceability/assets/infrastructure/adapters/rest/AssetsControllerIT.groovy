@@ -58,7 +58,14 @@ class AssetsControllerIT extends IntegrationSpec {
 			irsApiReturnsJobDetails()
 
 		when:
-			mvc.perform(post("/assets/sync")).andExpect(status().isOk())
+			mvc.perform(post("/assets/sync")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{" +
+					"  \"globalAssetIds\": [" +
+					"    \"urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb\"" +
+					"  ]" +
+					"}")
+			).andExpect(status().isOk())
 
 		then:
 			new PollingConditions(timeout: 10, initialDelay: 0.5).eventually {
