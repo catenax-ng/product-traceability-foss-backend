@@ -26,22 +26,24 @@ import java.time.ZonedDateTime;
 @Table(name = "shell_descriptor")
 public class ShellDescriptorEntity {
 	private Long id;
-	private String shellDescriptorId;
-	private String globalAssetId;
 	private ZonedDateTime created;
 	private ZonedDateTime updated;
+	private String shellDescriptorId;
+	private String globalAssetId;
+	private String rawDescriptor;
 
 	public ShellDescriptorEntity() {}
 
-	public ShellDescriptorEntity(String shellDescriptorId, String globalAssetId, ZonedDateTime created, ZonedDateTime updated) {
+	public ShellDescriptorEntity(ZonedDateTime created, ZonedDateTime updated, String shellDescriptorId, String globalAssetId, String rawDescriptor) {
 		this.shellDescriptorId = shellDescriptorId;
 		this.globalAssetId = globalAssetId;
 		this.created = created;
 		this.updated = updated;
+		this.rawDescriptor = rawDescriptor;
 	}
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
 		return id;
 	}
@@ -50,7 +52,6 @@ public class ShellDescriptorEntity {
 		this.id = id;
 	}
 
-	@Column(name = "shell_descriptor_id")
 	public String getShellDescriptorId() {
 		return shellDescriptorId;
 	}
@@ -59,7 +60,6 @@ public class ShellDescriptorEntity {
 		this.shellDescriptorId = shellDescriptorId;
 	}
 
-	@Column(name = "global_asset_id")
 	public String getGlobalAssetId() {
 		return globalAssetId;
 	}
@@ -82,5 +82,13 @@ public class ShellDescriptorEntity {
 
 	public void setUpdated(ZonedDateTime updated) {
 		this.updated = updated;
+	}
+
+	public String getRawDescriptor() {
+		return rawDescriptor;
+	}
+
+	public void setRawDescriptor(String rawDescriptor) {
+		this.rawDescriptor = rawDescriptor;
 	}
 }

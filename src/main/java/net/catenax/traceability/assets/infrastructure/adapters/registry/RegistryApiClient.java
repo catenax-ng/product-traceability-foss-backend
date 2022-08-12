@@ -25,7 +25,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 
 @FeignClient(
 	name = "aasApi",
-	url = "${feign.aasApi.url}",
+	url = "${feign.registryApi.url}",
 	configuration = {CatenaApiConfig.class}
 )
 public interface RegistryApiClient extends RegistryAndDiscoveryInterfaceApi {

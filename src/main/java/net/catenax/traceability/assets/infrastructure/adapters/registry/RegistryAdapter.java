@@ -19,12 +19,16 @@
 
 package net.catenax.traceability.assets.infrastructure.adapters.registry;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.catenax.traceability.assets.domain.ShellDescriptor;
 import net.catenax.traceability.assets.infrastructure.adapters.openapi.aas.AssetAdministrationShellDescriptorCollectionBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +39,7 @@ import java.util.stream.Collectors;
 public class RegistryAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(RegistryAdapter.class);
 
+	private final ObjectMapper objectMapper = new ObjectMapper();
 	private final RegistryApiClient registryApiClient;
 
 	public RegistryAdapter(RegistryApiClient registryApiClient) {
@@ -45,7 +50,7 @@ public class RegistryAdapter {
 		logger.info("Fetching all shell descriptor IDs for BPN {}.", bpn);
 
 		Map<String, Object> filter = new HashMap<>();
-		filter.put("ManufacturerID", bpn);
+		filter.put("assetIds", getFilterValue("ManufacturerId", bpn));
 
 		List<String> assetIds = registryApiClient.getAllAssetAdministrationShellIdsByAssetLink(filter);
 
@@ -59,7 +64,11 @@ public class RegistryAdapter {
 		List<ShellDescriptor> shellDescriptors = descriptors.getItems().stream().map(i -> {
 			if (i.getGlobalAssetId() != null) {
 				String globalAssetId = i.getGlobalAssetId().getValue().get(0);
-				return new ShellDescriptor(i.getIdentification(), globalAssetId);
+				try {
+					return new ShellDescriptor(i.getIdentification(), globalAssetId, objectMapper.writeValueAsString(i));
+				} catch (JsonProcessingException e) {
+					throw new RuntimeException(e);
+				}
 			}
 			return null;
 		}).filter(Objects::nonNull).collect(Collectors.toList());
@@ -67,5 +76,10 @@ public class RegistryAdapter {
 		logger.info("Found {} shell descriptors containing a global asset ID.", shellDescriptors.size());
 
 		return shellDescriptors;
+	}
+
+	private String getFilterValue(String key, String value) {
+		return URLEncoder.encode(String.format("""
+						{"key":"%s","value":"%s"}""", key, value), StandardCharsets.UTF_8);
 	}
 }

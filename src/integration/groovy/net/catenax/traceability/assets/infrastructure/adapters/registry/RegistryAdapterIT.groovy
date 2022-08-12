@@ -19,10 +19,12 @@
 
 package net.catenax.traceability.assets.infrastructure.adapters.registry
 
+import io.zonky.test.db.AutoConfigureEmbeddedDatabase
 import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Specification
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureEmbeddedDatabase(beanName = "dataSource")
 class RegistryAdapterIT extends Specification {
 
 	def test() {

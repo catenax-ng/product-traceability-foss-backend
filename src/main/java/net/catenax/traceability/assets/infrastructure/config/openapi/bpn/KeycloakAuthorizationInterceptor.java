@@ -51,7 +51,7 @@ public class KeycloakAuthorizationInterceptor implements RequestInterceptor {
 			OAuth2AccessToken accessToken = getAccessToken()
 				.orElseThrow(() -> new KeycloakTechnicalUserAuthorizationException("Couldn't obtain access token for keycloak technical user"));
 
-			logger.debug("Injecting access token value {} of type {}", accessToken.getTokenValue(), accessToken.getTokenType());
+			logger.debug("Injecting access token of type {}", accessToken.getTokenType());
 
 			template.header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(accessToken.getTokenValue()));
 		}

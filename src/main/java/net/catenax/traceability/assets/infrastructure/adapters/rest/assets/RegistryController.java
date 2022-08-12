@@ -12,8 +12,8 @@ public class RegistryController {
 		this.registryService = registryService;
 	}
 
-	@GetMapping("/aas/fetch")
-	public void assets() {
-		registryService.loadShellDescriptorsFor("BPNL00000003AVTH");
+	@GetMapping("/registry/fetch/{bpn}")
+	public void assets(@PathVariable String bpn) {
+		registryService.loadShellDescriptorsFor(bpn);
 	}
 }
