@@ -20,6 +20,9 @@
 package net.catenax.traceability.assets.domain;
 
 import net.catenax.traceability.assets.infrastructure.adapters.registry.RegistryAdapter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,14 +31,34 @@ import java.util.List;
 public class RegistryService {
 	private final RegistryAdapter registryAdapter;
 	private final ShellDescriptorStore shellDescriptorStore;
+	private final AssetService assetService;
 
-	public RegistryService(ShellDescriptorStore shellDescriptorStore, RegistryAdapter registryAdapter) {
+	@Value("${feign.registryApi.defaultBpn}")
+	private String defaultBpn;
+
+	public RegistryService(ShellDescriptorStore shellDescriptorStore, RegistryAdapter registryAdapter, AssetService assetService) {
 		this.shellDescriptorStore = shellDescriptorStore;
 		this.registryAdapter = registryAdapter;
+		this.assetService = assetService;
 	}
 
+	@Async
+	@Scheduled(cron = "0 0 */2 * * ?", zone = "Europe/Berlin")
+	void schedule() {
+		loadShellDescriptorsFor(defaultBpn);
+	}
+
+	@Async
 	public void loadShellDescriptorsFor(String bpn) {
 		List<ShellDescriptor> descriptors = registryAdapter.findAssetsByBpn(bpn);
+
+		// we do not have a proper update mechanism at the moment
+		shellDescriptorStore.deleteAll();
 		shellDescriptorStore.store(descriptors);
+
+		List<String> globalAssetIds = descriptors.stream().map(ShellDescriptor::globalAssetId).toList();
+
+		// add list
+		assetService.synchronizeAssets(globalAssetIds);
 	}
 }

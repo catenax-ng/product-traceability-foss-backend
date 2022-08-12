@@ -19,7 +19,7 @@
 
 package net.catenax.traceability.assets.infrastructure.adapters.registry;
 
-import net.catenax.traceability.assets.infrastructure.adapters.openapi.aas.RegistryAndDiscoveryInterfaceApi;
+import net.catenax.traceability.assets.infrastructure.adapters.openapi.registry.RegistryAndDiscoveryInterfaceApi;
 import net.catenax.traceability.assets.infrastructure.config.openapi.CatenaApiConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 

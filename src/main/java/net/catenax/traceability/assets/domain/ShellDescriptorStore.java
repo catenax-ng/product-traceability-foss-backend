@@ -25,4 +25,5 @@ import java.util.List;
 
 public interface ShellDescriptorStore {
 	void store(List<ShellDescriptor> globalAssetIds);
+	void deleteAll();
 }

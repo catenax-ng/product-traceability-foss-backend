@@ -38,6 +38,11 @@ public class ShellDescriptorDbStore implements ShellDescriptorStore {
 		shellDescriptorRepository.saveAll(descriptorEntities);
 	}
 
+	@Override
+	public void deleteAll() {
+		shellDescriptorRepository.deleteAll();
+	}
+
 	private List<ShellDescriptorEntity> map(List<ShellDescriptor> descriptors) {
 		ZonedDateTime now = ZonedDateTime.now();
 		return descriptors.stream().map(d -> new ShellDescriptorEntity(now, now, d.shellDescriptorId(), d.globalAssetId(), d.rawDescriptor())).toList();

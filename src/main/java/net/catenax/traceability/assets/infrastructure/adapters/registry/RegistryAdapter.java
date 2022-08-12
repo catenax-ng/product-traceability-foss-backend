@@ -22,7 +22,7 @@ package net.catenax.traceability.assets.infrastructure.adapters.registry;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.catenax.traceability.assets.domain.ShellDescriptor;
-import net.catenax.traceability.assets.infrastructure.adapters.openapi.aas.AssetAdministrationShellDescriptorCollectionBase;
+import net.catenax.traceability.assets.infrastructure.adapters.openapi.registry.AssetAdministrationShellDescriptorCollectionBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
