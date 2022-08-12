@@ -82,7 +82,7 @@ public class ErrorHandlingConfig implements AuthenticationFailureHandler {
 		logger.error("Couldn't retrieve keycloak token for technical user", keycloakTechnicalUserAuthorizationException);
 
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-			.body(new ErrorResponse("Please try again latter."));
+			.body(new ErrorResponse("Please try again later."));
 	}
 
 	@ExceptionHandler(Exception.class)
@@ -90,7 +90,7 @@ public class ErrorHandlingConfig implements AuthenticationFailureHandler {
 		logger.error("Unhandled exception", exception);
 
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-			.body(new ErrorResponse("Please try again latter."));
+			.body(new ErrorResponse("Please try again later."));
 	}
 
 	@Override
