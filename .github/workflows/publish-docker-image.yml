@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - 'TRACEFOSS-*'
+      - 'feature/**'
 
 env:
   REGISTRY: ghcr.io
