@@ -69,7 +69,7 @@ public class AssetsReader {
 	public record PartTypeInformation(
 		String nameAtManufacturer,
 		String nameAtCustomer,
-		String manufacturerPartID,
+		String manufacturerPartId,
 		String customerPartId
 	) {}
 
@@ -88,7 +88,7 @@ public class AssetsReader {
 				return EMPTY_TEXT;
 			}
 			return localIdentifiers.stream()
-				.filter(localId -> localId.type == LocalIdType.ManufacturerID)
+				.filter(localId -> localId.type == LocalIdType.ManufacturerId)
 				.findFirst()
 				.map(LocalId::value)
 				.orElse(EMPTY_TEXT);
@@ -121,9 +121,9 @@ public class AssetsReader {
 	) {}
 
 	public enum LocalIdType {
-		ManufacturerID,
-		ManufacturerPartID,
-		PartInstanceID,
+		ManufacturerId,
+		ManufacturerPartId,
+		PartInstanceId,
 		@JsonEnumDefaultValue Unknown
 	}
 
@@ -174,7 +174,7 @@ public class AssetsReader {
 			}
 			return serialPartTypization.stream().findFirst()
 				.map(SerialPartTypization::partTypeInformation)
-				.map(PartTypeInformation::manufacturerPartID)
+				.map(PartTypeInformation::manufacturerPartId)
 				.orElse(EMPTY_TEXT);
 		}
 
