@@ -27,7 +27,6 @@ import net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.IRSAp
 import net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.IRSApiClient.StartJobResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,15 +40,12 @@ public class IrsService {
 
 	private AssetRepository assetRepository;
 
-	private String globalAssetId;
-
-	public IrsService(IRSApiClient irsClient, AssetRepository assetRepository, @Value("${feign.irsApi.globalAssetId}") String globalAssetId) {
+	public IrsService(IRSApiClient irsClient, AssetRepository assetRepository) {
 		this.irsClient = irsClient;
 		this.assetRepository = assetRepository;
-		this.globalAssetId = globalAssetId;
 	}
 
-	public void synchronizeAssets() {
+	public void synchronizeAssets(String globalAssetId) {
 		logger.info("Synchronizing assets for globalAssetId: {}", globalAssetId);
 
 		AssetsConverter assetsConverter = new AssetsConverter();

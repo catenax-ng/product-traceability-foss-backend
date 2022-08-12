@@ -49,8 +49,8 @@ public class AssetsController {
 	}
 
 	@PostMapping("/assets/sync")
-	public void sync() {
-		assetService.synchronizeAssets();
+	public void sync(@Valid @RequestBody SyncAssets syncAssets) {
+		assetService.synchronizeAssets(syncAssets.globalAssetIds());
 	}
 
 	@GetMapping("/assets")

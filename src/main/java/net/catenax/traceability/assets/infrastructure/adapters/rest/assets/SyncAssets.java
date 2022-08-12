@@ -17,30 +17,11 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.common.config;
+package net.catenax.traceability.assets.infrastructure.adapters.rest.assets;
 
-import net.catenax.traceability.assets.domain.AssetService;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
-@Profile("!integration")
-@Configuration
-public class SchedulerConfig {
-
-	private final AssetService assetService;
-
-	public SchedulerConfig(AssetService assetService) {
-		this.assetService = assetService;
-	}
-
-	@Bean
-	public ThreadPoolTaskScheduler threadPoolTaskScheduler(){
-		ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-		threadPoolTaskScheduler.setPoolSize(5);
-		threadPoolTaskScheduler.setThreadNamePrefix("ThreadPoolTaskScheduler");
-		return threadPoolTaskScheduler;
-	}
-
+public record SyncAssets(
+	@NotEmpty(message = "Specify globalAssetIds") List<String> globalAssetIds) {
 }

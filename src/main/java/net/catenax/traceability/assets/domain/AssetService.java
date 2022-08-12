@@ -21,14 +21,19 @@ package net.catenax.traceability.assets.domain;
 
 import net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.IrsService;
 import net.catenax.traceability.assets.infrastructure.adapters.rest.assets.UpdateAsset;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
 public class AssetService {
+
+	private static final Logger logger = LoggerFactory.getLogger(AssetService.class);
 
 	private final AssetRepository assetRepository;
 
@@ -40,8 +45,14 @@ public class AssetService {
 	}
 
 	@Async
-	public void synchronizeAssets() {
-		irsService.synchronizeAssets();
+	public void synchronizeAssets(List<String> globalAssetIds) {
+		for (String globalAssetId : globalAssetIds) {
+			try {
+				irsService.synchronizeAssets(globalAssetId);
+			} catch (Exception e) {
+				logger.warn("Cannot fetch assets for id: {}. Error: {}", globalAssetId, e.getMessage());
+			}
+		}
 	}
 
 	public Asset updateAsset(String assetId, UpdateAsset updateAsset) {
