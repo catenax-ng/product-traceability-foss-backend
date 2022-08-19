@@ -20,13 +20,17 @@
 package net.catenax.traceability.assets.domain
 
 import net.catenax.traceability.UnitSpec
+import net.catenax.traceability.assets.domain.model.Asset
+import net.catenax.traceability.assets.domain.model.QualityType
+import net.catenax.traceability.assets.domain.ports.AssetRepository
+import net.catenax.traceability.assets.domain.service.AssetService
 import net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.IrsService
 
 class inAssetServiceSpec extends UnitSpec {
 
 	AssetRepository repository = Mock()
 
-	AssetService assetService = new AssetService(repository, Mock(IrsService))
+	AssetService assetService = new AssetService(repository, irsRepository, Mock(IrsService))
 
 	def "should return assets country map"() {
 		given:
@@ -50,7 +54,7 @@ class inAssetServiceSpec extends UnitSpec {
 			countryMap["FRA"] == 1
 	}
 
-	Asset newAsset(String country) {
+    Asset newAsset(String country) {
 		new Asset(null, null, null, null, null, null, null, null, null, country, QualityType.OK)
 	}
 

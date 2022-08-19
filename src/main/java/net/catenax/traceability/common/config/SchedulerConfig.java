@@ -19,7 +19,7 @@
 
 package net.catenax.traceability.common.config;
 
-import net.catenax.traceability.assets.domain.AssetService;
+import net.catenax.traceability.assets.domain.service.AssetService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

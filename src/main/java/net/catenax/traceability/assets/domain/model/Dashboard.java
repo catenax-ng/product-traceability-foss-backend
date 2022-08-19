@@ -17,14 +17,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability;
+package net.catenax.traceability.assets.domain.model;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
-public class TraceabilityApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(TraceabilityApplication.class, args);
-	}
+public record Dashboard(Long myItems, Long branchItems) {
 }

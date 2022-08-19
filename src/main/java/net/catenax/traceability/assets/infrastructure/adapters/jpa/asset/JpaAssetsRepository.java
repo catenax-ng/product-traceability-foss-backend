@@ -16,15 +16,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
+package net.catenax.traceability.assets.infrastructure.adapters.jpa.asset;
 
-package net.catenax.traceability;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
-public class TraceabilityApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(TraceabilityApplication.class, args);
-	}
+@Repository
+public interface JpaAssetsRepository extends JpaRepository<AssetEntity, String> {
 }

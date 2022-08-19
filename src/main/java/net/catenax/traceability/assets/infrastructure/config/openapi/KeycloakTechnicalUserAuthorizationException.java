@@ -17,14 +17,15 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability;
+package net.catenax.traceability.assets.infrastructure.config.openapi;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+public class KeycloakTechnicalUserAuthorizationException extends RuntimeException {
 
-@SpringBootApplication
-public class TraceabilityApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(TraceabilityApplication.class, args);
+	public KeycloakTechnicalUserAuthorizationException(String message) {
+		super(message);
+	}
+
+	public KeycloakTechnicalUserAuthorizationException(Throwable cause) {
+		super(cause);
 	}
 }

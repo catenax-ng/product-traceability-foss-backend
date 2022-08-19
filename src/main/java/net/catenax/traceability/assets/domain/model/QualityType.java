@@ -17,14 +17,25 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability;
+package net.catenax.traceability.assets.domain.model;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-@SpringBootApplication
-public class TraceabilityApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(TraceabilityApplication.class, args);
+public enum QualityType {
+	OK("Ok"),
+	MINOR("Minor"),
+	MAJOR("Major"),
+	CRITICAL("Critical"),
+	LIFE_THREATENING("LifeThreatening");
+
+	private final String description;
+
+	QualityType(String description) {
+		this.description = description;
+	}
+
+	@JsonValue
+	public String getDescription() {
+		return description;
 	}
 }

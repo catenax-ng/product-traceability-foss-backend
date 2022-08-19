@@ -17,28 +17,33 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.assets.infrastructure.adapters.rest.dashboard;
+package net.catenax.traceability.assets.domain.service;
 
 import net.catenax.traceability.assets.domain.model.Dashboard;
-import net.catenax.traceability.assets.domain.service.DashboardService;
+import net.catenax.traceability.assets.domain.ports.AssetRepository;
 import net.catenax.traceability.common.security.KeycloakAuthentication;
-import net.catenax.traceability.common.security.InjectedKeycloakAuthentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import net.catenax.traceability.common.security.KeycloakRole;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.stereotype.Component;
 
-@RestController
-@RequestMapping
-public class DashboardController {
+@Component
+public class DashboardService {
 
-	private final DashboardService dashboardService;
+	private final AssetRepository assetRepository;
 
-	public DashboardController(DashboardService dashboardService) {
-		this.dashboardService = dashboardService;
+	public DashboardService(AssetRepository assetRepository) {
+		this.assetRepository = assetRepository;
 	}
 
-	@GetMapping("/dashboard")
-	public Dashboard dashboard(@InjectedKeycloakAuthentication KeycloakAuthentication keycloakAuthentication) {
-		return dashboardService.getDashboard(keycloakAuthentication);
+	public Dashboard getDashboard(KeycloakAuthentication keycloakAuthentication) {
+		long assetsCount = assetRepository.countAssets();
+
+		if (keycloakAuthentication.hasRole(KeycloakRole.USER)) {
+			return new Dashboard(assetsCount, null);
+		} else if (keycloakAuthentication.hasAtLeastOneRole(KeycloakRole.ADMIN, KeycloakRole.SUPERVISOR)) {
+			return new Dashboard(assetsCount, assetsCount);
+		} else {
+			throw new AccessDeniedException("User has invalid role to access the dashboard.");
+		}
 	}
 }

@@ -67,7 +67,7 @@ feign:
     enabled: true
   hystrix:
     enabled: false
-  bpnApi:
+  default:
     connectionTimeoutMillis: 200
     readTimeoutMillis: 500
     maxIdleConnections: 10

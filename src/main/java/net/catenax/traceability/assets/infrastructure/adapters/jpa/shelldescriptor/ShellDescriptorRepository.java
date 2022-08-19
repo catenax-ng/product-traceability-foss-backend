@@ -1,4 +1,4 @@
-/********************************************************************************
+/*
  * Copyright (c) 2021,2022 Contributors to the CatenaX (ng) GitHub Organisation
  *
  * See the NOTICE file(s) distributed with this work for additional
@@ -15,16 +15,11 @@
  * under the License.
  *
  * SPDX-License-Identifier: Apache-2.0
- ********************************************************************************/
+ */
 
-package net.catenax.traceability;
+package net.catenax.traceability.assets.infrastructure.adapters.jpa.shelldescriptor;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@SpringBootApplication
-public class TraceabilityApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(TraceabilityApplication.class, args);
-	}
+public interface ShellDescriptorRepository extends JpaRepository<ShellDescriptorEntity, Long> {
 }

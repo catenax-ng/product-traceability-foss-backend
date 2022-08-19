@@ -17,14 +17,30 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability;
+package net.catenax.traceability.assets.domain.model;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.beans.support.PagedListHolder;
+import org.springframework.data.domain.Page;
 
-@SpringBootApplication
-public class TraceabilityApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(TraceabilityApplication.class, args);
+import java.util.List;
+import java.util.function.Function;
+
+public record PageResult<T>(
+	List<T> content,
+	Integer page,
+	Integer pageCount,
+	Integer pageSize,
+	Long totalItems
+) {
+	public PageResult(PagedListHolder<T> pagedListHolder) {
+		this(pagedListHolder.getPageList(), pagedListHolder.getPage(), pagedListHolder.getPageSize(), pagedListHolder.getPageSize(), (long)pagedListHolder.getNrOfElements());
+	}
+
+	public PageResult(Page<T> page) {
+		this(page, Function.identity());
+	}
+
+	public <R> PageResult(Page<R> page, Function<R, T> mapping) {
+		this(page.getContent().stream().map(mapping).toList(), page.getPageable().getPageNumber(), page.getTotalPages(), page.getPageable().getPageSize(), page.getTotalElements());
 	}
 }

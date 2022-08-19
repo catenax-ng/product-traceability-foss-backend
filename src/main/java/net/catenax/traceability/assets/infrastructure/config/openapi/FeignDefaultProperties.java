@@ -17,14 +17,20 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability;
+package net.catenax.traceability.assets.infrastructure.config.openapi;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import net.catenax.traceability.common.properties.FeignProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
-@SpringBootApplication
-public class TraceabilityApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(TraceabilityApplication.class, args);
+@ConstructorBinding
+@ConfigurationProperties("feign.default")
+public class FeignDefaultProperties extends FeignProperties {
+
+	public FeignDefaultProperties(Long connectionTimeoutMillis,
+								  Long readTimeoutMillis,
+								  int maxIdleConnections,
+								  Long keepAliveDurationMinutes) {
+		super(connectionTimeoutMillis, readTimeoutMillis, maxIdleConnections, keepAliveDurationMinutes);
 	}
 }

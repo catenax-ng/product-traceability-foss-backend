@@ -17,14 +17,28 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability;
+package net.catenax.traceability.assets.domain.ports;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import net.catenax.traceability.assets.domain.model.Asset;
+import net.catenax.traceability.assets.domain.model.PageResult;
+import org.springframework.data.domain.Pageable;
 
-@SpringBootApplication
-public class TraceabilityApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(TraceabilityApplication.class, args);
-	}
+import java.util.List;
+
+public interface AssetRepository {
+	Asset getAssetById(String assetId);
+
+	Asset getAssetByChildId(String assetId, String childId);
+
+	PageResult<Asset> getAssets(Pageable pageable);
+
+	List<Asset> getAssets();
+
+	Asset save(Asset asset);
+
+	List<Asset> saveAll(List<Asset> assets);
+
+    long countAssets();
+
+    void clean();
 }
