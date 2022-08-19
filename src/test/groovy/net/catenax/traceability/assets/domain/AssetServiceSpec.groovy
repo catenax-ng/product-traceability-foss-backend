@@ -22,15 +22,17 @@ package net.catenax.traceability.assets.domain
 import net.catenax.traceability.UnitSpec
 import net.catenax.traceability.assets.domain.model.Asset
 import net.catenax.traceability.assets.domain.model.QualityType
+import net.catenax.traceability.assets.domain.ports.AssetMockDataRepository
 import net.catenax.traceability.assets.domain.ports.AssetRepository
 import net.catenax.traceability.assets.domain.service.AssetService
-import net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.IrsService
+import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.IrsService
 
-class inAssetServiceSpec extends UnitSpec {
+class AssetServiceSpec extends UnitSpec {
 
 	AssetRepository repository = Mock()
+	AssetMockDataRepository assetMockDataRepository = Mock()
 
-	AssetService assetService = new AssetService(repository, irsRepository, Mock(IrsService))
+	AssetService assetService = new AssetService(repository, assetMockDataRepository, Mock(IrsService))
 
 	def "should return assets country map"() {
 		given:

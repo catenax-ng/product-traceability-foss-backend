@@ -1,6 +1,7 @@
 package net.catenax.traceability.assets.application;
 
 import net.catenax.traceability.assets.domain.service.ShellDescriptiorsService;
+import net.catenax.traceability.assets.infrastructure.config.async.AssetsAsyncConfig;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,7 @@ public class RegistryFacade {
 		shellDescriptiorsService.loadShellDescriptorsFor(bpn);
 	}
 
-	@Async
+	@Async(value = AssetsAsyncConfig.LOAD_SHELL_DESCRIPTORS_EXECUTOR)
 	public void loadShellDescriptorsAsyncFor(String bpn) {
 		shellDescriptiorsService.loadShellDescriptorsFor(bpn);
 	}

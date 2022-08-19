@@ -17,9 +17,9 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.assets.infrastructure.adapters.openapi.irs;
+package net.catenax.traceability.assets.infrastructure.adapters.feign.irs;
 
-import net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.IRSApiClient.JobResponse;
+import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.IRSApiClient.JobResponse;
 
 import java.util.function.Predicate;
 

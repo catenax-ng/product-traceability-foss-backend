@@ -19,24 +19,19 @@
 
 package net.catenax.traceability.common.config;
 
-import net.catenax.traceability.assets.domain.service.AssetService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
-@Profile("!integration")
+import static net.catenax.traceability.common.config.ApplicationProfiles.NOT_TESTS;
+
 @Configuration
+@Profile(NOT_TESTS)
 public class SchedulerConfig {
 
-	private final AssetService assetService;
-
-	public SchedulerConfig(AssetService assetService) {
-		this.assetService = assetService;
-	}
-
 	@Bean
-	public ThreadPoolTaskScheduler threadPoolTaskScheduler(){
+	public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
 		ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
 		threadPoolTaskScheduler.setPoolSize(5);
 		threadPoolTaskScheduler.setThreadNamePrefix("ThreadPoolTaskScheduler");

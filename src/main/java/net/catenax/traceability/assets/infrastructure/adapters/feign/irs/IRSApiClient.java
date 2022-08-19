@@ -17,7 +17,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.assets.infrastructure.adapters.openapi.irs;
+package net.catenax.traceability.assets.infrastructure.adapters.feign.irs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import feign.Param;

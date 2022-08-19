@@ -89,7 +89,7 @@ resilience4j:
   retry:
     instances:
       irs-get:
-        resultPredicate: 'net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.JobRunning'
+        resultPredicate: 'net.catenax.traceability.assets.infrastructure.adapters.feign.irs.JobRunning'
         maxAttempts: 5
         waitDuration: 10s
         enableExponentialBackoff: true

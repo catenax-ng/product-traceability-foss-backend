@@ -17,14 +17,14 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.assets.infrastructure.adapters.openapi.irs;
+package net.catenax.traceability.assets.infrastructure.adapters.feign.irs;
 
 import net.catenax.traceability.assets.domain.model.Asset;
 import net.catenax.traceability.assets.domain.ports.IrsRepository;
 import net.catenax.traceability.assets.infrastructure.adapters.mockdata.AssetsConverter;
-import net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.IRSApiClient.JobResponse;
-import net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.IRSApiClient.StartJobRequest;
-import net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.IRSApiClient.StartJobResponse;
+import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.IRSApiClient.JobResponse;
+import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.IRSApiClient.StartJobRequest;
+import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.IRSApiClient.StartJobResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

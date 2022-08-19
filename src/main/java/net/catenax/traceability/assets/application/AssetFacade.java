@@ -3,6 +3,7 @@ package net.catenax.traceability.assets.application;
 import net.catenax.traceability.assets.domain.model.Asset;
 import net.catenax.traceability.assets.domain.service.AssetService;
 import net.catenax.traceability.assets.infrastructure.adapters.rest.assets.UpdateAsset;
+import net.catenax.traceability.assets.infrastructure.config.async.AssetsAsyncConfig;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,7 @@ public class AssetFacade {
 		this.assetService = assetService;
 	}
 
-	@Async
+	@Async(value = AssetsAsyncConfig.SYNCHRONIZE_ASSETS_EXECUTOR)
 	public void synchronizeAssetsAsync(List<String> globalAssetIds) {
 		assetService.synchronizeAssets(globalAssetIds);
 	}

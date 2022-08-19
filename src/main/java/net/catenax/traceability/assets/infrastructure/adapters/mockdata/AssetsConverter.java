@@ -43,9 +43,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.IRSApiClient.JobResponse;
-import static net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.IRSApiClient.Shell;
-import static net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.IRSApiClient.Submodel;
+import static net.catenax.traceability.assets.infrastructure.adapters.feign.irs.IRSApiClient.JobResponse;
+import static net.catenax.traceability.assets.infrastructure.adapters.feign.irs.IRSApiClient.Shell;
+import static net.catenax.traceability.assets.infrastructure.adapters.feign.irs.IRSApiClient.Submodel;
 
 @Component
 public class AssetsConverter {
