@@ -31,7 +31,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -70,7 +69,7 @@ public class RegistryService {
 				} catch (JsonProcessingException e) {
 					throw new RuntimeException(e);
 				}
-		}).collect(Collectors.toList());
+		}).toList();
 
 		logger.info("Found {} shell descriptors containing a global asset ID.", shellDescriptors.size());
 
@@ -78,7 +77,6 @@ public class RegistryService {
 	}
 
 	private String getFilterValue(String key, String value) {
-		return URLEncoder.encode(String.format("""
-						{"key":"%s","value":"%s"}""", key, value), StandardCharsets.UTF_8);
+		return URLEncoder.encode(String.format("{\"key\":\"%s\",\"value\":\"%s\"}", key, value), StandardCharsets.UTF_8);
 	}
 }
