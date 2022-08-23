@@ -39,6 +39,10 @@ public class ShellDescriptorDbStore {
 		shellDescriptorRepository.saveAll(descriptorEntities);
 	}
 
+	public Long count(String shellDescriptorId) {
+		return shellDescriptorRepository.countAllByShellDescriptorIdEquals(shellDescriptorId);
+	}
+
 	public void deleteAll() {
 		shellDescriptorRepository.deleteAll();
 	}

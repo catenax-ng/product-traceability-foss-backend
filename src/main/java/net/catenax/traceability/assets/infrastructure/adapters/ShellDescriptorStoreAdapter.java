@@ -30,7 +30,7 @@ public class ShellDescriptorStoreAdapter implements ShellDescriptorStore {
 	}
 
 	@Override
-	public List<ShellDescriptor> findAssetsByBpn(String bpn) {
+	public List<ShellDescriptor> findByBpn(String bpn) {
 		return registryService.findAssetsByBpn(bpn);
 	}
 }

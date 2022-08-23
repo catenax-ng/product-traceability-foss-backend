@@ -13,4 +13,8 @@ trait AssetsSupport implements AssetRepositoryProvider {
 	void assertAssetsSize(int size) {
 		assert assetRepository().countAssets() == size
 	}
+
+	void assertNoAssetsStored() {
+		assertAssetsSize(0)
+	}
 }

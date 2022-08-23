@@ -68,6 +68,108 @@ class AssetsControllerIT extends IntegrationSpec {
 			}
 	}
 
+	def "should synchronize assets using retry"() {
+		given:
+			authenticatedUser(KeycloakRole.ADMIN)
+			keycloakApiReturnsToken()
+
+		and:
+			irsApiTriggerJob()
+
+		and:
+			irsApiReturnsJobInRunningAndCompleted()
+
+		when:
+			mvc.perform(post("/assets/sync")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJson(
+					[
+						globalAssetIds: ["urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"]
+					]
+				))
+			).andExpect(status().isOk())
+
+		then:
+			new PollingConditions(timeout: 15, initialDelay: 0.5).eventually {
+				assertAssetsSize(13)
+			}
+	}
+
+	def "should not synchronize assets when irs failed to trigger job"() {
+		given:
+			authenticatedUser(KeycloakRole.ADMIN)
+			keycloakApiReturnsToken()
+			irsApiTriggerJobFailed()
+
+		when:
+			mvc.perform(post("/assets/sync")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJson(
+					[
+						globalAssetIds: ["urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"]
+					]
+				))
+			).andExpect(status().isOk())
+
+		then:
+			new PollingConditions(timeout: 10, initialDelay: 3).eventually {
+				assertNoAssetsStored()
+			}
+
+		and:
+			verifyIrsJobDetailsApiNotCalled()
+	}
+
+	def "should not synchronize assets when irs failed to return job details"() {
+		given:
+			authenticatedUser(KeycloakRole.ADMIN)
+			keycloakApiReturnsToken()
+			irsApiTriggerJob()
+
+		and:
+			irsJobDetailsApiFailed()
+
+		when:
+			mvc.perform(post("/assets/sync")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJson(
+					[
+						globalAssetIds: ["urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"]
+					]
+				))
+			).andExpect(status().isOk())
+
+		then:
+			new PollingConditions(timeout: 10, initialDelay: 2).eventually {
+				assertNoAssetsStored()
+			}
+	}
+
+	def "should not synchronize assets when irs keeps returning job in running state"() {
+		given:
+			authenticatedUser(KeycloakRole.ADMIN)
+			keycloakApiReturnsToken()
+			irsApiTriggerJob()
+
+		and:
+			irsApiReturnsJobInRunningState()
+
+		when:
+			mvc.perform(post("/assets/sync")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJson(
+					[
+						globalAssetIds: ["urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"]
+					]
+				))
+			).andExpect(status().isOk())
+
+		then:
+			new PollingConditions(timeout: 10, initialDelay: 2).eventually {
+				assertNoAssetsStored()
+			}
+	}
+
 	def "should return assets for authenticated user with role"() {
 		given:
 			authenticatedUser(KeycloakRole.ADMIN)

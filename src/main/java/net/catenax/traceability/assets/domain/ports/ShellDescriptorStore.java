@@ -26,5 +26,5 @@ import java.util.List;
 public interface ShellDescriptorStore {
 	void store(List<ShellDescriptor> globalAssetIds);
 	void deleteAll();
-	List<ShellDescriptor> findAssetsByBpn(String bpn);
+	List<ShellDescriptor> findByBpn(String bpn);
 }

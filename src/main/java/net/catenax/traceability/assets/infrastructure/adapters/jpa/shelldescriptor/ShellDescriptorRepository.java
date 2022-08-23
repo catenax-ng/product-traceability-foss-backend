@@ -20,6 +20,9 @@
 package net.catenax.traceability.assets.infrastructure.adapters.jpa.shelldescriptor;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ShellDescriptorRepository extends JpaRepository<ShellDescriptorEntity, Long> {
+	Long countAllByShellDescriptorIdEquals(String shellDescriptorId);
 }

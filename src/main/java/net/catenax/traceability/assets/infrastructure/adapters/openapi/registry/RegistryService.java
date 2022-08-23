@@ -61,17 +61,16 @@ public class RegistryService {
 
 		logger.info("Received {} shell descriptors for {} IDs.", descriptors.getItems().size(), assetIds.size());
 
-		List<ShellDescriptor> shellDescriptors = descriptors.getItems().stream().map(i -> {
-			if (i.getGlobalAssetId() != null) {
+		List<ShellDescriptor> shellDescriptors = descriptors.getItems().stream()
+			.filter(it -> it.getGlobalAssetId() != null)
+			.map(i -> {
 				String globalAssetId = i.getGlobalAssetId().getValue().get(0);
 				try {
 					return new ShellDescriptor(i.getIdentification(), globalAssetId, objectMapper.writeValueAsString(i));
 				} catch (JsonProcessingException e) {
 					throw new RuntimeException(e);
 				}
-			}
-			return null;
-		}).filter(Objects::nonNull).collect(Collectors.toList());
+		}).collect(Collectors.toList());
 
 		logger.info("Found {} shell descriptors containing a global asset ID.", shellDescriptors.size());
 

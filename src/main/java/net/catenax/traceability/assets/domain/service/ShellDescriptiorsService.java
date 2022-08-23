@@ -37,7 +37,7 @@ public class ShellDescriptiorsService {
 	}
 
 	public void loadShellDescriptorsFor(String bpn) {
-		List<ShellDescriptor> descriptors = shellDescriptorStore.findAssetsByBpn(bpn);
+		List<ShellDescriptor> descriptors = shellDescriptorStore.findByBpn(bpn);
 
 		// we do not have a proper update mechanism at the moment
 		shellDescriptorStore.deleteAll();

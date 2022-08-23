@@ -23,6 +23,7 @@ import com.xebialabs.restito.server.StubServer
 import groovy.json.JsonBuilder
 import net.catenax.traceability.assets.domain.ports.AssetRepository
 import net.catenax.traceability.assets.infrastructure.adapters.cache.bpn.BpnCache
+import net.catenax.traceability.assets.infrastructure.adapters.jpa.shelldescriptor.ShellDescriptorDbStore
 import net.catenax.traceability.common.config.MailboxConfig
 import net.catenax.traceability.common.config.OAuth2Config
 import net.catenax.traceability.common.config.PostgreSQLConfig
@@ -33,6 +34,8 @@ import net.catenax.traceability.common.support.BpnApiSupport
 import net.catenax.traceability.common.support.IrsApiSupport
 import net.catenax.traceability.common.support.KeycloakApiSupport
 import net.catenax.traceability.common.support.KeycloakSupport
+import net.catenax.traceability.common.support.RegistrySupport
+import net.catenax.traceability.common.support.ShellDescriptorStoreProviderSupport
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -51,22 +54,26 @@ import spock.lang.Specification
 )
 @Testcontainers
 abstract class IntegrationSpec extends Specification implements KeycloakSupport, BpnApiSupport,
-	IrsApiSupport, KeycloakApiSupport, AssetsSupport {
+	IrsApiSupport, KeycloakApiSupport, AssetsSupport, ShellDescriptorStoreProviderSupport, RegistrySupport {
 
 	@Autowired
 	protected MockMvc mvc
 
 	@Autowired
-	protected BpnCache bpnCache
+	private BpnCache bpnCache
 
 	@Autowired
 	private AssetRepository assetRepository
+
+	@Autowired
+	private ShellDescriptorDbStore shellDescriptorDbStore
 
 	def cleanup() {
 		RestitoConfig.clear()
 		bpnCache.clear()
 		clearAuthentication()
 		assetRepository.clean()
+		shellDescriptorDbStore.deleteAll()
 	}
 
 	@Override
@@ -77,6 +84,11 @@ abstract class IntegrationSpec extends Specification implements KeycloakSupport,
 	@Override
 	AssetRepository assetRepository() {
 		return assetRepository
+	}
+
+	@Override
+	ShellDescriptorDbStore shellDescriptorStore() {
+		return shellDescriptorDbStore
 	}
 
 	protected String asJson(Map map) {
