@@ -36,7 +36,7 @@ keycloak:
 postgresql:
   secret:
     password: "<path:traceability-foss/data/dev/database#postgresPassword>"
-    initUserDbSql: "path:traceability-foss/data/dev/database#initUserDb.sql>"
+    initUserDbSql: "<path:traceability-foss/data/dev/database#initUserDb.sql>"
 
 pgadmin4:
   enabled: true
@@ -72,7 +72,6 @@ pgadmin4:
         secretName: trace-pgadmin4-tls-secret
   env:
     email: pgadmin4@trace.foss
-    password: "<path:traceability-foss/data/dev/database#pgadminPassword>"
   secret:
     password: "<path:traceability-foss/data/dev/database#pgadminPassword>"
   resources:
