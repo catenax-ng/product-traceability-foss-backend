@@ -36,9 +36,9 @@ keycloak:
 postgresql:
   auth:
     postgresPassword: "<path:traceability-foss/data/dev/database#postgresPassword>"
-    username: "edc"
-    password: "<path:traceability-foss/data/dev/database#password>"
-    database: "edc"
+#    username: "edc"
+#    password: "<path:traceability-foss/data/dev/database#password>"
+#    database: "edc"
 #  secret:
 #    password: "<path:traceability-foss/data/dev/database#postgresPassword>"
 #    initUserDbSql: "<path:traceability-foss/data/dev/database#initUserDb.sql>"
