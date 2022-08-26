@@ -140,6 +140,11 @@ postgresql:
   secret:
     password: ""
     initUserDbSql: ""
+  auth:
+    postgresPassword: ""
+    username: ""
+    password: ""
+    database: ""
   architecture: standalone
   audit:
     pgAuditLog: write, ddl
