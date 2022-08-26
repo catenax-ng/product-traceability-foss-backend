@@ -39,9 +39,9 @@ postgresql:
     username: "edc"
     password: <path:traceability-foss/data/int/database#password>
     database: "edc"
-  secret:
-    password: "<path:traceability-foss/data/int/database#postgresPassword>"
-    initUserDbSql: "<path:traceability-foss/data/dev/database#initUserDb.sql>" # TODO change me
+#  secret:
+#    password: "<path:traceability-foss/data/int/database#postgresPassword>"
+#    initUserDbSql: "<path:traceability-foss/data/dev/database#initUserDb.sql>" # TODO change me
 
 pgadmin4:
   enabled: true
