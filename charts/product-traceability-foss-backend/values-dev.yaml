@@ -77,7 +77,6 @@ pgadmin4:
         secretName: trace-pgadmin4-tls-secret
   env:
     email: pgadmin4@trace.foss
-  secret:
     password: "<path:traceability-foss/data/dev/database#pgadminPassword>"
   resources:
     limits:
