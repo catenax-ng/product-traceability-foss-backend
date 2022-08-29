@@ -82,7 +82,7 @@ pgadmin4:
   serverDefinitions:
     enabled: true
     servers: |-
-      '"1": {
+      "1": {
         "Name": "Traceability-FOSS PostgreSQL",
         "Group": "Primary",
         "Port": 5432,
@@ -90,7 +90,8 @@ pgadmin4:
         "Host": "product-traceability-foss-backend-postgresql",
         "SSLMode": "required",
         "MaintenanceDB": "postgres"
-     }'
+     }
+
   networkPolicy:
     enabled: false
   ingress:
