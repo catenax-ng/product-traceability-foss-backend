@@ -34,11 +34,40 @@ keycloak:
     clientSecret: <path:traceability-foss/data/dev/keycloak/oauth2#clientSecret>
 
 postgresql:
+  secret:
+    initUserDbSql: "<path:traceability-foss/data/dev/database#initUserDb.sql>"
   auth:
     postgresPassword: "<path:traceability-foss/data/dev/database#postgresPassword>"
   primary:
-    initdb:
-      scriptsSecret: "<path:traceability-foss/data/dev/database#initUserDb.sql>"
+    extraVolumeMounts:
+      - name: initdb
+        mountPath: "/docker-entrypoint-initdb.d"
+      - name: initdb-secrets
+        mountPath: "/secrets"
+    extraVolumes:
+      - name: initdb
+        emptyDir: {}
+      - name: initdb-secrets
+        secret:
+          secretName: secret-postgres-init-db-user
+    initContainers:
+      - name: initdb
+        image: ghcr.io/catenax-ng/product-portal-cd_initdb:latest # TODO check
+        imagePullPolicy: Always
+        command:
+          - sh
+        args:
+          - -c
+          - |
+            echo "Copying initdb secret sqls..."
+            cp /secrets/* /docker-entrypoint-initdb.d
+            echo "Copying initdb sqls..."
+            cp -R /import/* /docker-entrypoint-initdb.d
+        volumeMounts:
+          - name: initdb
+            mountPath: "/docker-entrypoint-initdb.d"
+          - name: initdb-secrets
+            mountPath: "/secrets"
 #    username: "edc"
 #    password: "<path:traceability-foss/data/dev/database#password>"
 #    database: "edc"
@@ -52,15 +81,16 @@ pgadmin4:
     type: Recreate
   serverDefinitions:
     enabled: true
-    servers:
-      firstServer:
-        Name: "Traceability PostgreSQL"
-        Group: "Servers"
-        Port: 5432
-        Username: "postgres"
-        Host: "traceability-database-postgresql-hl"
-        SSLMode: "required"
-        MaintenanceDB: "postgres"
+    servers: |-
+      "1": {
+        "Name": "Traceability-FOSS PostgreSQL",
+        "Group": "Primary",
+        "Port": 5432,
+        "Username": "postgres",
+        "Host": "product-traceability-foss-backend-postgresql",
+        "SSLMode": "required",
+        "MaintenanceDB": "postgres"
+     }
   networkPolicy:
     enabled: false
   ingress:
