@@ -81,16 +81,6 @@ pgadmin4:
     type: Recreate
   serverDefinitions:
     enabled: true
-    servers: |-
-      "1": {
-        "Name": "Traceability-FOSS PostgreSQL",
-        "Group": "Primary",
-        "Port": 5432,
-        "Username": "postgres",
-        "Host": "product-traceability-foss-backend-postgresql",
-        "SSLMode": "required",
-        "MaintenanceDB": "postgres"
-     }
 
   networkPolicy:
     enabled: false
