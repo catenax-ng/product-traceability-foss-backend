@@ -24,7 +24,7 @@ mailserver:
   password: <path:traceability-foss/data/dev#mailserverPassword>
 
 datasource:
-  url: jdbc:postgresql://traceability-database-postgresql:5432/trace
+  url: jdbc:postgresql://product-traceability-foss-backend-postgresql:5432/trace
   username: trace
   password: <path:traceability-foss/data/dev/database#tracePassword>
 
@@ -79,9 +79,6 @@ pgadmin4:
   enabled: true
   strategy:
     type: Recreate
-  serverDefinitions:
-    enabled: true
-
   networkPolicy:
     enabled: false
   ingress:
