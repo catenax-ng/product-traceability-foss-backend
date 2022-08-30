@@ -144,9 +144,9 @@ postgresql:
 #    initUserDbSql: ""
   auth:
     postgresPassword: ""
-#    username: ""
-#    password: ""
-#    database: ""
+    username: ""
+    password: ""
+    database: ""
   architecture: standalone
   audit:
     pgAuditLog: write, ddl

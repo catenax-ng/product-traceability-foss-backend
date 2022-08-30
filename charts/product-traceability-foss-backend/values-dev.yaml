@@ -38,6 +38,9 @@ postgresql:
     initUserDbSql: "<path:traceability-foss/data/dev/database#initUserDb.sql>"
   auth:
     postgresPassword: "<path:traceability-foss/data/dev/database#postgresPassword>"
+    username: "edc"
+    password: "<path:traceability-foss/data/dev/database#password>"
+    database: "edc"
   primary:
     extraVolumeMounts:
       - name: initdb
@@ -68,28 +71,11 @@ postgresql:
             mountPath: "/docker-entrypoint-initdb.d"
           - name: initdb-secrets
             mountPath: "/secrets"
-#    username: "edc"
-#    password: "<path:traceability-foss/data/dev/database#password>"
-#    database: "edc"
-#  secret:
-#    password: "<path:traceability-foss/data/dev/database#postgresPassword>"
-#    initUserDbSql: "<path:traceability-foss/data/dev/database#initUserDb.sql>"
 
 pgadmin4:
   enabled: true
   strategy:
     type: Recreate
-  serverDefinitions:
-    enabled: true
-    servers:
-      firstServer:
-        Name: "Traceability-FOSS PostgreSQL"
-        Group: "Servers"
-        Port: 5432
-        Username: "postgres"
-        Host: "product-traceability-foss-backend-postgresql"
-        SSLMode: "required"
-        MaintenanceDB: "postgres"
   networkPolicy:
     enabled: false
   ingress:
