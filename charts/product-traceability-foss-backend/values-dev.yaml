@@ -38,9 +38,6 @@ postgresql:
     initUserDbSql: "<path:traceability-foss/data/dev/database#initUserDb.sql>"
   auth:
     postgresPassword: "<path:traceability-foss/data/dev/database#postgresPassword>"
-    username: "edc"
-    password: "<path:traceability-foss/data/dev/database#password>"
-    database: "edc"
   primary:
     extraVolumeMounts:
       - name: initdb
