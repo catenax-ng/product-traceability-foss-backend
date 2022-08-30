@@ -79,6 +79,17 @@ pgadmin4:
   enabled: true
   strategy:
     type: Recreate
+  serverDefinitions:
+    enabled: true
+    servers:
+      firstServer:
+        Name: "Traceability-FOSS PostgreSQL"
+        Group: "Servers"
+        Port: 5432
+        Username: "postgres"
+        Host: "product-traceability-foss-backend-postgresql"
+        SSLMode: "required"
+        MaintenanceDB: "postgres"
   networkPolicy:
     enabled: false
   ingress:
