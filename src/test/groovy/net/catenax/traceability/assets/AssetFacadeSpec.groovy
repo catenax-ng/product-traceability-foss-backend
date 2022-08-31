@@ -17,26 +17,16 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.assets.domain
+package net.catenax.traceability.assets
 
-import net.catenax.traceability.UnitSpec
 import net.catenax.traceability.assets.domain.model.Asset
 import net.catenax.traceability.assets.domain.model.QualityType
-import net.catenax.traceability.assets.domain.ports.AssetMockDataRepository
-import net.catenax.traceability.assets.domain.ports.AssetRepository
-import net.catenax.traceability.assets.domain.service.AssetService
-import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.IrsService
 
-class AssetServiceSpec extends UnitSpec {
-
-	AssetRepository repository = Mock()
-	AssetMockDataRepository assetMockDataRepository = Mock()
-
-	AssetService assetService = new AssetService(repository, assetMockDataRepository, Mock(IrsService))
+class AssetFacadeSpec extends AssetsSpec {
 
 	def "should return assets country map"() {
 		given:
-			repository.getAssets() >> [
+			assetRepository.getAssets() >> [
 				newAsset("DEU"),
 				newAsset("DEU"),
 				newAsset("DEU"),
@@ -47,7 +37,7 @@ class AssetServiceSpec extends UnitSpec {
 			]
 
 		when:
-			Map<String, Long> countryMap = assetService.getAssetsCountryMap()
+			Map<String, Long> countryMap = assetFacade.getAssetsCountryMap()
 
 		then:
 			countryMap["DEU"] == 3
@@ -56,8 +46,7 @@ class AssetServiceSpec extends UnitSpec {
 			countryMap["FRA"] == 1
 	}
 
-    Asset newAsset(String country) {
+	Asset newAsset(String country) {
 		new Asset(null, null, null, null, null, null, null, null, null, country, QualityType.OK)
 	}
-
 }

@@ -57,6 +57,7 @@ val scribejavaVersion = "8.0.0"
 val findBugsVersion = "3.0.2"
 val restitoVersion = "0.9.5"
 val resilience4jVersion = "1.7.0"
+val testContainersVersion = "1.17.3"
 
 dependencyManagement {
 	imports {
@@ -116,8 +117,8 @@ dependencies {
     testImplementation("org.spockframework:spock-core")
     testImplementation("org.spockframework:spock-spring")
 
-	integrationImplementation("org.testcontainers:postgresql:1.17.3")
-	integrationImplementation("org.testcontainers:spock:1.17.3")
+	integrationImplementation("org.testcontainers:postgresql:$testContainersVersion")
+	integrationImplementation("org.testcontainers:spock:$testContainersVersion")
 
 	integrationImplementation("org.springframework.boot:spring-boot-starter-test")
 	integrationImplementation("org.springframework.security:spring-security-test")
@@ -177,8 +178,25 @@ tasks.jacocoTestReport {
 		xml.required.set(true)
 		xml.outputLocation.set(File("${project.buildDir}/jacoco/jacocoTestReport.xml"))
 		csv.required.set(false)
-		html.required.set(false)
+		html.required.set(true)
+		html.outputLocation.set(File("${project.buildDir}/jacoco/jacocoTestReport.html"))
 	}
+
+	classDirectories.setFrom(
+		files(classDirectories.files.map {
+			fileTree(it) {
+				exclude(
+					"**/generated/**",
+					"**/openapi/**",
+					"**/*Application.class",
+					"**/common/**",
+					"**/assets/domain/model/**",
+					"**/assets/infrastructure/**",
+					"**/assets/config/**"
+				)
+			}
+		})
+	)
 }
 
 tasks.test {
