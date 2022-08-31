@@ -52,7 +52,7 @@ postgresql:
           secretName: secret-postgres-init-db-user
     initContainers:
       - name: initdb
-        image: ghcr.io/catenax-ng/product-portal-cd_initdb:latest # TODO check
+        image: ghcr.io/catenax-ng/product-portal-cd_initdb:latest
         imagePullPolicy: Always
         command:
           - sh
