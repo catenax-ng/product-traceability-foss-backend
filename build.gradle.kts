@@ -178,8 +178,7 @@ tasks.jacocoTestReport {
 		xml.required.set(true)
 		xml.outputLocation.set(File("${project.buildDir}/jacoco/jacocoTestReport.xml"))
 		csv.required.set(false)
-		html.required.set(true)
-		html.outputLocation.set(File("${project.buildDir}/jacoco/jacocoTestReport.html"))
+		html.required.set(false)
 	}
 
 	classDirectories.setFrom(
