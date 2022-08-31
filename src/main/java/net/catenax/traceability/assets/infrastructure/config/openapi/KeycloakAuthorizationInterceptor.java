@@ -67,8 +67,6 @@ public class KeycloakAuthorizationInterceptor implements RequestInterceptor {
 		try {
 			oAuth2AuthorizedClient = oAuth2AuthorizedClientManager.authorize(request);
 		} catch (ClientAuthorizationException e) {
-			logger.error("Couldn't retrieve keycloak token for technical user", e);
-
 			throw new KeycloakTechnicalUserAuthorizationException(e);
 		}
 

@@ -31,10 +31,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 public class RegistryService {
+
 	private static final Logger logger = LoggerFactory.getLogger(RegistryService.class);
 
 	private final ObjectMapper objectMapper;
@@ -63,12 +63,19 @@ public class RegistryService {
 		List<ShellDescriptor> shellDescriptors = descriptors.getItems().stream()
 			.filter(it -> it.getGlobalAssetId() != null)
 			.map(i -> {
-				String globalAssetId = i.getGlobalAssetId().getValue().get(0);
+				final String rawDescriptor;
+
 				try {
-					return new ShellDescriptor(i.getIdentification(), globalAssetId, objectMapper.writeValueAsString(i));
+					rawDescriptor = objectMapper.writeValueAsString(i);
 				} catch (JsonProcessingException e) {
-					throw new RuntimeException(e);
+					logger.warn("Failed to write rawDescriptor {} as string", i, e);
+
+					throw new IllegalArgumentException(e);
 				}
+
+				String globalAssetId = i.getGlobalAssetId().getValue().get(0);
+
+				return new ShellDescriptor(i.getIdentification(), globalAssetId, rawDescriptor);
 		}).toList();
 
 		logger.info("Found {} shell descriptors containing a global asset ID.", shellDescriptors.size());
