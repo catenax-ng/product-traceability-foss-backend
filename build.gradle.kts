@@ -180,18 +180,17 @@ tasks.jacocoTestReport {
 		csv.required.set(false)
 		html.required.set(false)
 	}
-
 	classDirectories.setFrom(
 		files(classDirectories.files.map {
 			fileTree(it) {
 				exclude(
-					"**/generated/**",
-					"**/openapi/**",
-					"**/*Application.class",
-					"**/common/**",
-					"**/assets/domain/model/**",
-					"**/assets/infrastructure/**",
-					"**/assets/config/**"
+					"net/catenax/traceability/generated/**",
+					"net/catenax/traceability/openapi/**",
+					"net/catenax/traceability/*Application.class",
+					"net/catenax/traceability/common/**",
+					"net/catenax/traceability/assets/domain/model/**",
+					"net/catenax/traceability/assets/infrastructure/**",
+					"net/catenax/traceability/assets/config/**"
 				)
 			}
 		})
