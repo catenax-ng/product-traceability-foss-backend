@@ -27,7 +27,7 @@ jobs:
       - name: KICS scan
         uses: checkmarx/kics-github-action@master
         with:
-          exclude_paths: /openapi
+          exclude_paths: openapi/
           # Scanning directory .
           path: "."
           # Fail on HIGH severity results
