@@ -1,8 +1,27 @@
+/********************************************************************************
+ * Copyright (c) 2021,2022 Contributors to the CatenaX (ng) GitHub Organisation
+ *
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License, Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+
 package net.catenax.traceability.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.catenax.traceability.assets.domain.AssetNotFoundException;
-import net.catenax.traceability.assets.infrastructure.config.openapi.bpn.KeycloakTechnicalUserAuthorizationException;
+import net.catenax.traceability.assets.domain.model.AssetNotFoundException;
+import net.catenax.traceability.assets.infrastructure.config.openapi.KeycloakTechnicalUserAuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -26,7 +45,11 @@ public class ErrorHandlingConfig implements AuthenticationFailureHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(ErrorHandlingConfig.class);
 
-	private final ObjectMapper objectMapper = new ObjectMapper();
+	private final ObjectMapper objectMapper;
+
+	public ErrorHandlingConfig(ObjectMapper objectMapper) {
+		this.objectMapper = objectMapper;
+	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException methodArgumentNotValidException) {
@@ -63,7 +86,7 @@ public class ErrorHandlingConfig implements AuthenticationFailureHandler {
 		logger.error("Couldn't retrieve keycloak token for technical user", keycloakTechnicalUserAuthorizationException);
 
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-			.body(new ErrorResponse("Please try again latter."));
+			.body(new ErrorResponse("Please try again later."));
 	}
 
 	@ExceptionHandler(Exception.class)
@@ -71,7 +94,7 @@ public class ErrorHandlingConfig implements AuthenticationFailureHandler {
 		logger.error("Unhandled exception", exception);
 
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-			.body(new ErrorResponse("Please try again latter."));
+			.body(new ErrorResponse("Please try again later."));
 	}
 
 	@Override
