@@ -135,20 +135,6 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
-tasks.create<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("generateBpnApi") {
-	inputSpec.set("${project.rootDir}/openapi/bpn.yaml")
-	outputDir.set("${buildDir}/openapi")
-	validateSpec.set(false)
-
-	groupId.set("${project.group}")
-
-	library.set("feign")
-	generatorName.set("java")
-	apiPackage.set("net.catenax.traceability.assets.infrastructure.adapters.openapi.bpn")
-	modelPackage.set("net.catenax.traceability.assets.infrastructure.adapters.openapi.bpn")
-	configOptions.put("sourceFolder", "src/main/java")
-}
-
 tasks.create<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("generateAasRegistryApi") {
 	inputSpec.set("${project.rootDir}/openapi/aas-registry-openapi.yaml")
 	outputDir.set("${buildDir}/openapi")
