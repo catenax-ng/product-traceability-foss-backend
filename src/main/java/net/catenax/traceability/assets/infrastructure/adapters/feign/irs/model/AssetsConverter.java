@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 @Component
 public class AssetsConverter {
 
-	private final static String EMPTY_TEXT = "--";
+	private static final String EMPTY_TEXT = "--";
 
 	private final ObjectMapper mapper = new ObjectMapper()
 		.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
