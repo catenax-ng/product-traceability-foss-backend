@@ -22,7 +22,6 @@ package net.catenax.traceability.assets.domain.service;
 import net.catenax.traceability.assets.domain.model.Asset;
 import net.catenax.traceability.assets.domain.model.AssetNotFoundException;
 import net.catenax.traceability.assets.domain.model.QualityType;
-import net.catenax.traceability.assets.domain.ports.AssetMockDataRepository;
 import net.catenax.traceability.assets.domain.ports.AssetRepository;
 import net.catenax.traceability.assets.domain.ports.IrsRepository;
 import org.slf4j.Logger;
@@ -39,12 +38,10 @@ public class AssetService {
 	private static final Logger logger = LoggerFactory.getLogger(AssetService.class);
 
 	private final AssetRepository assetRepository;
-	private final AssetMockDataRepository assetMockDataRepository;
 	private final IrsRepository irsRepository;
 
-	public AssetService(AssetRepository assetRepository, AssetMockDataRepository assetMockDataRepository, IrsRepository irsRepository) {
+	public AssetService(AssetRepository assetRepository, IrsRepository irsRepository) {
 		this.assetRepository = assetRepository;
-		this.assetMockDataRepository = assetMockDataRepository;
 		this.irsRepository = irsRepository;
 	}
 
