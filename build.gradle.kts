@@ -58,6 +58,7 @@ val findBugsVersion = "3.0.2"
 val restitoVersion = "0.9.5"
 val resilience4jVersion = "1.7.0"
 val testContainersVersion = "1.17.3"
+val schedlockVersion = "4.41.0"
 
 dependencyManagement {
 	imports {
@@ -99,6 +100,9 @@ dependencies {
 	implementation("org.keycloak:keycloak-spring-boot-starter:$keycloakVersion")
 
 	implementation("io.springfox:springfox-boot-starter:$springfoxVersion")
+	implementation("net.javacrumbs.shedlock:shedlock-spring:$schedlockVersion")
+	implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$schedlockVersion")
+
 
 	// for demo purposes, to be removed once EDC works
 	implementation("com.github.javafaker:javafaker:1.0.2") {

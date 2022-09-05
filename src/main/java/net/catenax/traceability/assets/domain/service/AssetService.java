@@ -53,6 +53,7 @@ public class AssetService {
 			try {
 				synchronizeAssets(globalAssetId);
 			} catch (Exception e) {
+				e.printStackTrace();
 				logger.warn("Cannot fetch assets for id: {}. Error: {}", globalAssetId, e.getMessage());
 			}
 		}
@@ -63,12 +64,7 @@ public class AssetService {
 
 		List<Asset> assets = irsRepository.findAssets(globalAssetId);
 
-		if (assets.isEmpty()) { // fallback method just in case, remove after demo
-			logger.warn("Submodels not found in job details. Using defaults...");
-			assets = assetMockDataRepository.mockData();
-		}
-
-		logger.info("Assets synchronization for globalAssetId: {} COMPLETED. Found {} assets.", globalAssetId, assets.size());
+		logger.info("Assets synchronization for globalAssetId: {} is done. Found {} assets.", globalAssetId, assets.size());
 
 		assetRepository.saveAll(assets);
 	}
