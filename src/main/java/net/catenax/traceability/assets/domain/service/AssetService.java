@@ -53,7 +53,6 @@ public class AssetService {
 			try {
 				synchronizeAssets(globalAssetId);
 			} catch (Exception e) {
-				e.printStackTrace();
 				logger.warn("Cannot fetch assets for id: {}. Error: {}", globalAssetId, e.getMessage());
 			}
 		}
