@@ -160,7 +160,7 @@ tasks.withType<org.openapitools.generator.gradle.plugin.tasks.GenerateTask> {
 }
 
 tasks.withType<JavaCompile> {
-	dependsOn("generateBpnApi", "generateAasRegistryApi")
+	dependsOn("generateAasRegistryApi")
 }
 
 tasks.jacocoTestReport {
