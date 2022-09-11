@@ -39,6 +39,6 @@ public class RegistryController {
 
 	@GetMapping("/registry/fetch/{bpn}")
 	public void assets(@PathVariable String bpn) {
-		registryFacade.loadShellDescriptorsAsyncFor(bpn);
+		registryFacade.loadShellDescriptors(bpn);
 	}
 }

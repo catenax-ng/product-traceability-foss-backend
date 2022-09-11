@@ -17,12 +17,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package net.catenax.traceability.assets.infrastructure.adapters.jpa.shelldescriptor;
+package net.catenax.traceability.assets.domain.ports;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import net.catenax.traceability.assets.domain.model.ShellDescriptor;
 
-@Repository
-public interface ShellDescriptorRepository extends JpaRepository<ShellDescriptorEntity, Long> {
-	Long countAllByShellDescriptorIdEquals(String shellDescriptorId);
+import java.time.ZonedDateTime;
+import java.util.Collection;
+import java.util.List;
+
+public interface ShellDescriptorRepository {
+	List<ShellDescriptor> findByBpn(String bpn);
+	void update(ShellDescriptor shellDescriptorEntity);
+	void save(String bpn, Collection<ShellDescriptor> values);
+	void removeOldDescriptors(String bpn, ZonedDateTime now);
+	void clean();
 }

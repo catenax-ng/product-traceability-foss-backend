@@ -33,8 +33,6 @@ keycloak:
   use-resource-role-mappings: true
 
 feign:
-  bpnApi:
-    url: "https://catenax-bpdm-int.demo.catena-x.net/"
   irsApi:
     url: "https://irs.dev.demo.catena-x.net"
   registryApi:
