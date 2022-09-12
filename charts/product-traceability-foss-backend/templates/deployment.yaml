@@ -12,6 +12,7 @@ spec:
   selector:
     matchLabels:
       {{- include "product-traceability-foss-backend.selectorLabels" . | nindent 6 }}
+  revisionHistoryLimit: 2
   template:
     metadata:
       namespace: {{ .Values.namespace | default .Release.Namespace }}
