@@ -26,9 +26,9 @@ import java.util.Collection;
 import java.util.List;
 
 public interface ShellDescriptorRepository {
-	List<ShellDescriptor> findByBpn(String bpn);
-	void update(ShellDescriptor shellDescriptorEntity);
-	void save(String bpn, Collection<ShellDescriptor> values);
-	void removeOldDescriptors(String bpn, ZonedDateTime now);
+	List<ShellDescriptor> findAll();
+	void update(ShellDescriptor shellDescriptor);
+	void saveAll(Collection<ShellDescriptor> values);
+	void removeOldDescriptors(ZonedDateTime now);
 	void clean();
 }

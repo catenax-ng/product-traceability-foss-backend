@@ -41,8 +41,8 @@ public class ShellDescriptorsService {
 	}
 
 	@Transactional
-	public List<ShellDescriptor> update(String bpn, List<ShellDescriptor> descriptors) {
-		Map<String, ShellDescriptor> existingDescriptors = shellDescriptorRepository.findByBpn(bpn).stream()
+	public List<ShellDescriptor> update(List<ShellDescriptor> descriptors) {
+		Map<String, ShellDescriptor> existingDescriptors = shellDescriptorRepository.findAll().stream()
 			.collect(Collectors.toMap(ShellDescriptor::globalAssetId, Function.identity()));
 		List<ShellDescriptor> descriptorsToSync = new ArrayList<>();
 		ZonedDateTime now = ZonedDateTime.now();
@@ -55,8 +55,8 @@ public class ShellDescriptorsService {
 			}
 		}
 
-		shellDescriptorRepository.save(bpn, descriptorsToSync);
-		shellDescriptorRepository.removeOldDescriptors(bpn, now);
+		shellDescriptorRepository.saveAll(descriptorsToSync);
+		shellDescriptorRepository.removeOldDescriptors(now);
 
 		return descriptorsToSync;
 	}

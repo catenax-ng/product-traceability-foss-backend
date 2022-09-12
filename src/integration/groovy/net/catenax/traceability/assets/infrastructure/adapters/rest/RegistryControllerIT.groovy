@@ -26,7 +26,6 @@ import net.catenax.traceability.common.support.IrsApiSupport
 import net.catenax.traceability.common.support.RegistrySupport
 import net.catenax.traceability.common.support.ShellDescriptorSupport
 import org.springframework.http.MediaType
-import spock.util.concurrent.PollingConditions
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -48,7 +47,7 @@ class RegistryControllerIT extends IntegrationSpec implements IrsApiSupport, Reg
 			irsApiReturnsJobDetails()
 
 		when:
-			mvc.perform(get("/registry/fetch/$BPN")
+			mvc.perform(get("/registry/reload")
 				.contentType(MediaType.APPLICATION_JSON)
 			).andExpect(status().isOk())
 
@@ -74,7 +73,7 @@ class RegistryControllerIT extends IntegrationSpec implements IrsApiSupport, Reg
 			fetchRegistryShellDescriptorsLookupReturnsDataForUpdate()
 
 		when:
-			mvc.perform(get("/registry/fetch/$BPN")
+			mvc.perform(get("/registry/reload")
 				.contentType(MediaType.APPLICATION_JSON)
 			).andExpect(status().isOk())
 
@@ -89,7 +88,7 @@ class RegistryControllerIT extends IntegrationSpec implements IrsApiSupport, Reg
 			verifyIrsApiTriggerJobCalledOnceFor(syncIds)
 
 		when:
-			mvc.perform(get("/registry/fetch/$BPN")
+			mvc.perform(get("/registry/reload")
 				.contentType(MediaType.APPLICATION_JSON)
 			).andExpect(status().isOk())
 
@@ -114,7 +113,7 @@ class RegistryControllerIT extends IntegrationSpec implements IrsApiSupport, Reg
 			assetShellsLookupFailed()
 
 		when:
-			mvc.perform(get("/registry/fetch/$BPN")
+			mvc.perform(get("/registry/reload")
 				.contentType(MediaType.APPLICATION_JSON)
 			).andExpect(status().isOk())
 
@@ -140,12 +139,12 @@ class RegistryControllerIT extends IntegrationSpec implements IrsApiSupport, Reg
 			fetchRegistryShellDescriptorsLookupReturnsDataFailed()
 
 		when:
-			mvc.perform(get("/registry/fetch/$BPN")
+			mvc.perform(get("/registry/reload")
 				.contentType(MediaType.APPLICATION_JSON)
 			).andExpect(status().isOk())
 
 		then:
-			new PollingConditions(timeout: 10, initialDelay: 2.0).eventually {
+			eventually {
 				assertShellDescriptors().hasSize(0)
 				assertNoAssetsStored()
 			}

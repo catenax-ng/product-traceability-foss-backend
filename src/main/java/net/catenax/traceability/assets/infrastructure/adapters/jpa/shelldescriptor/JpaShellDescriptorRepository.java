@@ -23,12 +23,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface JpaShellDescriptorRepository extends JpaRepository<ShellDescriptorEntity, Long> {
 	Optional<ShellDescriptorEntity> findByShellDescriptorId(String shellDescriptorId);
-	List<ShellDescriptorEntity> findByBpn(String bpn);
-	void deleteAllByBpnAndUpdatedBefore(String bpn, ZonedDateTime dateTime);
+	void deleteAllByUpdatedBefore(ZonedDateTime dateTime);
 }

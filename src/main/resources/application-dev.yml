@@ -16,6 +16,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 ################################################################################
+traceability:
+  bpn: BPNL00000003AXS3
 
 spring:
   security:
@@ -37,4 +39,3 @@ feign:
     url: "https://irs.dev.demo.catena-x.net"
   registryApi:
     url: https://semantics.int.demo.catena-x.net/registry
-    defaultBpn: BPNL00000003AXS3

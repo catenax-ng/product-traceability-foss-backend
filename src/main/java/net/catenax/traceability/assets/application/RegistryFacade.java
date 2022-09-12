@@ -42,14 +42,14 @@ public class RegistryFacade {
 		this.assetService = assetService;
 	}
 
-	public List<ShellDescriptor> updateShellDescriptors(String bpn) {
-		List<ShellDescriptor> descriptors = registryService.findAssetsByBpn(bpn);
-		return shellDescriptiorsService.update(bpn, descriptors);
+	public List<ShellDescriptor> updateShellDescriptors() {
+		List<ShellDescriptor> descriptors = registryService.findAssets();
+		return shellDescriptiorsService.update(descriptors);
 	}
 
 	@Async(value = AssetsAsyncConfig.LOAD_SHELL_DESCRIPTORS_EXECUTOR)
-	public void loadShellDescriptors(String bpn) {
-		List<ShellDescriptor> descriptors = updateShellDescriptors(bpn);
+	public void loadShellDescriptors() {
+		List<ShellDescriptor> descriptors = updateShellDescriptors();
 		List<String> globalAssetIds = descriptors.stream()
 			.map(ShellDescriptor::globalAssetId)
 			.toList();

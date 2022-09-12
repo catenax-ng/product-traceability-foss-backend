@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
 
 @Component
 public class PersistentShellDescriptorsRepository implements ShellDescriptorRepository {
@@ -19,8 +18,8 @@ public class PersistentShellDescriptorsRepository implements ShellDescriptorRepo
 	}
 
 	@Override
-	public List<ShellDescriptor> findByBpn(String bpn) {
-		return repository.findByBpn(bpn).stream()
+	public List<ShellDescriptor> findAll() {
+		return repository.findAll().stream()
 			.map(this::toShellDescriptor)
 			.toList();
 	}
@@ -34,16 +33,15 @@ public class PersistentShellDescriptorsRepository implements ShellDescriptorRepo
 	}
 
 	@Override
-	public void save(String bpn, Collection<ShellDescriptor> values) {
-
+	public void saveAll(Collection<ShellDescriptor> values) {
 		repository.saveAll(values.stream()
-			.map(this.toNewEntity(bpn))
+			.map(this::toNewEntity)
 			.toList());
 	}
 
 	@Override
-	public void removeOldDescriptors(String bpn, ZonedDateTime now) {
-		repository.deleteAllByBpnAndUpdatedBefore(bpn, now);
+	public void removeOldDescriptors(ZonedDateTime now) {
+		repository.deleteAllByUpdatedBefore(now);
 	}
 
 	@Override
@@ -52,11 +50,11 @@ public class PersistentShellDescriptorsRepository implements ShellDescriptorRepo
 	}
 
 	private ShellDescriptor toShellDescriptor(ShellDescriptorEntity descriptor) {
-		return new ShellDescriptor(descriptor.getShellDescriptorId(), descriptor.getGlobalAssetId(), descriptor.getRawDescriptor());
+		return new ShellDescriptor(descriptor.getShellDescriptorId(), descriptor.getGlobalAssetId());
 	}
 
-	private Function<ShellDescriptor, ShellDescriptorEntity> toNewEntity(String bpn) {
-		return (descriptor) -> ShellDescriptorEntity.newEntity(descriptor.shellDescriptorId(), descriptor.globalAssetId(), bpn, descriptor.rawDescriptor());
+	private ShellDescriptorEntity toNewEntity(ShellDescriptor descriptor) {
+		return ShellDescriptorEntity.newEntity(descriptor.shellDescriptorId(), descriptor.globalAssetId());
 	}
 
 }

@@ -4,10 +4,8 @@ import net.catenax.traceability.assets.domain.model.ShellDescriptor
 
 trait ShellDescriptorSupport implements ShellDescriptorStoreProvider {
 
-	static final String BPN = "BPNL00000003AXS3"
-
 	ShellDescriptorsAssertion assertShellDescriptors() {
-		return new ShellDescriptorsAssertion(shellDescriptorRepository().findByBpn(BPN))
+		return new ShellDescriptorsAssertion(shellDescriptorRepository().findAll())
 	}
 
 	static class ShellDescriptorsAssertion {
