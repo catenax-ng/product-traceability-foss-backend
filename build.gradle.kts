@@ -40,7 +40,8 @@ sonarqube {
 		property("sonar.organization", "catenax-ng")
 		property("sonar.host.url", "https://sonarcloud.io")
 		property("sonar.projectKey", "catenax-ng_product-traceability-foss-backend")
-		property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/jacoco/*.xml")
+//		property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/jacoco/*.xml")
+		property("sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/*.exec")
 	}
 }
 
@@ -169,7 +170,7 @@ tasks.jacocoTestReport {
 		xml.required.set(true)
 		xml.outputLocation.set(File("${project.buildDir}/jacoco/jacocoTestReport.xml"))
 		csv.required.set(false)
-		html.required.set(false)
+		html.required.set(true)
 	}
 	classDirectories.setFrom(
 		files(classDirectories.files.map {
