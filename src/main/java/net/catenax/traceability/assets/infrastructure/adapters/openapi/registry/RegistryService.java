@@ -66,7 +66,7 @@ public class RegistryService {
 
 		List<ShellDescriptor> shellDescriptors = descriptors.getItems().stream()
 			.filter(it -> Objects.nonNull(it.getGlobalAssetId()))
-			.peek(this::logIncomingDescriptor)
+			.map(this::logIncomingDescriptor)
 			.map(i -> new ShellDescriptor(i.getIdentification(), i.getGlobalAssetId().getValue().get(0)))
 			.toList();
 
@@ -75,7 +75,7 @@ public class RegistryService {
 		return shellDescriptors;
 	}
 
-	private void logIncomingDescriptor(AssetAdministrationShellDescriptor descriptor) {
+	private AssetAdministrationShellDescriptor logIncomingDescriptor(AssetAdministrationShellDescriptor descriptor) {
 		if (logger.isDebugEnabled()) {
 			try {
 				String rawDescriptor = objectMapper.writeValueAsString(descriptor);
@@ -84,6 +84,7 @@ public class RegistryService {
 				logger.warn("Failed to write rawDescriptor {} as string", descriptor, e);
 			}
 		}
+		return descriptor;
 	}
 
 	private String getFilterValue(String key, String value) {
