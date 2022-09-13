@@ -2,7 +2,7 @@ name: "Trivy"
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main", "TRACEFOSS-584-api-docs-update" ]
   schedule:
     # Once a day
     - cron: "0 0 * * *"
@@ -24,7 +24,7 @@ jobs:
       - name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@master
         with:
-          trivyignore: /github/workspace/.trivyignore
+          trivyignore: /.github/.trivyignore
           scan-type: "config"
           exit-code: "1"
           hide-progress: false
