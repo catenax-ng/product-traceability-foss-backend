@@ -24,7 +24,7 @@ jobs:
       - name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@master
         with:
-          trivyignore: /github/workspace/.trivyignore/.github/workflows/.trivyignore
+          trivyignores: "${{ github.workspace }}/.github/workflows/.trivyignore"
           scan-type: "config"
           exit-code: "1"
           hide-progress: false
