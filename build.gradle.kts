@@ -41,7 +41,7 @@ sonarqube {
 		property("sonar.host.url", "https://sonarcloud.io")
 		property("sonar.projectKey", "catenax-ng_product-traceability-foss-backend")
 //		property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/jacoco/*.xml")
-		property("sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/*.exec")
+//		property("sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/*.exec")
 	}
 }
 
