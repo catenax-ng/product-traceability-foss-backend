@@ -2,7 +2,7 @@ name: "Trivy"
 
 on:
   push:
-    branches: [ "main", "TRACEFOSS-584-api-docs-update" ]
+    branches: [ main ]
   schedule:
     # Once a day
     - cron: "0 0 * * *"
