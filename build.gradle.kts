@@ -41,6 +41,16 @@ sonarqube {
 		property("sonar.host.url", "https://sonarcloud.io")
 		property("sonar.projectKey", "catenax-ng_product-traceability-foss-backend")
 		property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/jacoco/*.xml")
+		property("sonar.coverage.exclusions", listOf(
+				"net/catenax/traceability/generated/**",
+				"net/catenax/traceability/openapi/**",
+				"net/catenax/traceability/*Application.class",
+				"net/catenax/traceability/common/**",
+				"net/catenax/traceability/assets/domain/model/**",
+				"net/catenax/traceability/assets/infrastructure/**",
+				"net/catenax/traceability/assets/config/**"
+			)
+		)
 	}
 }
 
@@ -73,8 +83,8 @@ dependencies {
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-mail")
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
@@ -116,11 +126,11 @@ dependencies {
 	implementation("io.github.resilience4j:resilience4j-retry:${resilience4jVersion}")
 	implementation("io.github.resilience4j:resilience4j-spring-boot2:${resilience4jVersion}")
 
-    testImplementation("org.codehaus.groovy:groovy-all:$groovyVersion")
 	testImplementation("org.codehaus.groovy:groovy-all:$groovyVersion")
-    testImplementation(platform("org.spockframework:spock-bom:$spockBomVersion"))
-    testImplementation("org.spockframework:spock-core")
-    testImplementation("org.spockframework:spock-spring")
+	testImplementation("org.codehaus.groovy:groovy-all:$groovyVersion")
+	testImplementation(platform("org.spockframework:spock-bom:$spockBomVersion"))
+	testImplementation("org.spockframework:spock-core")
+	testImplementation("org.spockframework:spock-spring")
 
 	integrationImplementation("org.testcontainers:postgresql:$testContainersVersion")
 	integrationImplementation("org.testcontainers:spock:$testContainersVersion")
@@ -128,7 +138,7 @@ dependencies {
 	integrationImplementation("org.springframework.boot:spring-boot-starter-test")
 	integrationImplementation("org.springframework.security:spring-security-test")
 
-    integrationImplementation("com.icegreen:greenmail-spring:$greenmailVersion")
+	integrationImplementation("com.icegreen:greenmail-spring:$greenmailVersion")
 	integrationImplementation("com.xebialabs.restito:restito:$restitoVersion")
 }
 
