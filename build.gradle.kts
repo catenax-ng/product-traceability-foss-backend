@@ -45,7 +45,7 @@ sonarqube {
 		property("sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/*.exec")
 		property("sonar.groovy.jacoco.reportPath", "${project.buildDir}/jacoco/*.xml")
 		property("sonar.groovy.jacoco.reportPath", "${project.buildDir}/jacoco/*.exec")
-		property("sonar.tests", listOf("${sourceSets.test.get().allSource.srcDirs}", "${sourceSets.integration.get().allSource.srcDirs}"))
+		property("sonar.tests", listOf("${sourceSets.test.get().allJava.srcDirs}", "${sourceSets.integration.get().allJava.srcDirs}"))
 	}
 }
 
