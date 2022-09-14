@@ -42,6 +42,7 @@ sonarqube {
 		property("sonar.projectKey", "catenax-ng_product-traceability-foss-backend")
 		property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/jacoco/*.xml")
 		property("sonar.tests", listOf("./src/test/groovy", "./src/integration/groovy"))
+		property("sonar.branch", "main")
 	}
 }
 
