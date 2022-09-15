@@ -36,6 +36,7 @@ public class AssetEntity {
 	private String nameAtManufacturer;
 	private String manufacturerPartId;
 	private String manufacturerId;
+	private String batchId;
 	private String manufacturerName;
 	private String nameAtCustomer;
 	private String customerPartId;
@@ -46,7 +47,7 @@ public class AssetEntity {
 	private List<ChildDescription> childDescriptors;
 
 	public AssetEntity(String id, String idShort, String nameAtManufacturer,
-					   String manufacturerPartId,  String manufacturerId,
+					   String manufacturerPartId,  String manufacturerId, String batchId,
 					   String manufacturerName, String nameAtCustomer,
 					   String customerPartId, Instant manufacturingDate,
 					   String manufacturingCountry, List<ChildDescription> childDescriptors,
@@ -56,6 +57,7 @@ public class AssetEntity {
 		this.nameAtManufacturer = nameAtManufacturer;
 		this.manufacturerPartId = manufacturerPartId;
 		this.manufacturerId = manufacturerId;
+		this.batchId = batchId;
 		this.manufacturerName = manufacturerName;
 		this.nameAtCustomer = nameAtCustomer;
 		this.customerPartId = customerPartId;
@@ -114,6 +116,14 @@ public class AssetEntity {
 
 	public void setManufacturerId(String manufacturerId) {
 		this.manufacturerId = manufacturerId;
+	}
+
+	public String getBatchId() {
+		return batchId;
+	}
+
+	public void setBatchId(String batchId) {
+		this.batchId = batchId;
 	}
 
 	public String getManufacturerName() {

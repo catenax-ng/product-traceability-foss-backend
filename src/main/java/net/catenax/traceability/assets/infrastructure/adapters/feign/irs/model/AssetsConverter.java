@@ -70,6 +70,7 @@ public class AssetsConverter {
 					defaultValue(part.partTypeInformation().nameAtManufacturer()),
 					defaultValue(part.partTypeInformation().manufacturerPartID()),
 					manufacturerId(part),
+					batchId(part),
 					manufacturerName(part, response.bpns()),
 					defaultValue(part.partTypeInformation().nameAtCustomer()),
 					defaultValue(part.partTypeInformation().customerPartId()),
@@ -86,13 +87,12 @@ public class AssetsConverter {
 	}
 
 	public String manufacturerId(SerialPartTypization part) {
-		if (part.localIdentifiers() == null) {
-			return EMPTY_TEXT;
-		}
-		return part.localIdentifiers().stream()
-			.filter(localId -> localId.type() == LocalIdType.MANUFACTURER_ID)
-			.findFirst()
-			.map(LocalId::value)
+		return part.getLocalId(LocalIdType.MANUFACTURER_ID)
+			.orElse(EMPTY_TEXT);
+	}
+
+	public String batchId(SerialPartTypization part) {
+		return part.getLocalId(LocalIdType.BATCH_ID)
 			.orElse(EMPTY_TEXT);
 	}
 
