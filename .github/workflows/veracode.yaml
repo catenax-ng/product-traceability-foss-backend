@@ -1,6 +1,7 @@
 name: "Veracode upload and scan"
 
 on:
+  pull_request:
   schedule:
     # Once a day
     - cron: "0 0 * * *"
