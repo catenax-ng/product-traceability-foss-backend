@@ -7,11 +7,10 @@
 [![VeraCode](https://github.com/catenax-ng/product-traceability-foss-backend/actions/workflows/veracode.yaml/badge.svg)](https://github.com/catenax-ng/product-traceability-foss-backend/actions/workflows/veracode.yaml)
 
 
-## What is the TRACE-FOSS?
+## What is TRACE-FOSS?
 
 Trace-FOSS is a system for tracking parts along the supply chain. A high level of transparency across the supplier network enables faster intervention based on
-a recorded event in the supply chain. This saves costs by seamlessly tracking parts and creates trust through clearly defined and secure data access by the companies
-and persons involved in the process.
+a recorded event in the supply chain. This saves costs by seamlessly tracking parts and creates trust through clearly defined and secure data access by the companies and persons involved in the process.
 
 ## Getting started
 
@@ -53,7 +52,7 @@ To run all tests invoke following command:
 ./gradlew testAll
 ```
 
-*Please note that following task depends on `integrationTest` task, so it's required to have [Docker Engine](https://docs.docker.com/engine/) running.*
+*Please note that this task depends on `integrationTest` task, so it's required to have [Docker Engine](https://docs.docker.com/engine/) running.*
 
 #### Generating OpenAPI clients
 
