@@ -15,6 +15,9 @@ $ cd product-traceability-foss-backend
   * `SPRING_DATASOURCE_PASSWORD` - with value `docker` [see docker-compose file](../docker/docker-compose.yml)
   * `KEYCLOAK_OAUTH2_CLIENT_ID` - with Keycloak client registration id specific value
   * `KEYCLOAK_OAUTH2_CLIENT_SECRET` - with Keycloak client registration secret specific value
+  * `MAILSERVER_HOST` - with host for the email server of your choice
+  * `MAILSERVER_PORT` - with port for the email server of your choice
+  * `MAILSERVER_USERNAME` - with username for the email server of your choice
   * `MAILSERVER_PASSWORD` - with password for the email server of your choice
   * `SPRING_PROFILES_ACTIVE` - with profile to be picked when starting the service. One of `[dev|int]`.
 * Start the service by invoking following command in project root directory `./gradlew bootRun`
@@ -38,19 +41,22 @@ In order to deploy the service following secrets needs to be provided for specif
 
 ### Database
 
-* `postgresql.secret.initUserDbSql` - database initialization script, contains username and password for databases used by the service but also by the deployed EDC.
+* `postgresql.secret.initUserDbSql` - database initialization script, contains username and password for databases used by the service.
 Please note that the final script should be encoded using Base64 encoding and then added to a secret. Sample command:
 ```sh
-echo -n 'CREATE ROLE edc WITH LOGIN PASSWORD 'yourPassowrd';\nCREATE DATABASE edc;\nGRANT ALL PRIVILEGES ON DATABASE edc TO edc;\n\nCREATE ROLE trace WITH LOGIN PASSWORD 'yourPassowrd';\nCREATE DATABASE trace;\nGRANT ALL PRIVILEGES ON DATABASE trace TO trace;' | base64
+echo -n 'CREATE ROLE trace WITH LOGIN PASSWORD 'yourPassword';\nCREATE DATABASE trace;\nGRANT ALL PRIVILEGES ON DATABASE trace TO trace;' | base64
 ```
 
 
 * `postgresql.auth.postgresPassword` - PostgreSQL master password
 * `datasource.password` - `trace` database password configured in `initUserDbSql` script
-* `pgAdmin4.env.passowrd` - pgAdmin4 master password
+* `pgAdmin4.env.password` - pgAdmin4 master password
 
 ### Email server
 
+* `mailserver.host` - host for the email server of your choice
+* `mailserver.port` - port for the email server of your choice
+* `mailserver.username` - username for the email server of your choice
 * `mailserver.password` - password for the email server of your choice
 
 ## API sample endpoints
