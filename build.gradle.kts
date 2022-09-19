@@ -59,7 +59,7 @@ val groovyVersion = "3.0.10"
 val spockBomVersion = "2.1-groovy-3.0"
 val greenmailVersion = "1.6.9"
 val springfoxVersion = "3.0.0"
-val keycloakVersion = "19.0.1"
+val keycloakVersion = "19.0.2"
 val feignVersion = "11.8"
 val springCloudVersion = "2021.0.1"
 val springBootSecurityOauth2Version = "2.6.8"
@@ -144,6 +144,7 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	finalizedBy(tasks.jacocoTestReport)
 }
 
 tasks.create<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("generateAasRegistryApi") {
@@ -175,6 +176,7 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.jacocoTestReport {
+	executionData.setFrom(fileTree("${project.buildDir}").include("/jacoco/*.exec"))
 	reports {
 		xml.required.set(true)
 		xml.outputLocation.set(File("${project.buildDir}/jacoco/jacocoTestReport.xml"))
@@ -196,8 +198,4 @@ tasks.jacocoTestReport {
 			}
 		})
 	)
-}
-
-tasks.test {
-	finalizedBy(tasks.jacocoTestReport)
 }

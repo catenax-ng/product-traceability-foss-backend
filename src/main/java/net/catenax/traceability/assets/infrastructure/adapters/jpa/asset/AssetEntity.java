@@ -42,6 +42,7 @@ public class AssetEntity {
 	private String customerPartId;
 	private Instant manufacturingDate;
 	private String manufacturingCountry;
+	private boolean supplierPart;
 	private QualityType qualityType;
 	@ElementCollection
 	private List<ChildDescription> childDescriptors;
@@ -50,8 +51,8 @@ public class AssetEntity {
 					   String manufacturerPartId,  String manufacturerId, String batchId,
 					   String manufacturerName, String nameAtCustomer,
 					   String customerPartId, Instant manufacturingDate,
-					   String manufacturingCountry, List<ChildDescription> childDescriptors,
-					   QualityType qualityType) {
+					   String manufacturingCountry, boolean supplierPart,
+					   List<ChildDescription> childDescriptors, QualityType qualityType) {
 		this.id = id;
 		this.idShort = idShort;
 		this.nameAtManufacturer = nameAtManufacturer;
@@ -63,6 +64,7 @@ public class AssetEntity {
 		this.customerPartId = customerPartId;
 		this.manufacturingDate = manufacturingDate;
 		this.manufacturingCountry = manufacturingCountry;
+		this.supplierPart = supplierPart;
 		this.childDescriptors = childDescriptors;
 		this.qualityType = qualityType;
 	}
@@ -164,6 +166,14 @@ public class AssetEntity {
 
 	public void setManufacturingCountry(String manufacturingCountry) {
 		this.manufacturingCountry = manufacturingCountry;
+	}
+
+	public boolean isSupplierPart() {
+		return supplierPart;
+	}
+
+	public void setSupplierPart(boolean supplierPart) {
+		this.supplierPart = supplierPart;
 	}
 
 	public QualityType getQualityType() {
