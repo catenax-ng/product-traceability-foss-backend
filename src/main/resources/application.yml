@@ -18,6 +18,7 @@
 ################################################################################
 traceability:
   bpn: BPNL00000003AXS3
+  registry.manufacturerIdKey: manufacturerId
 
 server:
   servlet:
@@ -60,9 +61,9 @@ spring:
   mail:
     templates:
       path: mail-templates
-    host: smtp.office365.com
-    port: 587
-    username: notifications@catena-x.net
+    host: ${MAILSERVER_HOST}
+    port: ${MAILSERVER_PORT}
+    username: ${MAILSERVER_USERNAME}
     password: ${MAILSERVER_PASSWORD}
     properties:
       mail.smtp.auth: true
