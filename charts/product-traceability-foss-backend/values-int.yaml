@@ -72,7 +72,7 @@ postgresql:
             mountPath: "/secrets"
 
 pgadmin4:
-  enabled: false
+  enabled: true
   strategy:
     type: Recreate
   networkPolicy:
