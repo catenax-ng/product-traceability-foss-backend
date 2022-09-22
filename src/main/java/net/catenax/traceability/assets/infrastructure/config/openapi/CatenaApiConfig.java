@@ -21,7 +21,6 @@ package net.catenax.traceability.assets.infrastructure.config.openapi;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import feign.RequestInterceptor;
 import feign.codec.Decoder;
@@ -45,15 +44,11 @@ public class CatenaApiConfig {
 
 	@Bean
 	public Decoder feignDecoder() {
-		return new ResponseEntityDecoder(new JacksonDecoder(customObjectMapper()));
-	}
-
-	public ObjectMapper customObjectMapper(){
-		return JsonMapper.builder()
+		return new ResponseEntityDecoder(new JacksonDecoder(JsonMapper.builder()
 			.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
 			.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
 			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-			.build();
+			.build()));
 	}
 
 	@Bean
