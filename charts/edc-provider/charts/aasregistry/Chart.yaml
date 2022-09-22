@@ -25,10 +25,3 @@ description: A Helm chart for Kubernetes
 type: application
 version: 0.1.0
 appVersion: 0.0.1-M1
-
-dependencies:
-  - repository: https://charts.bitnami.com/bitnami
-    name: postgresql
-    version: 11.1.9
-    condition: enablePostgres
-    alias: registryPostgresql

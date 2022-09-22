@@ -12,4 +12,10 @@ dependencies:
   - name: postgresql
     repository: https://charts.bitnami.com/bitnami
     version: 11.x.x
-    condition: postgresql.enabled
+    condition: edcPostgresql.enabled
+    alias: edcPostgresql
+  - name: postgresql
+    repository: https://charts.bitnami.com/bitnami
+    version: 11.x.x
+    condition: registryPostgresql.enabled
+    alias: registryPostgresql

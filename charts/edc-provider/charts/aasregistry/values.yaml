@@ -18,8 +18,6 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-enablePostgres: true
-
 registry:
   image: ghcr.io/catenax-ng/registry@sha256:d171ff49f5daa77631829915f3f02a6ffa2ce05995df1d604ea808d8f3ba55ed
   replicaCount: 1
@@ -39,9 +37,9 @@ registry:
     sqlInitPlatform: pg
     ## The url, user, and password parameter will be ignored if 'enablePostgres' is set to true.
     ## In that case the postgresql auth parameters are used.
-    #url: jdbc:postgresql://database:5432
-    #user: user
-    #password: password
+    url: jdbc:postgresql://database:5432
+    user: user
+    password: password
   ingress:
     hosts:
       - host: "tracex-aas-registry.dev.demo.catena-x.net"
@@ -60,21 +58,6 @@ registry:
       nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
   resources:
     limits:
-      memory: "1024Mi"
+      memory: 2560Mi
     requests:
-      memory: "512Mi"
-
-registryPostgresql:
-  fullnameOverride: "tracex-registry-postgresql"
-
-  primary:
-    persistence:
-      enabled: true
-      size: 1Gi
-  service:
-    ports:
-      postgresql: 5432
-  auth:
-    username: <path:traceability-foss/data/dev/aasregistry#username>
-    password: <path:traceability-foss/data/dev/aasregistry#password>
-    database: registry
+      memory: 768Mi
