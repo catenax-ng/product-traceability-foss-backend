@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.catenax.traceability.assets.domain.model.Asset;
 import net.catenax.traceability.assets.domain.model.Asset.ChildDescriptions;
 import net.catenax.traceability.assets.domain.model.InvestigationStatus;
+import net.catenax.traceability.assets.domain.model.InvestigationStatus;
 import net.catenax.traceability.assets.domain.model.QualityType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
 @Component
 public class AssetsConverter {
 
-	private static final String EMPTY_TEXT = "--";
+	public static final String EMPTY_TEXT = "--";
 
 	private final ObjectMapper mapper = new ObjectMapper()
 		.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
@@ -60,34 +61,34 @@ public class AssetsConverter {
 	}
 
 	public List<Asset> convertAssets(JobResponse response)  {
-			List<SerialPartTypization> parts = response.serialPartTypizations();
-			Map<String, AssemblyPartRelationship> relationships = response.assemblyPartRelationships();
-			Map<String, String> shortIds = response.shells().stream()
-				.collect(Collectors.toMap(Shell::identification, Shell::idShort));
-			Set<String> supplierParts = relationships.values().stream()
-				.flatMap(a -> a.childParts().stream())
-				.map(ChildPart::childCatenaXId)
-				.collect(Collectors.toSet());
+		List<SerialPartTypization> parts = response.serialPartTypizations();
+		Map<String, AssemblyPartRelationship> relationships = response.assemblyPartRelationships();
+		Map<String, String> shortIds = response.shells().stream()
+			.collect(Collectors.toMap(Shell::identification, Shell::idShort));
+		Set<String> supplierParts = relationships.values().stream()
+			.flatMap(a -> a.childParts().stream())
+			.map(ChildPart::childCatenaXId)
+			.collect(Collectors.toSet());
 
 
-			return parts.stream()
-				.map(part -> new Asset(
-					part.catenaXId(),
-					shortIds.get(part.catenaXId()),
-					defaultValue(part.partTypeInformation().nameAtManufacturer()),
-					defaultValue(part.partTypeInformation().manufacturerPartID()),
-					manufacturerId(part),
-					batchId(part),
-					manufacturerName(part, response.bpns()),
-					defaultValue(part.partTypeInformation().nameAtCustomer()),
-					defaultValue(part.partTypeInformation().customerPartId()),
-					manufacturingDate(part),
-					manufacturingCountry(part),
-					supplierParts.contains(part.catenaXId()),
-					getChildParts(relationships, shortIds, part.catenaXId()),
-					InvestigationStatus.NONE,
-					QualityType.OK
-				)).toList();
+		return parts.stream()
+			.map(part -> new Asset(
+				part.catenaXId(),
+				shortIds.get(part.catenaXId()),
+				defaultValue(part.partTypeInformation().nameAtManufacturer()),
+				defaultValue(part.partTypeInformation().manufacturerPartID()),
+				manufacturerId(part),
+				batchId(part),
+				manufacturerName(part, response.bpns()),
+				defaultValue(part.partTypeInformation().nameAtCustomer()),
+				defaultValue(part.partTypeInformation().customerPartId()),
+				manufacturingDate(part),
+				manufacturingCountry(part),
+				supplierParts.contains(part.catenaXId()),
+				getChildParts(relationships, shortIds, part.catenaXId()),
+				InvestigationStatus.NONE,
+				QualityType.OK
+			)).toList();
 	}
 
 	public String manufacturerName(SerialPartTypization part, Map<String, String> bpns) {
