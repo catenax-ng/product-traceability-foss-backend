@@ -230,8 +230,8 @@ public class AssetEntity {
 			return assetId;
 		}
 
-		public void setAssetId(String asset_id) {
-			this.assetId = asset_id;
+		public void setAssetId(String assetId) {
+			this.assetId = assetId;
 		}
 
 		public InvestigationStatus getStatus() {
