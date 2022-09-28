@@ -177,6 +177,17 @@ edc-controlplane:
     EDC_DATASOURCE_TRANSFERPROCESS_PASSWORD: <path:traceability-foss/data/dev/edc/database#password>
     EDC_VAULT_HASHICORP_TOKEN: <path:traceability-foss/data/dev/edc#edc.vault.hashicorp.token>
 
+  logging:
+    # -- EDC logging.properties configuring the [java.util.logging subsystem](https://docs.oracle.com/javase/7/docs/technotes/guides/logging/overview.html#a1.8)
+    properties: |-
+      .level=INFO
+      org.eclipse.dataspaceconnector.level=INFO
+      net.catenax.edc.hashicorpvault.level=INFO
+      handlers=java.util.logging.ConsoleHandler
+      java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter
+      java.util.logging.ConsoleHandler.level=INFO
+      java.util.logging.SimpleFormatter.format=[%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS] [%4$-7s] %5$s%6$s%n
+
 edc-dataplane:
   replicaCount: 1
 
@@ -219,7 +230,7 @@ edc-dataplane:
       web.http.control.port=9999
       web.http.control.path=/api/dataplane/control
       edc.api.control.auth.apikey.key=X-Api-Key
-      edc.controlplane.validation.endpoint=http://tracex-edc-provider-controlplane:8182/validation/token
+      edc.dataplane.token.validation.endpoint=http://tracex-edc-provider-controlplane:8182/validation/token
       edc.hostname=tracex-edc-provider-dataplane.dev.demo.catena-x.net
       edc.vault.hashicorp.url=https://vault.demo.catena-x.net
       edc.vault.hashicorp.health.check.enabled=true
@@ -229,3 +240,14 @@ edc-dataplane:
   secrets:
     EDC_API_CONTROL_AUTH_APIKEY_VALUE: <path:traceability-foss/data/dev/edc/controlplane#edc.api.control.auth.apikey.value>
     EDC_VAULT_HASHICORP_TOKEN: <path:traceability-foss/data/dev/edc#edc.vault.hashicorp.token>
+
+  logging:
+    # -- EDC logging.properties configuring the [java.util.logging subsystem](https://docs.oracle.com/javase/7/docs/technotes/guides/logging/overview.html#a1.8)
+    properties: |-
+      .level=INFO
+      org.eclipse.dataspaceconnector.level=INFO
+      net.catenax.edc.hashicorpvault.level=INFO
+      handlers=java.util.logging.ConsoleHandler
+      java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter
+      java.util.logging.ConsoleHandler.level=INFO
+      java.util.logging.SimpleFormatter.format=[%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS] [%4$-7s] %5$s%6$s%n
