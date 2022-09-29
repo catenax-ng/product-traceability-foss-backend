@@ -58,11 +58,17 @@ public class AssetService {
 	private void synchronizeAssets(String globalAssetId) {
 		logger.info("Synchronizing assets for globalAssetId: {}", globalAssetId);
 
-		List<Asset> assets = irsRepository.findAssets(globalAssetId);
+		try {
+			List<Asset> assets = irsRepository.findAssets(globalAssetId);
 
-		logger.info("Assets synchronization for globalAssetId: {} is done. Found {} assets.", globalAssetId, assets.size());
+			logger.info("Assets synchronization for globalAssetId: {} is done. Found {} assets. Saving them in the repository.", globalAssetId, assets.size());
 
-		assetRepository.saveAll(assets);
+			assetRepository.saveAll(assets);
+
+			logger.info("Assets for globalAssetId {} successfully saved.", globalAssetId);
+		} catch (Exception e) {
+			logger.warn("Exception during assets synchronization for globalAssetId: {}. Message: {}.", globalAssetId, e.getMessage(), e);
+		}
 	}
 
 	public Asset updateAsset(String assetId, QualityType qualityType) {
