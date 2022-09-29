@@ -41,15 +41,9 @@ In order to deploy the service following secrets needs to be provided for specif
 
 ### Database
 
-* `postgresql.secret.initUserDbSql` - database initialization script, contains username and password for databases used by the service.
-Please note that the final script should be encoded using Base64 encoding and then added to a secret. Sample command:
-```sh
-echo -n 'CREATE ROLE trace WITH LOGIN PASSWORD 'yourPassword';\nCREATE DATABASE trace;\nGRANT ALL PRIVILEGES ON DATABASE trace TO trace;' | base64
-```
-
-
 * `postgresql.auth.postgresPassword` - PostgreSQL master password
-* `datasource.password` - `trace` database password configured in `initUserDbSql` script
+* `postgresql.auth.password` - `trace` database password
+* `datasource.password` - `trace` database password
 * `pgAdmin4.env.password` - pgAdmin4 master password
 
 ### Email server

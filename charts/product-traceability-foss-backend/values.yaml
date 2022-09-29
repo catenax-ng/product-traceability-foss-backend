@@ -141,10 +141,11 @@ keycloak:
 
 postgresql:
   enabled: false
-  secret:
-    initUserDbSql: ""
   auth:
     postgresPassword: ""
+    database: "trace"
+    username: "trace"
+    password: ""
   architecture: standalone
   audit:
     pgAuditLog: write, ddl
