@@ -24,8 +24,10 @@ import net.catenax.traceability.assets.domain.model.AssetNotFoundException;
 import net.catenax.traceability.assets.domain.model.QualityType;
 import net.catenax.traceability.assets.domain.ports.AssetRepository;
 import net.catenax.traceability.assets.domain.ports.IrsRepository;
+import net.catenax.traceability.assets.infrastructure.config.async.AssetsAsyncConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -34,7 +36,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class AssetService {
-
 	private static final Logger logger = LoggerFactory.getLogger(AssetService.class);
 
 	private final AssetRepository assetRepository;
@@ -55,7 +56,8 @@ public class AssetService {
 		}
 	}
 
-	private void synchronizeAssets(String globalAssetId) {
+	@Async(value = AssetsAsyncConfig.SYNCHRONIZE_ASSETS_EXECUTOR)
+	public void synchronizeAssets(String globalAssetId) {
 		logger.info("Synchronizing assets for globalAssetId: {}", globalAssetId);
 
 		try {
