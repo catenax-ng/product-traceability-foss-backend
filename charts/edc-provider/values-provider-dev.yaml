@@ -100,10 +100,10 @@ edc-controlplane:
   resources:
     limits:
       cpu: 1.5
-      memory: 512Mi
+      memory: 2Gi
     requests:
       cpu: 500m
-      memory: 512Mi
+      memory: 2Gi
 
   configuration:
     # -- EDC configuration.properties configuring aspects of the [eclipse-dataspaceconnector](https://github.com/eclipse-dataspaceconnector/DataSpaceConnector)
