@@ -60,6 +60,7 @@ sonarqube {
 
 val commonsCodecVersion = "1.15"
 val commonsIoVersion = "2.11.0"
+val commonsLangVersion = "3.12.0"
 val groovyVersion = "3.0.10"
 val spockBomVersion = "2.1-groovy-3.0"
 val greenmailVersion = "1.6.9"
@@ -119,13 +120,8 @@ dependencies {
 	implementation("net.javacrumbs.shedlock:shedlock-spring:$schedlockVersion")
 	implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$schedlockVersion")
 
-
-	// for demo purposes, to be removed once EDC works
-	implementation("com.github.javafaker:javafaker:1.0.2") {
-		exclude("org.yaml")
-	}
-
 	implementation("commons-codec:commons-codec:$commonsCodecVersion")
+	implementation("org.apache.commons:commons-lang3:$commonsLangVersion")
 
 	implementation("io.github.resilience4j:resilience4j-feign:${resilience4jVersion}")
 	implementation("io.github.resilience4j:resilience4j-retry:${resilience4jVersion}")
