@@ -59,6 +59,7 @@ sonarqube {
 }
 
 val commonsCodecVersion = "1.15"
+val commonsIoVersion = "2.11.0"
 val groovyVersion = "3.0.10"
 val spockBomVersion = "2.1-groovy-3.0"
 val greenmailVersion = "1.6.9"
@@ -144,6 +145,8 @@ dependencies {
 
     integrationImplementation("com.icegreen:greenmail-spring:$greenmailVersion")
 	integrationImplementation("com.xebialabs.restito:restito:$restitoVersion")
+
+	integrationImplementation("commons-io:commons-io:$commonsIoVersion")
 }
 
 tasks.withType<Test> {
