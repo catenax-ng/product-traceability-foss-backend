@@ -1,17 +1,31 @@
 name: "Trivy"
 
 on:
-  push:
-    branches: [ main ]
-  schedule:
-    # Once a day
-    - cron: "0 0 * * *"
   workflow_dispatch:
   # Trigger manually
+  workflow_run:
+    workflows: [Publish docker image]
+    types: [completed]
+    branches: [main]
 
 jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      check_sha: ${{ steps.step1.outputs.check_sha }}
+    steps:
+      - name: Set commit SHA to check
+        id: step1
+        run: |
+          if [ -z "${{ github.event.workflow_run.head_sha }}" ]; then
+            echo "::set-output name=check_sha::$GITHUB_SHA"
+          else
+            echo "::set-output name=check_sha::${{ github.event.workflow_run.head_sha }}"
+          fi
+
   analyze-config:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       actions: read
       contents: read
@@ -20,6 +34,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          ref: ${{needs.prepare.outputs.check_sha}}
 
       - name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@master
@@ -39,6 +55,7 @@ jobs:
 
   analyze-product-traceability-foss-backend:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       actions: read
       contents: read
@@ -57,7 +74,7 @@ jobs:
         if: always()
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: "ghcr.io/catenax-ng/product-traceability-foss-backend:latest"
+          image-ref: ghcr.io/catenax-ng/product-traceability-foss-backend:${{needs.prepare.outputs.check_sha}}
           trivyignores: "./.github/workflows/.trivyignore"
           format: "sarif"
           output: "trivy-results2.sarif"
