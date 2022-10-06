@@ -1,17 +1,28 @@
 name: "Trivy"
 
 on:
-  push:
-    branches: [ main ]
-  schedule:
-    # Once a day
-    - cron: "0 0 * * *"
   workflow_dispatch:
   # Trigger manually
+  workflow_run:
+    workflows: [Publish docker image]
+    types: [completed]
+    branches: [main]
 
 jobs:
+  prepare-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set commit SHA
+        run: |
+          if [ -z "${{ github.event.workflow_run.head_sha }}" ]; then
+            echo check_sha=$GITHUB_SHA >> $GITHUB_ENV
+          else
+            echo check_sha=${{ github.event.workflow_run.head_sha }} >> $GITHUB_ENV
+          fi
+
   analyze-config:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       actions: read
       contents: read
@@ -19,7 +30,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.check_sha }}
 
       - name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@master
@@ -39,6 +52,7 @@ jobs:
 
   analyze-product-traceability-foss-backend:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       actions: read
       contents: read
@@ -46,7 +60,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # It's also possible to scan your private registry with Trivy's built-in image scan.
       # All you have to do is set ENV vars.
@@ -57,7 +71,7 @@ jobs:
         if: always()
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: "ghcr.io/catenax-ng/product-traceability-foss-backend:latest"
+          image-ref: ghcr.io/catenax-ng/product-traceability-foss-backend:${{ env.check_sha }}
           trivyignores: "./.github/workflows/.trivyignore"
           format: "sarif"
           output: "trivy-results2.sarif"

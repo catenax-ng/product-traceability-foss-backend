@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - uses: actions/setup-java@v3
         with:
@@ -32,7 +32,7 @@ jobs:
         run: ./gradlew bootJar
 
       - name: Run Veracode Upload And Scan
-        uses: veracode/veracode-uploadandscan-action@0.2.1
+        uses: veracode/veracode-uploadandscan-action@0.2.4
         with:
           appname: "Traceability-Foss-Backend"
           createprofile: false
