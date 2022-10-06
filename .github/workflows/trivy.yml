@@ -9,15 +9,18 @@ on:
     branches: [main]
 
 jobs:
-  prepare-env:
+  prepare:
     runs-on: ubuntu-latest
+    outputs:
+      check_sha: ${{ steps.step1.outputs.check_sha }}
     steps:
-      - name: Set commit SHA
+      - name: Set commit SHA to check
+        id: step1
         run: |
           if [ -z "${{ github.event.workflow_run.head_sha }}" ]; then
-            echo check_sha=$GITHUB_SHA >> $GITHUB_ENV
+            echo "::set-output name=check_sha::$GITHUB_SHA"
           else
-            echo check_sha=${{ github.event.workflow_run.head_sha }} >> $GITHUB_ENV
+            echo "::set-output name=check_sha::${{ github.event.workflow_run.head_sha }}"
           fi
 
   analyze-config:
@@ -32,7 +35,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          ref: ${{ env.check_sha }}
+          ref: ${{needs.prepare.outputs.check_sha}}
 
       - name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@master
@@ -71,7 +74,7 @@ jobs:
         if: always()
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ghcr.io/catenax-ng/product-traceability-foss-backend:${{ env.check_sha }}
+          image-ref: ghcr.io/catenax-ng/product-traceability-foss-backend:${{needs.prepare.outputs.check_sha}}
           trivyignores: "./.github/workflows/.trivyignore"
           format: "sarif"
           output: "trivy-results2.sarif"
