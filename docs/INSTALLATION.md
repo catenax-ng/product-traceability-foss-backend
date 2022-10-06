@@ -1,4 +1,7 @@
-# ![Product Traceability FOSS Backend Installation Guide](./catena-x-logo.svg) Product Traceability FOSS Backend Installation guide
+<div style="display: flex; align-items: center;justify-content: center;align-content: center;">
+   <img src="./trace-x-logo.svg" alt="Product Traceability FOSS Backend Installation Guide" style="width:200px;"/>
+   <h1 style="margin: 10px 0 0 10px">Product Traceability FOSS Backend Installation guide</h1>
+</div>
 
 ## Clone the source locally:
 
@@ -15,6 +18,9 @@ $ cd product-traceability-foss-backend
   * `SPRING_DATASOURCE_PASSWORD` - with value `docker` [see docker-compose file](../docker/docker-compose.yml)
   * `KEYCLOAK_OAUTH2_CLIENT_ID` - with Keycloak client registration id specific value
   * `KEYCLOAK_OAUTH2_CLIENT_SECRET` - with Keycloak client registration secret specific value
+  * `KEYCLOAK_OAUTH2_CLIENT_TOKEN_URI` - with Keycloak url to obtain tokens
+  * `KEYCLOAK_OAUTH2_JWK_SET_URI` - with Keycloak certs url
+  * `KEYCLOAK_OAUTH2_RESOURCE_CLIENT` - with Keycloak resource client name
   * `MAILSERVER_HOST` - with host for the email server of your choice
   * `MAILSERVER_PORT` - with port for the email server of your choice
   * `MAILSERVER_USERNAME` - with username for the email server of your choice
