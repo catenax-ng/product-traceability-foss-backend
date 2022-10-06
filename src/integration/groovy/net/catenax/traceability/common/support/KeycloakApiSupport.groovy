@@ -25,14 +25,16 @@ import static com.xebialabs.restito.builder.stub.StubHttp.whenHttp
 import static com.xebialabs.restito.builder.verify.VerifyHttp.verifyHttp
 import static com.xebialabs.restito.semantics.Action.header
 import static com.xebialabs.restito.semantics.Action.ok
+import static com.xebialabs.restito.semantics.Action.stringContent
 import static com.xebialabs.restito.semantics.Action.unauthorized
 import static com.xebialabs.restito.semantics.Condition.basicAuth
+import static com.xebialabs.restito.semantics.Condition.get
 import static com.xebialabs.restito.semantics.Condition.post
 import static com.xebialabs.restito.semantics.Condition.startsWithUri
 
 trait KeycloakApiSupport implements RestitoProvider {
 
-	void keycloakApiReturnsToken() {
+	void keycloakApiReturnsTechnicalUserToken() {
 		whenHttp(stubServer()).match(
 			post(RestitoConfig.KEYCLOAK_TOKEN_PATH),
 			basicAuth("traceability-foss-integration-tests", "integration-tests")
@@ -41,6 +43,17 @@ trait KeycloakApiSupport implements RestitoProvider {
 				ok(),
 				header("Content-Type", "application/json"),
 				jsonResponseFromFile("./stubs/keycloak/post/auth/realms/CX-Central/protocol/openid-connect/token/response_200.json")
+			)
+	}
+
+	void keycloakApiReturnsJwkCerts(String jwk) {
+		whenHttp(stubServer()).match(
+			get(RestitoConfig.KEYCLOAK_JWK_PATH)
+		)
+			.then(
+				ok(),
+				header("Content-Type", "application/json"),
+				stringContent(jwk)
 			)
 	}
 
@@ -55,13 +68,13 @@ trait KeycloakApiSupport implements RestitoProvider {
 			)
 	}
 
-	void verifyKeycloakApiCalledOnceForToken() {
+	void verifyKeycloakApiCalledOnceForTechnicalUserToken() {
 		verifyHttp(stubServer()).once(
 			startsWithUri(RestitoConfig.KEYCLOAK_TOKEN_PATH)
 		)
 	}
 
-	void verifyKeycloakApiNotCalledForToken() {
+	void verifyKeycloakApiNotCalledForTechnicalUserToken() {
 		verifyHttp(stubServer()).never(
 			startsWithUri(RestitoConfig.KEYCLOAK_TOKEN_PATH)
 		)

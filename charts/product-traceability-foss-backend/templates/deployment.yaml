@@ -57,6 +57,12 @@ spec:
               value: {{ .Values.keycloak.oauth2.clientId | quote }}
             - name: KEYCLOAK_OAUTH2_CLIENT_SECRET
               value: {{ .Values.keycloak.oauth2.clientSecret | quote }}
+            - name: KEYCLOAK_OAUTH2_CLIENT_TOKEN_URI
+              value: {{ .Values.keycloak.oauth2.clientTokenUri | quote }}
+            - name: KEYCLOAK_OAUTH2_JWK_SET_URI
+              value: {{ .Values.keycloak.oauth2.jwkSetUri | quote }}
+            - name: KEYCLOAK_OAUTH2_RESOURCE_CLIENT
+              value: {{ .Values.keycloak.oauth2.resourceClient | quote }}
             - name: SPRING_DATASOURCE_URL
               value: {{ .Values.datasource.url | quote }}
             - name: SPRING_DATASOURCE_USERNAME

@@ -17,19 +17,25 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.common.config
+package net.catenax.traceability.common.support
 
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.jose4j.jwk.RsaJsonWebKey
+import org.jose4j.jwk.RsaJwkGenerator
+import org.jose4j.jws.AlgorithmIdentifiers
 
-@TestConfiguration
-class SecurityTestConfig extends WebSecurityConfigurerAdapter {
+trait RsaJsonWebKeyProvider {
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		super.configure(http)
+	private static RsaJsonWebKey RSA_JSON_WEB_KEY
 
-		http.csrf().disable()
+	static {
+		RSA_JSON_WEB_KEY = RsaJwkGenerator.generateJwk(2048)
+		RSA_JSON_WEB_KEY = RsaJwkGenerator.generateJwk(2048)
+		RSA_JSON_WEB_KEY.keyId = "some-key"
+		RSA_JSON_WEB_KEY.algorithm = AlgorithmIdentifiers.RSA_USING_SHA256
+		RSA_JSON_WEB_KEY.use = "sig"
+	}
+
+	 RsaJsonWebKey rsaJsonWebKey() {
+		return RSA_JSON_WEB_KEY
 	}
 }

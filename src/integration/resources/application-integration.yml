@@ -34,8 +34,8 @@ spring:
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
-  autoconfigure:
-    exclude: org.keycloak.adapters.springboot.KeycloakAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
+#  autoconfigure:
+#    exclude: org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
   datasource:
     url: jdbc:postgresql://localhost:5432/trace
     password: docker
@@ -43,8 +43,7 @@ spring:
     show-sql: true
 
 keycloak:
-  enabled: false
-  resource: "Integration-Test"
+  resource-client: "Integration-Test"
 
 resilience4j:
   retry:

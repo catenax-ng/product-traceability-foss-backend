@@ -32,8 +32,8 @@ import java.util.List;
 @Component
 public class WebConfig implements WebMvcConfigurer {
 
-	@Value("${keycloak.resource}")
-	private String resourceRealm;
+	@Value("${keycloak.resource-client}")
+	private String resourceClient;
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -51,6 +51,6 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-		resolvers.add(new InjectedKeycloakAuthenticationHandler(resourceRealm));
+		resolvers.add(new InjectedKeycloakAuthenticationHandler(resourceClient));
 	}
 }

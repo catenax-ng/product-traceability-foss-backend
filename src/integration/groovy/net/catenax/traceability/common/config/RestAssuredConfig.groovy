@@ -17,13 +17,19 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.common.config;
+package net.catenax.traceability.common.config
 
-public class ApplicationProfiles {
+import io.restassured.RestAssured
+import org.springframework.boot.test.context.TestConfiguration
 
-	public static final String TESTS = "integration";
-	public static final String NOT_TESTS = "!" + TESTS;
+import org.springframework.boot.web.context.WebServerInitializedEvent
+import org.springframework.context.event.EventListener
 
-	private ApplicationProfiles() {
+@TestConfiguration
+class RestAssuredConfig {
+
+	@EventListener(WebServerInitializedEvent.class)
+	void onServletContainerInitialized(WebServerInitializedEvent event) {
+		RestAssured.port = event.webServer.port
 	}
 }

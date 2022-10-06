@@ -63,7 +63,6 @@ val groovyVersion = "3.0.10"
 val spockBomVersion = "2.1-groovy-3.0"
 val greenmailVersion = "1.6.9"
 val springfoxVersion = "3.0.0"
-val keycloakVersion = "19.0.2"
 val feignVersion = "11.8"
 val springCloudVersion = "2021.0.1"
 val springBootSecurityOauth2Version = "2.6.8"
@@ -71,9 +70,11 @@ val jacksonDatabindNullableVersion = "0.2.2"
 val scribejavaVersion = "8.0.0"
 val findBugsVersion = "3.0.2"
 val restitoVersion = "0.9.5"
+val restAssuredVersion = "5.2.0"
 val resilience4jVersion = "1.7.0"
 val testContainersVersion = "1.17.3"
 val schedlockVersion = "4.41.0"
+val jose4jVersion = "0.8.0"
 
 dependencyManagement {
 	imports {
@@ -92,6 +93,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	implementation("org.springframework.boot:spring-boot-starter-cache")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 
@@ -112,17 +114,9 @@ dependencies {
 
 	implementation("com.github.scribejava:scribejava-core:$scribejavaVersion")
 
-	implementation("org.keycloak:keycloak-spring-boot-starter:$keycloakVersion")
-
 	implementation("io.springfox:springfox-boot-starter:$springfoxVersion")
 	implementation("net.javacrumbs.shedlock:shedlock-spring:$schedlockVersion")
 	implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$schedlockVersion")
-
-
-	// for demo purposes, to be removed once EDC works
-	implementation("com.github.javafaker:javafaker:1.0.2") {
-		exclude("org.yaml")
-	}
 
 	implementation("commons-codec:commons-codec:$commonsCodecVersion")
 
@@ -130,7 +124,6 @@ dependencies {
 	implementation("io.github.resilience4j:resilience4j-retry:${resilience4jVersion}")
 	implementation("io.github.resilience4j:resilience4j-spring-boot2:${resilience4jVersion}")
 
-    testImplementation("org.codehaus.groovy:groovy-all:$groovyVersion")
 	testImplementation("org.codehaus.groovy:groovy-all:$groovyVersion")
     testImplementation(platform("org.spockframework:spock-bom:$spockBomVersion"))
     testImplementation("org.spockframework:spock-core")
@@ -140,10 +133,13 @@ dependencies {
 	integrationImplementation("org.testcontainers:spock:$testContainersVersion")
 
 	integrationImplementation("org.springframework.boot:spring-boot-starter-test")
-	integrationImplementation("org.springframework.security:spring-security-test")
 
     integrationImplementation("com.icegreen:greenmail-spring:$greenmailVersion")
 	integrationImplementation("com.xebialabs.restito:restito:$restitoVersion")
+	integrationImplementation("io.rest-assured:rest-assured:$restAssuredVersion")  {
+		exclude("org.apache.groovy")
+	}
+	integrationImplementation("org.bitbucket.b_c:jose4j:$jose4jVersion")
 }
 
 tasks.withType<Test> {
