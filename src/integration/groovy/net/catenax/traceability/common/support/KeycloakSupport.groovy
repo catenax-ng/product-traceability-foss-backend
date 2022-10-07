@@ -30,7 +30,7 @@ import org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClient
 
 trait KeycloakSupport extends RsaJsonWebKeyProvider {
 
-	@Value('${keycloak.resource-client}')
+	@Value('${jwt.resource-client}')
 	private String resourceClient
 
 	@Autowired

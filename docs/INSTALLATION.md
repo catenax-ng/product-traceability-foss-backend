@@ -20,7 +20,7 @@ $ cd product-traceability-foss-backend
   * `OAUTH2_CLIENT_SECRET` - with OAuth2 provider client registration secret specific value
   * `OAUTH2_PROVIDER_TOKEN_URI` - with OAuth2 provider url to obtain tokens
   * `OAUTH2_JWK_SET_URI` - with OAuth2 provider certs url
-  * `OAUTH2_RESOURCE_CLIENT` - with OAuth2 provider resource client name
+  * `JWT_RESOURCE_CLIENT` - with JWT resource client name
   * `MAILSERVER_HOST` - with host for the email server of your choice
   * `MAILSERVER_PORT` - with port for the email server of your choice
   * `MAILSERVER_USERNAME` - with username for the email server of your choice

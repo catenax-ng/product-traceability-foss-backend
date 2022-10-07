@@ -32,7 +32,7 @@ import java.util.List;
 @Component
 public class WebConfig implements WebMvcConfigurer {
 
-	@Value("${oauth2.resource-client}")
+	@Value("${jwt.resource-client}")
 	private String resourceClient;
 
 	@Override

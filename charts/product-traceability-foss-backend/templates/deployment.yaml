@@ -61,7 +61,7 @@ spec:
               value: {{ .Values.keycloak.oauth2.clientTokenUri | quote }}
             - name: OAUTH2_JWK_SET_URI
               value: {{ .Values.keycloak.oauth2.jwkSetUri | quote }}
-            - name: OAUTH2_RESOURCE_CLIENT
+            - name: JWT_RESOURCE_CLIENT
               value: {{ .Values.keycloak.oauth2.resourceClient | quote }}
             - name: SPRING_DATASOURCE_URL
               value: {{ .Values.datasource.url | quote }}

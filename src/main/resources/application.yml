@@ -75,8 +75,8 @@ spring:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
 
-oauth2:
-  resource-client: ${OAUTH2_RESOURCE_CLIENT}
+jwt:
+  resource-client: ${JWT_RESOURCE_CLIENT}
 
 feign:
   okhttp:

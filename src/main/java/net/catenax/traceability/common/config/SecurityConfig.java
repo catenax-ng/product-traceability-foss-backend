@@ -47,7 +47,7 @@ public class SecurityConfig {
 		"/actuator/**",
 	};
 
-	@Value("${oauth2.resource-client}")
+	@Value("${jwt.resource-client}")
 	private String resourceClient;
 
 	@Bean

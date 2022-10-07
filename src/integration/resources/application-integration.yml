@@ -34,15 +34,13 @@ spring:
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
-#  autoconfigure:
-#    exclude: org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
   datasource:
     url: jdbc:postgresql://localhost:5432/trace
     password: docker
     username: postgres
     show-sql: true
 
-oauth2:
+jwt:
   resource-client: "Integration-Test"
 
 resilience4j:
