@@ -40,8 +40,6 @@ public interface AssetRepository {
 
 	Asset save(Asset asset);
 
-	void startInvestigation(List<String> assetIds, String description);
-
 	List<Asset> saveAll(List<Asset> assets);
 
     long countAssets();

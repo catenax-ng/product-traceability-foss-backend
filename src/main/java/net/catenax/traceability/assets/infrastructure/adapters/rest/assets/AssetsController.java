@@ -77,11 +77,6 @@ public class AssetsController {
 		return assetRepository.getAssetById(assetId);
 	}
 
-	@PostMapping("/investigations")
-	public void investigateAssets(@RequestBody Investigations investigations) {
-		assetFacade.startInvestigation(investigations.partIds(), investigations.description());
-	}
-
 	@GetMapping("/assets/{assetId}/children/{childId}")
 	public Asset asset(@PathVariable String assetId, @PathVariable String childId) {
 		return assetRepository.getAssetByChildId(assetId, childId);

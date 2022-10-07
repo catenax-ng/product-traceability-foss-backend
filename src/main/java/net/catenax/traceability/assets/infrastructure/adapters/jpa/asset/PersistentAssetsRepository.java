@@ -22,10 +22,8 @@ package net.catenax.traceability.assets.infrastructure.adapters.jpa.asset;
 import net.catenax.traceability.assets.domain.model.Asset;
 import net.catenax.traceability.assets.domain.model.Asset.ChildDescriptions;
 import net.catenax.traceability.assets.domain.model.AssetNotFoundException;
-import net.catenax.traceability.assets.domain.model.InvestigationStatus;
 import net.catenax.traceability.assets.domain.model.PageResult;
 import net.catenax.traceability.assets.domain.ports.AssetRepository;
-import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.AssetEntity.PendingInvestigation;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -82,14 +80,6 @@ public class PersistentAssetsRepository implements AssetRepository {
 	}
 
 	@Override
-	public void startInvestigation(List<String> assetIds, String description) {
-		assetsRepository.findByIdIn(assetIds).forEach(entity -> {
-			entity.setPendingInvestigation(PendingInvestigation.newInvestigation(entity.getId(), description));
-			assetsRepository.save(entity);
-		});
-	}
-
-	@Override
 	public List<Asset> saveAll(List<Asset> assets) {
 		return toAssets(assetsRepository.saveAll(toEntities(assets)));
 	}
@@ -111,7 +101,7 @@ public class PersistentAssetsRepository implements AssetRepository {
 
 	@Override
 	public long countPendingInvestigations() {
-		return assetsRepository.countByPendingInvestigationStatus(InvestigationStatus.PENDING);
+		return 1L;//assetsRepository.countByPendingInvestigationStatus(InvestigationStatus.PENDING);
 	}
 
 	private List<Asset> toAssets(List<AssetEntity> entities) {

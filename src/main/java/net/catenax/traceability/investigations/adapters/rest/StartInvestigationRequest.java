@@ -16,13 +16,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-package net.catenax.traceability.assets.infrastructure.adapters.rest.assets;
+package net.catenax.traceability.investigations.adapters.rest;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-public record Investigations(
+public record StartInvestigationRequest(
 	@NotEmpty(message = "Specify at least one partId") List<String> partIds,
 	@Size(min = 15, message = "Description should have at least 15 characters") String description
 ) {}

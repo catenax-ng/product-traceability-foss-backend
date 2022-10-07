@@ -51,7 +51,4 @@ public class AssetFacade {
 		return assetService.updateAsset(assetId, updateAsset.qualityType());
 	}
 
-	public void startInvestigation(List<String> assetId, String description) {
-		assetService.startInvestigation(assetId, description);
-	}
 }

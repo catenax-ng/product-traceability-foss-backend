@@ -260,9 +260,9 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 			List<AssetEntity> parts = jpaAssetsRepository.findByIdIn(partIds)
 			parts.size() == 2
 			parts.each { part ->
-				assert part.pendingInvestigation
-				assert part.pendingInvestigation.status == InvestigationStatus.PENDING
-				assert part.pendingInvestigation.description == description
+				assert part.investigations
+				assert part.investigations[0].status == InvestigationStatus.PENDING
+				assert part.investigations[0].description == description
 			}
 
 		and:

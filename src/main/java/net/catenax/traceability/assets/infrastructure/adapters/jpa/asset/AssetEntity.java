@@ -21,6 +21,9 @@ package net.catenax.traceability.assets.infrastructure.adapters.jpa.asset;
 
 import net.catenax.traceability.assets.domain.model.InvestigationStatus;
 import net.catenax.traceability.assets.domain.model.QualityType;
+import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
@@ -28,11 +31,9 @@ import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
+import javax.persistence.OneToMany;
 import java.time.Instant;
-import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -51,11 +52,13 @@ public class AssetEntity {
 	private String manufacturingCountry;
 	private boolean supplierPart;
 	private QualityType qualityType;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	private List<ChildDescription> childDescriptors;
-	@OneToOne(cascade = CascadeType.ALL)
-	@PrimaryKeyJoinColumn
-	private PendingInvestigation pendingInvestigation;
+
+	@OneToMany(mappedBy = "asset", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
+	private List<InvestigationEntity> investigations = new ArrayList<>();
 
 	public AssetEntity(String id, String idShort, String nameAtManufacturer,
 					   String manufacturerPartId,  String manufacturerId, String batchId,
@@ -162,14 +165,6 @@ public class AssetEntity {
 		this.customerPartId = customerPartId;
 	}
 
-	public PendingInvestigation getPendingInvestigation() {
-		return pendingInvestigation;
-	}
-
-	public void setPendingInvestigation(PendingInvestigation pendingInvestigation) {
-		this.pendingInvestigation = pendingInvestigation;
-	}
-
 	public Instant getManufacturingDate() {
 		return manufacturingDate;
 	}
@@ -202,75 +197,17 @@ public class AssetEntity {
 		this.qualityType = qualityType;
 	}
 
-	public boolean isOnInvestigation() {
-		return pendingInvestigation != null && pendingInvestigation.status == InvestigationStatus.PENDING;
+	public List<InvestigationEntity> getInvestigations() {
+		return investigations;
 	}
 
-	@Entity
-	@Table(name = "pending_investigation")
-	public static class PendingInvestigation {
-		@Id
-		private String assetId;
-		private InvestigationStatus status;
-		private String description;
-		private ZonedDateTime created;
-		private ZonedDateTime updated;
+	public void setInvestigations(List<InvestigationEntity> investigations) {
+		this.investigations = investigations;
+	}
 
-		public PendingInvestigation() {
-		}
-
-		private PendingInvestigation(String assetId, String description, InvestigationStatus status, ZonedDateTime created, ZonedDateTime updated) {
-			this.assetId = assetId;
-			this.status = status;
-			this.description = description;
-			this.created = created;
-			this.updated = updated;
-		}
-
-		public static PendingInvestigation newInvestigation(String assetId, String description) {
-			ZonedDateTime now = ZonedDateTime.now();
-			return new PendingInvestigation(assetId, description, InvestigationStatus.PENDING, now, now);
-		}
-
-		public String getAssetId() {
-			return assetId;
-		}
-
-		public void setAssetId(String assetId) {
-			this.assetId = assetId;
-		}
-
-		public InvestigationStatus getStatus() {
-			return status;
-		}
-
-		public ZonedDateTime getCreated() {
-			return created;
-		}
-
-		public void setCreated(ZonedDateTime created) {
-			this.created = created;
-		}
-
-		public ZonedDateTime getUpdated() {
-			return updated;
-		}
-
-		public void setUpdated(ZonedDateTime updated) {
-			this.updated = updated;
-		}
-
-		public void setStatus(InvestigationStatus status) {
-			this.status = status;
-		}
-
-		public String getDescription() {
-			return description;
-		}
-
-		public void setDescription(String description) {
-			this.description = description;
-		}
+	public boolean isOnInvestigation() {
+		return investigations.stream()
+			.anyMatch(investigation -> investigation.getStatus() == InvestigationStatus.PENDING);
 	}
 
 	@Embeddable

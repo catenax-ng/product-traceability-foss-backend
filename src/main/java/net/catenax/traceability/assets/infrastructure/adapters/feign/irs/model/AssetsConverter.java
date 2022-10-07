@@ -75,13 +75,12 @@ public class AssetsConverter {
 			.map(ChildPart::childCatenaXId)
 			.collect(Collectors.toSet());
 
-
 			return parts.stream()
 				.map(part -> new Asset(
 					part.catenaXId(),
 					shortIds.get(part.catenaXId()),
 					defaultValue(part.partTypeInformation().nameAtManufacturer()),
-					defaultValue(part.partTypeInformation().manufacturerPartID()),
+					defaultValue(part.partTypeInformation().manufacturerPartId()),
 					manufacturerId(part),
 					batchId(part),
 					manufacturerName(part),
