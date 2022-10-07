@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -60,7 +61,6 @@ public class SecurityConfig {
 			.and()
 			.anonymous().disable()
 			.authorizeRequests()
-			.antMatchers(WHITELIST_URLS).permitAll()
 			.antMatchers("/api/**").authenticated()
 			.and()
 			.oauth2Client()
@@ -70,6 +70,11 @@ public class SecurityConfig {
 			.jwtAuthenticationConverter(new KeycloakAuthenticationTokenConverter(resourceClient));
 
 		return http.build();
+	}
+
+	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() {
+		return (web) -> web.ignoring().antMatchers(WHITELIST_URLS);
 	}
 
 	@Bean
