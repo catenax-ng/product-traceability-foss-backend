@@ -60,7 +60,6 @@ sonarqube {
 
 val commonsCodecVersion = "1.15"
 val commonsIoVersion = "2.11.0"
-val commonsLangVersion = "3.12.0"
 val groovyVersion = "3.0.13"
 val spockBomVersion = "2.1-groovy-3.0"
 val greenmailVersion = "1.6.9"
