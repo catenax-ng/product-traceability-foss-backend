@@ -141,15 +141,6 @@ keycloak:
 
 postgresql:
   enabled: false
-  auth:
-    postgresPassword: ""
-    database: "trace"
-    username: "trace"
-    password: ""
-  architecture: standalone
-  audit:
-    pgAuditLog: write, ddl
-    logLinePrefix: "%m %u %d "
 
 pgadmin4:
   enabled: false

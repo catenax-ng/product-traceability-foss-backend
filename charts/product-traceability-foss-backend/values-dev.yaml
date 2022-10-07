@@ -39,6 +39,8 @@ postgresql:
   auth:
     postgresPassword: "<path:traceability-foss/data/dev/database#postgresPassword>"
     password: "<path:traceability-foss/data/dev/database#tracePassword>"
+    database: "trace"
+    username: "trace"
 
 pgadmin4:
   enabled: true
