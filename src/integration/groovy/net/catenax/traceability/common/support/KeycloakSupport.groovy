@@ -20,7 +20,7 @@
 package net.catenax.traceability.common.support
 
 import io.restassured.http.Header
-import net.catenax.traceability.common.security.KeycloakRole
+import net.catenax.traceability.common.security.JwtRole
 import org.jose4j.jwk.JsonWebKeySet
 import org.jose4j.jwk.RsaJsonWebKey
 import org.springframework.beans.factory.annotation.Autowired
@@ -40,19 +40,19 @@ trait KeycloakSupport extends RsaJsonWebKeyProvider {
 		authorizedClientService.removeAuthorizedClient("keycloak", "feignClient")
 	}
 
-	Header jwtAuthorization(KeycloakRole... keycloakRoles) {
-		return new Header(HttpHeaders.AUTHORIZATION, jwtToken(keycloakRoles))
+	Header jwtAuthorization(JwtRole... jwtRoles) {
+		return new Header(HttpHeaders.AUTHORIZATION, jwtToken(jwtRoles))
 	}
 
 	Header jwtAuthorizationWithNoRole() {
 		return new Header(HttpHeaders.AUTHORIZATION, jwtToken())
 	}
 
-	private String jwtToken(KeycloakRole... keycloakRoles) {
+	private String jwtToken(JwtRole... jwtRoles) {
 		RsaJsonWebKey rsaJsonWebKey = rsaJsonWebKey()
 
 		def token = new JsonWebSignatureBuilder(rsaJsonWebKey, resourceClient)
-			.buildWithRoles(keycloakRoles)
+			.buildWithRoles(jwtRoles)
 			.compactSerialization
 
 		return "Bearer $token"

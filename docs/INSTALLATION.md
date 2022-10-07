@@ -16,11 +16,11 @@ $ cd product-traceability-foss-backend
   * `SPRING_DATASOURCE_URL` - with value `jdbc:postgresql://localhost:5432/trace`
   * `SPRING_DATASOURCE_USERNAME` - with value `trace` [see database initialization script](../docker/db-init/create_db.sql)
   * `SPRING_DATASOURCE_PASSWORD` - with value `docker` [see docker-compose file](../docker/docker-compose.yml)
-  * `KEYCLOAK_OAUTH2_CLIENT_ID` - with Keycloak client registration id specific value
-  * `KEYCLOAK_OAUTH2_CLIENT_SECRET` - with Keycloak client registration secret specific value
-  * `KEYCLOAK_OAUTH2_CLIENT_TOKEN_URI` - with Keycloak url to obtain tokens
-  * `KEYCLOAK_OAUTH2_JWK_SET_URI` - with Keycloak certs url
-  * `KEYCLOAK_OAUTH2_RESOURCE_CLIENT` - with Keycloak resource client name
+  * `OAUTH2_CLIENT_ID` - with OAuth2 provider client registration id specific value
+  * `OAUTH2_CLIENT_SECRET` - with OAuth2 provider client registration secret specific value
+  * `OAUTH2_PROVIDER_TOKEN_URI` - with OAuth2 provider url to obtain tokens
+  * `OAUTH2_JWK_SET_URI` - with OAuth2 provider certs url
+  * `OAUTH2_RESOURCE_CLIENT` - with OAuth2 provider resource client name
   * `MAILSERVER_HOST` - with host for the email server of your choice
   * `MAILSERVER_PORT` - with port for the email server of your choice
   * `MAILSERVER_USERNAME` - with username for the email server of your choice

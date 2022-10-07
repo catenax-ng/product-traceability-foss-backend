@@ -21,7 +21,7 @@ package net.catenax.traceability.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.catenax.traceability.assets.domain.model.AssetNotFoundException;
-import net.catenax.traceability.assets.infrastructure.config.openapi.KeycloakTechnicalUserAuthorizationException;
+import net.catenax.traceability.assets.infrastructure.config.openapi.TechnicalUserAuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -82,9 +82,9 @@ public class ErrorHandlingConfig implements AuthenticationFailureHandler {
 			.body(new ErrorResponse(accessDeniedException.getMessage()));
 	}
 
-	@ExceptionHandler(KeycloakTechnicalUserAuthorizationException.class)
-	ResponseEntity<ErrorResponse> handleKeycloakTokenRetrieveException(KeycloakTechnicalUserAuthorizationException keycloakTechnicalUserAuthorizationException) {
-		logger.error("Couldn't retrieve keycloak token for technical user", keycloakTechnicalUserAuthorizationException);
+	@ExceptionHandler(TechnicalUserAuthorizationException.class)
+	ResponseEntity<ErrorResponse> handleTechnicalUserAuthorizationException(TechnicalUserAuthorizationException technicalUserAuthorizationException) {
+		logger.error("Couldn't retrieve keycloak token for technical user", technicalUserAuthorizationException);
 
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 			.body(new ErrorResponse("Please try again later."));

@@ -32,12 +32,12 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class KeycloakAuthenticationTokenConverter implements Converter<Jwt, AbstractAuthenticationToken> {
+public class JwtAuthenticationTokenConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
 	private final String resourceClient;
 	private final JwtGrantedAuthoritiesConverter defaultGrantedAuthoritiesConverter;
 
-	public KeycloakAuthenticationTokenConverter(String resourceClient) {
+	public JwtAuthenticationTokenConverter(String resourceClient) {
 		this.resourceClient = resourceClient;
 		this.defaultGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
 	}
@@ -52,7 +52,7 @@ public class KeycloakAuthenticationTokenConverter implements Converter<Jwt, Abst
 	}
 
 	private static Collection<? extends GrantedAuthority> extractRoles(final Jwt jwt, final String resourceId) {
-		return KeycloakRolesExtractor.extract(jwt, resourceId).stream().map(Enum::name)
+		return JwtRolesExtractor.extract(jwt, resourceId).stream().map(Enum::name)
 			.map(it -> new SimpleGrantedAuthority("ROLE_%s".formatted(it)))
 			.collect(Collectors.toSet());
 	}

@@ -26,7 +26,7 @@ import net.catenax.traceability.common.support.RegistrySupport
 import net.catenax.traceability.common.support.ShellDescriptorSupport
 
 import static io.restassured.RestAssured.given
-import static net.catenax.traceability.common.security.KeycloakRole.*
+import static net.catenax.traceability.common.security.JwtRole.*
 
 class RegistryControllerIT extends IntegrationSpec implements IrsApiSupport, RegistrySupport, ShellDescriptorSupport, AssetsSupport {
 

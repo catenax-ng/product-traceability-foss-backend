@@ -28,15 +28,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-class KeycloakRolesExtractor {
+class JwtRolesExtractor {
 
 	private static final String RESOURCE_ACCESS = "resource_access";
 	private static final String ROLES = "roles";
 
-	private KeycloakRolesExtractor() {
+	private JwtRolesExtractor() {
 	}
 
-	static Set<KeycloakRole> extract(Jwt jwtToken, String resourceClient) {
+	static Set<JwtRole> extract(Jwt jwtToken, String resourceClient) {
 		Object resourceAccess = Optional.ofNullable(jwtToken.getClaimAsMap(RESOURCE_ACCESS))
 			.flatMap(it -> Optional.ofNullable(it.get(resourceClient)))
 			.orElse(null);
@@ -47,7 +47,7 @@ class KeycloakRolesExtractor {
 			if (roles instanceof JSONArray rolesArray) {
 				return rolesArray.stream()
 					.map(Object::toString)
-					.map(KeycloakRole::parse)
+					.map(JwtRole::parse)
 					.filter(Optional::isPresent)
 					.map(Optional::get)
 					.collect(Collectors.toSet());

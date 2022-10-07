@@ -33,9 +33,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import spock.util.concurrent.PollingConditions
 
 import static io.restassured.RestAssured.given
-import static net.catenax.traceability.common.security.KeycloakRole.ADMIN
-import static net.catenax.traceability.common.security.KeycloakRole.SUPERVISOR
-import static net.catenax.traceability.common.security.KeycloakRole.USER
+import static net.catenax.traceability.common.security.JwtRole.ADMIN
+import static net.catenax.traceability.common.security.JwtRole.SUPERVISOR
+import static net.catenax.traceability.common.security.JwtRole.USER
 import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.everyItem
 import static org.hamcrest.Matchers.not

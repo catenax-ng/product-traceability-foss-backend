@@ -34,19 +34,19 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import java.util.Optional;
 import java.util.Set;
 
-public class InjectedKeycloakAuthenticationHandler implements HandlerMethodArgumentResolver {
+public class InjectedJwtAuthenticationHandler implements HandlerMethodArgumentResolver {
 
-	private static final Logger logger = LoggerFactory.getLogger(InjectedKeycloakAuthenticationHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(InjectedJwtAuthenticationHandler.class);
 
 	private final String resourceClient;
 
-	public InjectedKeycloakAuthenticationHandler(String resourceClient) {
+	public InjectedJwtAuthenticationHandler(String resourceClient) {
 		this.resourceClient = resourceClient;
 	}
 
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
-		return parameter.hasParameterAnnotation(InjectedKeycloakAuthentication.class);
+		return parameter.hasParameterAnnotation(InjectedJwtAuthentication.class);
 	}
 
 	@Override
@@ -60,9 +60,9 @@ public class InjectedKeycloakAuthenticationHandler implements HandlerMethodArgum
 			.orElseThrow(() -> new AuthenticationCredentialsNotFoundException("Authentication not found."));
 
 		if (credentials instanceof Jwt jwtToken) {
-			Set<KeycloakRole> keycloakRoles = KeycloakRolesExtractor.extract(jwtToken, resourceClient);
+			Set<JwtRole> jwtRoles = JwtRolesExtractor.extract(jwtToken, resourceClient);
 
-			return new KeycloakAuthentication(keycloakRoles);
+			return new JwtAuthentication(jwtRoles);
 		}
 
 		logger.error("Authentication not found for {} resource realm in JWT token", resourceClient);

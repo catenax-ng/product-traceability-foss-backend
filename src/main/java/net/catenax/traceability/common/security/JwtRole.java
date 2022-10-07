@@ -24,21 +24,21 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public enum KeycloakRole {
+public enum JwtRole {
 	USER("User"),
 	SUPERVISOR("Supervisor"),
 	ADMIN("Admin");
 
 	private final String description;
 
-	private static final Map<String, KeycloakRole> ROLE_MAPPINGS;
+	private static final Map<String, JwtRole> ROLE_MAPPINGS;
 
 	static {
-		ROLE_MAPPINGS = Arrays.stream(KeycloakRole.values())
-			.collect(Collectors.toMap(keycloakRole -> keycloakRole.description, keycloakRole -> keycloakRole));
+		ROLE_MAPPINGS = Arrays.stream(JwtRole.values())
+			.collect(Collectors.toMap(jwtRole -> jwtRole.description, jwtRole -> jwtRole));
 	}
 
-	KeycloakRole(String description) {
+	JwtRole(String description) {
 		this.description = description;
 	}
 
@@ -46,7 +46,7 @@ public enum KeycloakRole {
 		return description;
 	}
 
-	public static Optional<KeycloakRole> parse(String roleRaw) {
+	public static Optional<JwtRole> parse(String roleRaw) {
 		return Optional.ofNullable(ROLE_MAPPINGS.get(roleRaw));
 	}
 }

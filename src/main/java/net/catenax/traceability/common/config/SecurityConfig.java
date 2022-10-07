@@ -19,7 +19,7 @@
 
 package net.catenax.traceability.common.config;
 
-import net.catenax.traceability.common.security.KeycloakAuthenticationTokenConverter;
+import net.catenax.traceability.common.security.JwtAuthenticationTokenConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,7 +47,7 @@ public class SecurityConfig {
 		"/actuator/**",
 	};
 
-	@Value("${keycloak.resource-client}")
+	@Value("${oauth2.resource-client}")
 	private String resourceClient;
 
 	@Bean
@@ -67,7 +67,7 @@ public class SecurityConfig {
 			.and()
 			.oauth2ResourceServer()
 			.jwt()
-			.jwtAuthenticationConverter(new KeycloakAuthenticationTokenConverter(resourceClient));
+			.jwtAuthenticationConverter(new JwtAuthenticationTokenConverter(resourceClient));
 
 		return http.build();
 	}

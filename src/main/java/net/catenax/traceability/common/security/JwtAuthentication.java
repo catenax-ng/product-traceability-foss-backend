@@ -17,15 +17,38 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.assets.infrastructure.config.openapi;
+package net.catenax.traceability.common.security;
 
-public class KeycloakTechnicalUserAuthorizationException extends RuntimeException {
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
 
-	public KeycloakTechnicalUserAuthorizationException(String message) {
-		super(message);
+public class JwtAuthentication {
+
+	public static final JwtAuthentication NO_ROLES = new JwtAuthentication(Set.of());
+
+	private final Set<JwtRole> jwtRoles;
+
+	public JwtAuthentication(Set<JwtRole> jwtRoles) {
+		this.jwtRoles = Collections.unmodifiableSet(jwtRoles);
 	}
 
-	public KeycloakTechnicalUserAuthorizationException(Throwable cause) {
-		super(cause);
+	public boolean hasRole(JwtRole jwtRole) {
+		return jwtRoles.contains(jwtRole);
+	}
+
+	public boolean hasAtLeastOneRole(JwtRole... jwtRole) {
+		return Arrays.stream(jwtRole)
+			.map(this::hasRole)
+			.filter(hasRole -> hasRole)
+			.findFirst()
+			.orElse(false);
+	}
+
+	@Override
+	public String toString() {
+		return "JwtAuthentication{" +
+			"jwtRoles=" + jwtRoles +
+			'}';
 	}
 }

@@ -17,38 +17,15 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.common.security;
+package net.catenax.traceability.assets.infrastructure.config.openapi;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Set;
+public class TechnicalUserAuthorizationException extends RuntimeException {
 
-public class KeycloakAuthentication {
-
-	public static final KeycloakAuthentication NO_ROLES = new KeycloakAuthentication(Set.of());
-
-	private final Set<KeycloakRole> keycloakRoles;
-
-	public KeycloakAuthentication(Set<KeycloakRole> keycloakRoles) {
-		this.keycloakRoles = Collections.unmodifiableSet(keycloakRoles);
+	public TechnicalUserAuthorizationException(String message) {
+		super(message);
 	}
 
-	public boolean hasRole(KeycloakRole keycloakRole) {
-		return keycloakRoles.contains(keycloakRole);
-	}
-
-	public boolean hasAtLeastOneRole(KeycloakRole... keycloakRole) {
-		return Arrays.stream(keycloakRole)
-			.map(this::hasRole)
-			.filter(hasRole -> hasRole)
-			.findFirst()
-			.orElse(false);
-	}
-
-	@Override
-	public String toString() {
-		return "KeycloakAuthentication{" +
-			"keycloakRoles=" + keycloakRoles +
-			'}';
+	public TechnicalUserAuthorizationException(Throwable cause) {
+		super(cause);
 	}
 }

@@ -19,7 +19,7 @@
 
 package net.catenax.traceability.common.config;
 
-import net.catenax.traceability.common.security.InjectedKeycloakAuthenticationHandler;
+import net.catenax.traceability.common.security.InjectedJwtAuthenticationHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -32,7 +32,7 @@ import java.util.List;
 @Component
 public class WebConfig implements WebMvcConfigurer {
 
-	@Value("${keycloak.resource-client}")
+	@Value("${oauth2.resource-client}")
 	private String resourceClient;
 
 	@Override
@@ -51,6 +51,6 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-		resolvers.add(new InjectedKeycloakAuthenticationHandler(resourceClient));
+		resolvers.add(new InjectedJwtAuthenticationHandler(resourceClient));
 	}
 }

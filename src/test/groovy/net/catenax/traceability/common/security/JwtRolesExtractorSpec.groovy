@@ -26,35 +26,35 @@ import spock.lang.Specification
 
 import java.time.Instant
 
-class KeycloakRolesExtractorSpec extends Specification {
+class JwtRolesExtractorSpec extends Specification {
 
-	def "should extract keycloak resource client roles"() {
+	def "should extract jwt resource client roles"() {
 		given:
 			String resourceClient = "unit-tests"
 
 		and:
-			Set<String> keycloakMappedRoles = roles
+			Set<String> mappedRoles = roles
 				.each { it -> it.description }
 				.collect { it.description }
 
 		and:
-			Jwt token = createToken(keycloakMappedRoles, resourceClient)
+			Jwt token = createToken(mappedRoles, resourceClient)
 
 		when:
-			Set<KeycloakRole> extractedRoles = KeycloakRolesExtractor.extract(token, resourceClient)
+			Set<JwtRole> extractedRoles = JwtRolesExtractor.extract(token, resourceClient)
 
 		then:
 			extractedRoles == roles
 
 		where:
 			_ | roles
-			_ | [KeycloakRole.USER] as Set
-			_ | [KeycloakRole.ADMIN] as Set
-			_ | [KeycloakRole.SUPERVISOR] as Set
-			_ | [KeycloakRole.USER, KeycloakRole.ADMIN, KeycloakRole.SUPERVISOR] as Set
+			_ | [JwtRole.USER] as Set
+			_ | [JwtRole.ADMIN] as Set
+			_ | [JwtRole.SUPERVISOR] as Set
+			_ | [JwtRole.USER, JwtRole.ADMIN, JwtRole.SUPERVISOR] as Set
 	}
 
-	def "should extract only mapped keycloak roles"() {
+	def "should extract only mapped jwt roles"() {
 		given:
 			String resourceClient = "unit-tests"
 
@@ -62,7 +62,7 @@ class KeycloakRolesExtractorSpec extends Specification {
 			Jwt token = createToken(roles.toSet(), resourceClient)
 
 		when:
-			Set<KeycloakRole> extractedRoles = KeycloakRolesExtractor.extract(token, resourceClient)
+			Set<JwtRole> extractedRoles = JwtRolesExtractor.extract(token, resourceClient)
 
 		then:
 			extractedRoles == result
@@ -70,31 +70,31 @@ class KeycloakRolesExtractorSpec extends Specification {
 		where:
 			roles                                                     | result
 			["Unknown"]                                               | [] as Set
-			["User", "someUnknownRole1", "Admin", "someUnknownRole2"] | [KeycloakRole.USER, KeycloakRole.ADMIN] as Set
+			["User", "someUnknownRole1", "Admin", "someUnknownRole2"] | [JwtRole.USER, JwtRole.ADMIN] as Set
 
 	}
 
-	def "shouldn't not extract from keycloak unknown resource client "() {
+	def "shouldn't not extract roles from jwt unknown resource client"() {
 		given:
-			Set<String> keycloakMappedRoles = roles
+			Set<String> mappedRoles = roles
 				.each { it -> it.description }
 				.collect { it.description }
 
 		and:
-			Jwt token = createToken(keycloakMappedRoles, "unit-tests")
+			Jwt token = createToken(mappedRoles, "unit-tests")
 
 		when:
-			Set<KeycloakRole> extractedRoles = KeycloakRolesExtractor.extract(token, "unknown-resource-client")
+			Set<JwtRole> extractedRoles = JwtRolesExtractor.extract(token, "unknown-resource-client")
 
 		then:
 			extractedRoles.isEmpty()
 
 		where:
 			_ | roles
-			_ | [KeycloakRole.USER] as Set
-			_ | [KeycloakRole.ADMIN] as Set
-			_ | [KeycloakRole.SUPERVISOR] as Set
-			_ | [KeycloakRole.USER, KeycloakRole.ADMIN, KeycloakRole.SUPERVISOR] as Set
+			_ | [JwtRole.USER] as Set
+			_ | [JwtRole.ADMIN] as Set
+			_ | [JwtRole.SUPERVISOR] as Set
+			_ | [JwtRole.USER, JwtRole.ADMIN, JwtRole.SUPERVISOR] as Set
 	}
 
 	private static Jwt createToken(Set<String> roles, String resourceClient) {

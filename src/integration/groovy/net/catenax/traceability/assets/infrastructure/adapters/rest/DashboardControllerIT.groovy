@@ -25,9 +25,9 @@ import net.catenax.traceability.common.support.AssetsSupport
 import spock.lang.Unroll
 
 import static io.restassured.RestAssured.given
-import static net.catenax.traceability.common.security.KeycloakRole.ADMIN
-import static net.catenax.traceability.common.security.KeycloakRole.SUPERVISOR
-import static net.catenax.traceability.common.security.KeycloakRole.USER
+import static net.catenax.traceability.common.security.JwtRole.ADMIN
+import static net.catenax.traceability.common.security.JwtRole.SUPERVISOR
+import static net.catenax.traceability.common.security.JwtRole.USER
 import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.nullValue
 

@@ -19,7 +19,7 @@
 
 package net.catenax.traceability.common.support
 
-import net.catenax.traceability.common.security.KeycloakRole
+import net.catenax.traceability.common.security.JwtRole
 import org.jose4j.jwk.RsaJsonWebKey
 import org.jose4j.jws.JsonWebSignature
 import org.jose4j.jwt.JwtClaims
@@ -38,7 +38,7 @@ class JsonWebSignatureBuilder {
 		this.resourceClient = resourceClient
 	}
 
-	JsonWebSignature buildWithRoles(KeycloakRole... keycloakRoles) {
+	JsonWebSignature buildWithRoles(JwtRole... jwtRoles) {
 		JwtClaims jwtClaims = new JwtClaims()
 		jwtClaims.jwtId = UUID.randomUUID().toString()
 		jwtClaims.issuer = claimsIssuer
@@ -46,7 +46,7 @@ class JsonWebSignatureBuilder {
 		jwtClaims.setIssuedAtToNow()
 		jwtClaims.setExpirationTimeMinutesInTheFuture(100)
 
-		List<String> roles = keycloakRoles.collect { it.description }.toList()
+		List<String> roles = jwtRoles.collect { it.description }.toList()
 		Object resourceAccess = [(resourceClient): Map.of("roles", roles)]
 		jwtClaims.setClaim("resource_access", resourceAccess)
 
