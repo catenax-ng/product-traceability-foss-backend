@@ -1,8 +1,8 @@
 package net.catenax.traceability.investigations.adapters.jpa;
 
-import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.JpaAssetsRepository;
 import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity;
 import net.catenax.traceability.infrastructure.jpa.investigation.JpaInvestigationRepository;
+import net.catenax.traceability.investigations.domain.model.Investigation;
 import net.catenax.traceability.investigations.domain.ports.InvestigationsRepository;
 import org.springframework.stereotype.Component;
 
@@ -13,17 +13,24 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 
 	private final JpaInvestigationRepository investigationRepository;
 
-	private final JpaAssetsRepository assetsRepository;
-
-	public PersistentInvestigationsRepository(JpaInvestigationRepository investigationRepository, JpaAssetsRepository assetsRepository) {
+	public PersistentInvestigationsRepository(JpaInvestigationRepository investigationRepository) {
 		this.investigationRepository = investigationRepository;
-		this.assetsRepository = assetsRepository;
 	}
 
 	@Override
-	public void startInvestigation(List<String> assetIds, String description) {
-		assetsRepository.findByIdIn(assetIds).forEach(asset -> {
-			investigationRepository.save(new InvestigationEntity(asset, description));
-		});
+	public void saveAll(List<Investigation> investigations) {
+		investigationRepository.saveAll(investigations.stream()
+			.map(this::toNewEntity)
+			.toList()
+		);
 	}
+
+	private InvestigationEntity toNewEntity(Investigation investigation) {
+		return new InvestigationEntity(
+			investigation.getAssetId(),
+			investigation.getDescription(),
+			investigation.getInvestigationStatus()
+		);
+	}
+
 }

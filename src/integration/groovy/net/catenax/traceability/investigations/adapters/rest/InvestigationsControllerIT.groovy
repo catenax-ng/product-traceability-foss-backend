@@ -17,7 +17,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.investigations.infrastructure.adapters
+package net.catenax.traceability.investigations.adapters.rest
 
 import net.catenax.traceability.IntegrationSpec
 import net.catenax.traceability.assets.domain.model.Asset

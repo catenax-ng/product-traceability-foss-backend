@@ -56,7 +56,7 @@ public class AssetEntity {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private List<ChildDescription> childDescriptors;
 
-	@OneToMany(mappedBy = "asset", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "assetId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<InvestigationEntity> investigations = new ArrayList<>();
 

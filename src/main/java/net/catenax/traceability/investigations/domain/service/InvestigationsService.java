@@ -1,5 +1,6 @@
 package net.catenax.traceability.investigations.domain.service;
 
+import net.catenax.traceability.investigations.domain.model.Investigation;
 import net.catenax.traceability.investigations.domain.ports.InvestigationsRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,10 @@ public class InvestigationsService {
 	}
 
 	public void startInvestigation(List<String> assetIds, String description) {
-		repository.startInvestigation(assetIds, description);
+		repository.saveAll(assetIds.stream()
+			.map(asset -> new Investigation(asset, description))
+			.toList()
+		);
 	}
 
 }

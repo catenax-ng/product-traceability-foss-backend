@@ -1,14 +1,11 @@
 package net.catenax.traceability.infrastructure.jpa.investigation;
 
 import net.catenax.traceability.assets.domain.model.InvestigationStatus;
-import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.AssetEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.ZonedDateTime;
 
@@ -18,11 +15,7 @@ public class InvestigationEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	@ManyToOne
-	@JoinColumn(name = "asset_id", nullable = false)
-	private AssetEntity asset;
-
+	private String assetId;
 	private InvestigationStatus status;
 	private String description;
 	private ZonedDateTime created;
@@ -31,10 +24,10 @@ public class InvestigationEntity {
 	public InvestigationEntity() {
 	}
 
-	public InvestigationEntity(AssetEntity asset, String description) {
+	public InvestigationEntity(String assetId, String description, InvestigationStatus status) {
 		ZonedDateTime now = ZonedDateTime.now();
-		this.asset = asset;
-		this.status = InvestigationStatus.PENDING;
+		this.assetId = assetId;
+		this.status = status;
 		this.description = description;
 		this.created = now;
 		this.updated = now;
@@ -48,12 +41,12 @@ public class InvestigationEntity {
 		this.id = id;
 	}
 
-	public AssetEntity getAsset() {
-		return asset;
+	public String getAssetId() {
+		return assetId;
 	}
 
-	public void setAsset(AssetEntity asset) {
-		this.asset = asset;
+	public void setAssetId(String assetId) {
+		this.assetId = assetId;
 	}
 
 	public InvestigationStatus getStatus() {

@@ -1,7 +1,9 @@
 package net.catenax.traceability.investigations.domain.ports;
 
+import net.catenax.traceability.investigations.domain.model.Investigation;
+
 import java.util.List;
 
 public interface InvestigationsRepository {
-	void startInvestigation(List<String> assetIds, String description);
+	void saveAll(List<Investigation> investigations);
 }
