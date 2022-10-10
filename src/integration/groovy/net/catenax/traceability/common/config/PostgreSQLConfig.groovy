@@ -1,11 +1,12 @@
 package net.catenax.traceability.common.config
 
-
+import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.boot.test.util.TestPropertyValues
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
 import org.testcontainers.containers.PostgreSQLContainer
 
+@TestConfiguration
 class PostgreSQLConfig {
 
 	private static final DATABASE_NAME = "traceability-integration-tests"

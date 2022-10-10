@@ -26,6 +26,7 @@ import net.catenax.traceability.assets.domain.ports.ShellDescriptorRepository
 import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.model.AssetsConverter
 import net.catenax.traceability.common.config.MailboxConfig
 import net.catenax.traceability.common.config.OAuth2Config
+import net.catenax.traceability.common.config.PostgreSQLConfig
 import net.catenax.traceability.common.config.RestitoConfig
 import net.catenax.traceability.common.config.SecurityTestConfig
 import net.catenax.traceability.common.support.AssetRepositoryProvider
@@ -47,8 +48,8 @@ import javax.persistence.EntityManager
 @ActiveProfiles(profiles = ["integration"])
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(
-	classes = [SecurityTestConfig.class, MailboxConfig.class, RestitoConfig.class, OAuth2Config.class],
-	initializers = [RestitoConfig.Initializer.class]
+	classes = [SecurityTestConfig.class, MailboxConfig.class, RestitoConfig.class, OAuth2Config.class, PostgreSQLConfig.class],
+	initializers = [RestitoConfig.Initializer.class, PostgreSQLConfig.Initializer.class]
 )
 @Testcontainers
 abstract class IntegrationSpecification extends DatabaseAwareSpecification implements KeycloakSupport, KeycloakApiSupport, AssetRepositoryProvider, ShellDescriptorStoreProvider {
