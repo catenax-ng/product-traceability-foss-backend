@@ -26,6 +26,7 @@ import net.catenax.traceability.assets.domain.model.PageResult;
 import net.catenax.traceability.assets.domain.ports.AssetRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -41,10 +42,18 @@ public class PersistentAssetsRepository implements AssetRepository {
 	}
 
 	@Override
+	@Transactional
 	public Asset getAssetById(String assetId) {
 		return assetsRepository.findById(assetId)
 			.map(this::toAsset)
 			.orElse(null);
+	}
+
+	@Override
+	public List<Asset> getAssetsById(List<String> assetIds) {
+		return assetsRepository.findByIdIn(assetIds).stream()
+			.map(this::toAsset)
+			.toList();
 	}
 
 	@Override
@@ -70,6 +79,7 @@ public class PersistentAssetsRepository implements AssetRepository {
 	}
 
 	@Override
+	@Transactional
 	public List<Asset> getAssets() {
 		return toAssets(assetsRepository.findAll());
 	}
@@ -92,11 +102,6 @@ public class PersistentAssetsRepository implements AssetRepository {
 	@Override
 	public long countMyAssets() {
 		return assetsRepository.countBySupplierPartIsFalse();
-	}
-
-	@Override
-	public void clean() {
-		assetsRepository.deleteAll();
 	}
 
 	@Override
@@ -137,6 +142,7 @@ public class PersistentAssetsRepository implements AssetRepository {
 	}
 
 	private Asset toAsset(AssetEntity entity) {
+		entity.getInvestigations().size();
 		return new Asset(
 			entity.getId(), entity.getIdShort(),
 			entity.getNameAtManufacturer(),

@@ -62,11 +62,6 @@ public class PersistentShellDescriptorsRepository implements ShellDescriptorRepo
 		repository.deleteAllByUpdatedBefore(now);
 	}
 
-	@Override
-	public void clean() {
-		repository.deleteAll();
-	}
-
 	private ShellDescriptor toShellDescriptor(ShellDescriptorEntity descriptor) {
 		return new ShellDescriptor(descriptor.getShellDescriptorId(), descriptor.getGlobalAssetId());
 	}

@@ -2,24 +2,21 @@ package net.catenax.traceability.investigations.domain.model;
 
 import net.catenax.traceability.assets.domain.model.InvestigationStatus;
 
+import java.util.List;
+
 public class Investigation {
-	private Long investigationId;
-	private final String assetId;
+	private List<String> assetIds;
 	private InvestigationStatus investigationStatus;
 	private String description;
 
-	public Investigation(String assetId, String description) {
-		this.assetId = assetId;
+	public Investigation(List<String> assetIds, String description) {
+		this.assetIds = assetIds;
 		this.description = description;
-		this.investigationStatus = InvestigationStatus.PENDING;
+		this.investigationStatus = InvestigationStatus.CREATED;
 	}
 
-	public Long getInvestigationId() {
-		return investigationId;
-	}
-
-	public String getAssetId() {
-		return assetId;
+	public List<String> getAssetIds() {
+		return assetIds;
 	}
 
 	public InvestigationStatus getInvestigationStatus() {

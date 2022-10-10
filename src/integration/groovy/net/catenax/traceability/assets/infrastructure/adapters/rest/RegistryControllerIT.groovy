@@ -19,7 +19,7 @@
 
 package net.catenax.traceability.assets.infrastructure.adapters.rest
 
-import net.catenax.traceability.IntegrationSpec
+import net.catenax.traceability.IntegrationSpecification
 import net.catenax.traceability.common.security.KeycloakRole
 import net.catenax.traceability.common.support.AssetsSupport
 import net.catenax.traceability.common.support.IrsApiSupport
@@ -30,7 +30,7 @@ import org.springframework.http.MediaType
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-class RegistryControllerIT extends IntegrationSpec implements IrsApiSupport, RegistrySupport, ShellDescriptorSupport, AssetsSupport {
+class RegistryControllerIT extends IntegrationSpecification implements IrsApiSupport, RegistrySupport, ShellDescriptorSupport, AssetsSupport {
 
 	def "should synchronize descriptors and assets"() {
 		given:

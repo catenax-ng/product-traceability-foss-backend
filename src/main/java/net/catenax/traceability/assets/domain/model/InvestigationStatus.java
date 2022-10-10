@@ -20,7 +20,13 @@
 package net.catenax.traceability.assets.domain.model;
 
 public enum InvestigationStatus {
-	NONE,
-	PENDING,
-	CLOSED
+	CREATED,
+	APPROVED,
+	SENT,
+	RECEIVED,
+	ACKNOWLEDGED,
+	ACCEPTED,
+	DECLINED,
+	CLOSED,
+	CONFIRMED;
 }

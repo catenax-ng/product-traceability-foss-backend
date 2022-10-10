@@ -22,16 +22,12 @@ package net.catenax.traceability.assets.infrastructure.adapters.jpa.asset;
 import net.catenax.traceability.assets.domain.model.InvestigationStatus;
 import net.catenax.traceability.assets.domain.model.QualityType;
 import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,11 +49,10 @@ public class AssetEntity {
 	private boolean supplierPart;
 	private QualityType qualityType;
 
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection
 	private List<ChildDescription> childDescriptors;
 
-	@OneToMany(mappedBy = "assetId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@Fetch(value = FetchMode.SUBSELECT)
+	@ManyToMany(mappedBy = "assets")
 	private List<InvestigationEntity> investigations = new ArrayList<>();
 
 	public AssetEntity(String id, String idShort, String nameAtManufacturer,
@@ -206,8 +201,8 @@ public class AssetEntity {
 	}
 
 	public boolean isOnInvestigation() {
-		return investigations.stream()
-			.anyMatch(investigation -> investigation.getStatus() == InvestigationStatus.PENDING);
+		return getInvestigations().stream()
+			.anyMatch(investigation -> investigation.getStatus() == InvestigationStatus.CREATED);
 	}
 
 	@Embeddable

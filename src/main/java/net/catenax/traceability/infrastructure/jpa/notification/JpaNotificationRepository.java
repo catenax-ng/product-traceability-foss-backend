@@ -1,4 +1,4 @@
-/*
+/********************************************************************************
  * Copyright (c) 2021,2022 Contributors to the CatenaX (ng) GitHub Organisation
  *
  * See the NOTICE file(s) distributed with this work for additional
@@ -15,19 +15,14 @@
  * under the License.
  *
  * SPDX-License-Identifier: Apache-2.0
- */
+ ********************************************************************************/
 
-package net.catenax.traceability.assets.domain.ports;
+package net.catenax.traceability.infrastructure.jpa.notification;
 
-import net.catenax.traceability.assets.domain.model.ShellDescriptor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.time.ZonedDateTime;
-import java.util.Collection;
-import java.util.List;
+@Repository
+public interface JpaNotificationRepository extends JpaRepository<NotificationEntity, Long> {
 
-public interface ShellDescriptorRepository {
-	List<ShellDescriptor> findAll();
-	void update(ShellDescriptor shellDescriptor);
-	void saveAll(Collection<ShellDescriptor> values);
-	void removeOldDescriptors(ZonedDateTime now);
 }

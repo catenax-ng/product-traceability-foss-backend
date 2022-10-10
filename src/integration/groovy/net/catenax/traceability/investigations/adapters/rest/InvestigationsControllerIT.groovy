@@ -19,30 +19,35 @@
 
 package net.catenax.traceability.investigations.adapters.rest
 
-import net.catenax.traceability.IntegrationSpec
+import net.catenax.traceability.IntegrationSpecification
 import net.catenax.traceability.assets.domain.model.Asset
-import net.catenax.traceability.assets.domain.model.InvestigationStatus
-import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.AssetEntity
-import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.JpaAssetsRepository
 import net.catenax.traceability.common.security.KeycloakRole
 import net.catenax.traceability.common.support.AssetsSupport
 import net.catenax.traceability.common.support.IrsApiSupport
+import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity
+import net.catenax.traceability.infrastructure.jpa.investigation.JpaInvestigationRepository
+import net.catenax.traceability.infrastructure.jpa.notification.JpaNotificationRepository
+import net.catenax.traceability.infrastructure.jpa.notification.NotificationEntity
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-class InvestigationsControllerIT extends IntegrationSpec implements IrsApiSupport, AssetsSupport {
+class InvestigationsControllerIT extends IntegrationSpecification implements IrsApiSupport, AssetsSupport {
 
 	@Autowired
-	JpaAssetsRepository jpaAssetsRepository
+	JpaInvestigationRepository jpaInvestigationRepository
+
+	@Autowired
+	JpaNotificationRepository jpaNotificationRepository
 
 	def "should start investigation"() {
 		given:
 			List<String> partIds = [
-				"urn:uuid:fe99da3d-b0de-4e80-81da-882aebcca978",
-				"urn:uuid:0ce83951-bc18-4e8f-892d-48bad4eb67ef"
+				"urn:uuid:fe99da3d-b0de-4e80-81da-882aebcca978", // BPN: BPNL00000003AYRE
+				"urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb", // BPN: BPNL00000003AYRE
+				"urn:uuid:0ce83951-bc18-4e8f-892d-48bad4eb67ef"  // BPN: BPNL00000003AXS3
 			]
 			String description = "at least 15 characters long investigation description"
 			authenticatedUser(KeycloakRole.ADMIN)
@@ -62,20 +67,19 @@ class InvestigationsControllerIT extends IntegrationSpec implements IrsApiSuppor
 			).andExpect(status().isOk())
 
 		then:
-			List<AssetEntity> parts = jpaAssetsRepository.findByIdIn(partIds)
-			parts.size() == 2
-			parts.each { part ->
-				assert part.investigations
-				assert part.investigations[0].status == InvestigationStatus.PENDING
-				assert part.investigations[0].description == description
-			}
-
-		and:
 			partIds.each {partId ->
 				Asset asset = assetRepository().getAssetById(partId)
 				assert asset
 				assert asset.isUnderInvestigation()
 			}
+
+		and:
+			List<NotificationEntity> notifications = jpaNotificationRepository.findAll()
+			notifications.size() == 2
+
+		and:
+			List<InvestigationEntity> investigations = jpaInvestigationRepository.findAll()
+			investigations.size() == 1
 	}
 
 }

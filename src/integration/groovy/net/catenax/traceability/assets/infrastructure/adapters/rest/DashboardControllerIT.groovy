@@ -19,7 +19,7 @@
 
 package net.catenax.traceability.assets.infrastructure.adapters.rest
 
-import net.catenax.traceability.IntegrationSpec
+import net.catenax.traceability.IntegrationSpecification
 import net.catenax.traceability.common.support.AssetsSupport
 import org.springframework.http.MediaType
 import spock.lang.Unroll
@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-class DashboardControllerIT extends IntegrationSpec implements AssetsSupport {
+class DashboardControllerIT extends IntegrationSpecification implements AssetsSupport {
 
 	@Unroll
 	def "should return all dashboard information for user with #role role"() {

@@ -28,6 +28,8 @@ import java.util.List;
 public interface AssetRepository {
 	Asset getAssetById(String assetId);
 
+	List<Asset> getAssetsById(List<String> assetIds);
+
 	Asset getAssetByChildId(String assetId, String childId);
 
 	PageResult<Asset> getAssets(Pageable pageable);
@@ -45,8 +47,6 @@ public interface AssetRepository {
     long countAssets();
 
 	long countMyAssets();
-
-	void clean();
 
 	long countPendingInvestigations();
 }
