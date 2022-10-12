@@ -19,26 +19,27 @@
 
 package net.catenax.traceability.assets.infrastructure.adapters.rest
 
-import io.restassured.http.ContentType
 import net.catenax.traceability.IntegrationSpec
 import net.catenax.traceability.assets.domain.model.Asset
 import net.catenax.traceability.assets.domain.model.InvestigationStatus
 import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.model.AssetsConverter
 import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.AssetEntity
 import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.JpaAssetsRepository
+import net.catenax.traceability.common.security.KeycloakRole
 import net.catenax.traceability.common.support.AssetsSupport
 import net.catenax.traceability.common.support.IrsApiSupport
 import org.hamcrest.Matchers
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.MediaType
 import spock.util.concurrent.PollingConditions
 
-import static io.restassured.RestAssured.given
-import static net.catenax.traceability.common.security.JwtRole.ADMIN
-import static net.catenax.traceability.common.security.JwtRole.SUPERVISOR
-import static net.catenax.traceability.common.security.JwtRole.USER
 import static org.hamcrest.Matchers.equalTo
-import static org.hamcrest.Matchers.everyItem
 import static org.hamcrest.Matchers.not
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, AssetsSupport {
 
@@ -47,78 +48,61 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 
 	def "should synchronize assets"() {
 		given:
-			oauth2ApiReturnsTechnicalUserToken()
+			authenticatedUser(KeycloakRole.ADMIN)
+			keycloakApiReturnsToken()
 			irsApiTriggerJob()
 			irsApiReturnsJobDetails()
 
 		when:
-			given()
-				.contentType(ContentType.JSON)
-				.body(
-					asJson(
-						[
-							globalAssetIds: ["urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"]
-						]
-					)
-				)
-				.header(jwtAuthorization(ADMIN))
-				.when()
-				.post("/api/assets/sync")
-				.then()
-				.statusCode(200)
+			mvc.perform(post("/assets/sync")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJson(
+					[
+						globalAssetIds: ["urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"]
+					]
+				))
+			).andExpect(status().isOk())
 
 		then:
 			eventually {
 				assertAssetsSize(14)
 				assertHasRequiredIdentifiers();
 			}
-
-		and:
-			verifyOAuth2ApiCalledOnceForTechnicalUserToken()
-			verifyIrsApiTriggerJobCalledOnce()
 	}
 
 	def "should use cached BPNs when empty list is returned"() {
 		given:
-			oauth2ApiReturnsTechnicalUserToken()
+			authenticatedUser(KeycloakRole.ADMIN)
+			keycloakApiReturnsToken()
 			irsApiTriggerJob()
 			irsApiReturnsJobDetailsWithNoBPNs()
 
 		when:
-			given()
-				.contentType(ContentType.JSON)
-				.body(
-					asJson(
-						[
-							globalAssetIds: ["urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"]
-						]
-					)
-				)
-				.header(jwtAuthorization(ADMIN))
-				.when()
-				.post("/api/assets/sync")
-				.then()
-				.statusCode(200)
+			mvc.perform(post("/assets/sync")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJson(
+					[
+						globalAssetIds: ["urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"]
+					]
+				))
+			).andExpect(status().isOk())
 
 		then:
 			eventually {
-				List<Asset> assets = assetRepository().getAssets().findAll { asset ->
+				List<Asset> assets = assetRepository().getAssets().findAll {asset ->
 					asset.manufacturerId != AssetsConverter.EMPTY_TEXT
 				}
 				assets.size() == 13
-				assets.each { asset ->
+				assets.each {asset ->
 					assert asset.manufacturerName != AssetsConverter.EMPTY_TEXT
 				}
 			}
-
-		and:
-			verifyOAuth2ApiCalledOnceForTechnicalUserToken()
-			verifyIrsApiTriggerJobCalledOnce()
 	}
 
 	def "should synchronize assets using retry"() {
 		given:
-			oauth2ApiReturnsTechnicalUserToken()
+			authenticatedUser(KeycloakRole.ADMIN)
+			keycloakApiReturnsToken()
 
 		and:
 			irsApiTriggerJob()
@@ -127,51 +111,36 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 			irsApiReturnsJobInRunningAndCompleted()
 
 		when:
-			given()
-				.contentType(ContentType.JSON)
-				.body(
-					asJson(
-						[
-							globalAssetIds: ["urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"]
-						]
-					)
-				)
-				.header(jwtAuthorization(ADMIN))
-				.when()
-				.post("/api/assets/sync")
-				.then()
-				.statusCode(200)
+			mvc.perform(post("/assets/sync")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJson(
+					[
+						globalAssetIds: ["urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"]
+					]
+				))
+			).andExpect(status().isOk())
 
 		then:
 			eventually {
 				assertAssetsSize(14)
 			}
-
-		and:
-			verifyOAuth2ApiCalledOnceForTechnicalUserToken()
-			verifyIrsApiTriggerJobCalledOnce()
 	}
 
 	def "should not synchronize assets when irs failed to trigger job"() {
 		given:
-			oauth2ApiReturnsTechnicalUserToken()
+			authenticatedUser(KeycloakRole.ADMIN)
+			keycloakApiReturnsToken()
 			irsApiTriggerJobFailed()
 
 		when:
-			given()
-				.contentType(ContentType.JSON)
-				.body(
-					asJson(
-						[
-							globalAssetIds: ["urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"]
-						]
-					)
-				)
-				.header(jwtAuthorization(ADMIN))
-				.when()
-				.post("/api/assets/sync")
-				.then()
-				.statusCode(200)
+			mvc.perform(post("/assets/sync")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJson(
+					[
+						globalAssetIds: ["urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"]
+					]
+				))
+			).andExpect(status().isOk())
 
 		then:
 			new PollingConditions(timeout: 10, initialDelay: 3).eventually {
@@ -179,139 +148,113 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 			}
 
 		and:
-			verifyOAuth2ApiCalledOnceForTechnicalUserToken()
-			verifyIrsApiTriggerJobCalledOnce()
 			verifyIrsJobDetailsApiNotCalled()
 	}
 
 	def "should not synchronize assets when irs failed to return job details"() {
 		given:
-			oauth2ApiReturnsTechnicalUserToken()
+			authenticatedUser(KeycloakRole.ADMIN)
+			keycloakApiReturnsToken()
 			irsApiTriggerJob()
 
 		and:
 			irsJobDetailsApiFailed()
 
 		when:
-			given()
-				.contentType(ContentType.JSON)
-				.body(
-					asJson(
-						[
-							globalAssetIds: ["urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"]
-						]
-					)
-				)
-				.header(jwtAuthorization(ADMIN))
-				.when()
-				.post("/api/assets/sync")
-				.then()
-				.statusCode(200)
+			mvc.perform(post("/assets/sync")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJson(
+					[
+						globalAssetIds: ["urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"]
+					]
+				))
+			).andExpect(status().isOk())
 
 		then:
 			eventually {
 				assertNoAssetsStored()
 			}
-
-		and:
-			verifyOAuth2ApiCalledOnceForTechnicalUserToken()
-			verifyIrsApiTriggerJobCalledOnce()
 	}
 
 	def "should not synchronize assets when irs keeps returning job in running state"() {
 		given:
-			oauth2ApiReturnsTechnicalUserToken()
+			authenticatedUser(KeycloakRole.ADMIN)
+			keycloakApiReturnsToken()
 			irsApiTriggerJob()
 
 		and:
 			irsApiReturnsJobInRunningState()
 
 		when:
-			given()
-				.contentType(ContentType.JSON)
-				.body(
-					asJson(
-						[
-							globalAssetIds: ["urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"]
-						]
-					)
-				)
-				.header(jwtAuthorization(ADMIN))
-				.when()
-				.post("/api/assets/sync")
-				.then()
-				.statusCode(200)
+			mvc.perform(post("/assets/sync")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJson(
+					[
+						globalAssetIds: ["urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"]
+					]
+				))
+			).andExpect(status().isOk())
 
 		then:
 			eventually {
 				assertNoAssetsStored()
 			}
-
-		and:
-			verifyOAuth2ApiCalledOnceForTechnicalUserToken()
-			verifyIrsApiTriggerJobCalledOnce()
 	}
 
 	def "should return assets for authenticated user with role"() {
+		given:
+			authenticatedUser(KeycloakRole.ADMIN)
+
 		expect:
-			given()
-				.header(jwtAuthorization(ADMIN))
-				.when()
-				.get("/api/assets/1234")
-				.then()
-				.statusCode(200)
+			mvc.perform(get("/assets/1234").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
 	}
 
 	def "should return assets with manufacturer name"() {
 		given:
+			authenticatedUser(KeycloakRole.ADMIN)
+
+		and:
 			defaultAssetsStored()
 
 		expect:
-			given()
-				.header(jwtAuthorization(ADMIN))
-				.when()
-				.get("/api/assets")
-				.then()
-				.statusCode(200)
-				.body("content.manufacturerName", everyItem(not(equalTo(AssetsConverter.EMPTY_TEXT))))
+			mvc.perform(get("/assets").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath('$.content[*].manufacturerName', not(equalTo(AssetsConverter.EMPTY_TEXT))))
 	}
 
 	def "should return supplier assets"() {
 		given:
+			authenticatedUser(KeycloakRole.ADMIN)
+
+		and:
 			defaultAssetsStored()
 
 		expect:
-			given()
-				.header(jwtAuthorization(ADMIN))
-				.when()
-				.get("/api/assets/supplier")
-				.then()
-				.statusCode(200)
-				.body("totalItems", equalTo(12))
+			mvc.perform(get("/assets/supplier").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath('$.totalItems', equalTo(12)))
 	}
 
 	def "should start investigation"() {
 		given:
 			List<String> partIds = ["urn:uuid:fe99da3d-b0de-4e80-81da-882aebcca978", "urn:uuid:0ce83951-bc18-4e8f-892d-48bad4eb67ef"]
 			String description = "at least 15 characters long investigation description"
+			authenticatedUser(KeycloakRole.ADMIN)
 
 		and:
 			defaultAssetsStored()
 
 		when:
-			given()
-				.header(jwtAuthorization(ADMIN))
-				.contentType(ContentType.JSON)
-				.body(asJson(
+			mvc.perform(post("/investigations")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJson(
 					[
-						partIds    : partIds,
+						partIds: partIds,
 						description: description
 					]
 				))
-				.when()
-				.post("/api/investigations")
-				.then()
-				.statusCode(200)
+			).andExpect(status().isOk())
 
 		then:
 			List<AssetEntity> parts = jpaAssetsRepository.findByIdIn(partIds)
@@ -323,7 +266,7 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 			}
 
 		and:
-			partIds.each { partId ->
+			partIds.each {partId ->
 				Asset asset = assetRepository().getAssetById(partId)
 				assert asset
 				assert asset.isUnderInvestigation()
@@ -332,121 +275,126 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 
 	def "should return own assets"() {
 		given:
+			authenticatedUser(KeycloakRole.ADMIN)
+
+		and:
 			defaultAssetsStored()
 
 		expect:
-			given()
-				.header(jwtAuthorization(ADMIN))
-				.when()
-				.get("/api/assets/my")
-				.then()
-				.statusCode(200)
-				.body("totalItems", equalTo(1))
+			mvc.perform(get("/assets/my").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath('$.totalItems', equalTo(1)))
 	}
 
 	def "should return assets country map"() {
-		expect:
-			given()
-				.header(jwtAuthorization(role))
-				.when()
-				.get("/api/assets/countries")
-				.then()
-				.statusCode(200)
+		given:
+			authenticatedUser()
 
-		where:
-			role << [USER, ADMIN, SUPERVISOR]
+		expect:
+			mvc.perform(get("/assets/countries").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
 	}
 
-	def "should not return assets country map when user is not authenticated"() {
+	def "should not return assets country map when user is not authorized"() {
+		given:
+			unauthenticatedUser()
+
 		expect:
-			given()
-				.when()
-				.get("/api/assets/countries")
-				.then()
-				.statusCode(401)
+			mvc.perform(get("/assets/countries").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isUnauthorized())
 	}
 
 	def "should not return assets when user is not authenticated"() {
+		given:
+			unauthenticatedUser()
+
 		expect:
-			given()
-				.when()
-				.get("/api/assets/1234")
-				.then()
-				.statusCode(401)
+			mvc.perform(get("/assets/1234").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isUnauthorized())
 	}
 
 	def "should get children asset"() {
 		given:
+			authenticatedUser(KeycloakRole.ADMIN)
+			keycloakApiReturnsToken()
+
+		and:
 			defaultAssetsStored()
 
 		expect:
-			given()
-				.header(jwtAuthorization(ADMIN))
-				.when()
-				.get("/api/assets/urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb/children/urn:uuid:587cfb38-7149-4f06-b1e0-0e9b6e98be2a")
-				.then()
-				.statusCode(200)
-				.body("id", Matchers.is("urn:uuid:587cfb38-7149-4f06-b1e0-0e9b6e98be2a"))
+			mvc.perform(get("/assets/urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb/children/urn:uuid:587cfb38-7149-4f06-b1e0-0e9b6e98be2a")
+				.contentType(MediaType.APPLICATION_JSON)
+			)
+				.andExpect(status().isOk())
+				.andExpect(jsonPath('$.id', Matchers.is("urn:uuid:587cfb38-7149-4f06-b1e0-0e9b6e98be2a")))
 	}
 
 	def "should return 404 when children asset is not found"() {
 		given:
+			authenticatedUser(KeycloakRole.ADMIN)
+			keycloakApiReturnsToken()
+
+		and:
 			defaultAssetsStored()
 
 		expect:
-			given()
-				.header(jwtAuthorization(ADMIN))
-				.when()
-				.get("/api/assets/urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb/children/unknown")
-				.then()
-				.statusCode(404)
+			mvc.perform(get("/assets/urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb/children/unknown")
+				.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andExpect(status().isNotFound())
 	}
 
 	def "should get a page of assets"() {
 		given:
+			authenticatedUser(KeycloakRole.ADMIN)
+			keycloakApiReturnsToken()
+
+		and:
 			defaultAssetsStored()
 
 		expect:
-			given()
-				.header(jwtAuthorization(ADMIN))
-				.param("page", "2")
-				.param("size", "2")
-				.when()
-				.get("/api/assets")
-				.then()
-				.statusCode(200)
-				.body("page", Matchers.is(2))
-				.body("pageSize", Matchers.is(2))
+			mvc.perform(get("/assets")
+				.queryParam("page", "2")
+				.queryParam("size", "2")
+				.contentType(MediaType.APPLICATION_JSON)
+			)
+				.andExpect(status().isOk())
+				.andExpect(jsonPath('$.page', Matchers.is(2)))
+				.andExpect(jsonPath('$.pageSize', Matchers.is(2)))
 	}
 
 	def "should not update quality type for not existing asset"() {
+		given:
+			authenticatedUser(KeycloakRole.ADMIN)
+
 		expect:
-			given()
-				.header(jwtAuthorization(ADMIN))
-				.contentType(ContentType.JSON)
-				.body(asJson(
-					[
-						qualityType: 'Critical'
-					]
-				))
-				.when()
-				.patch("/api/assets/1234")
-				.then()
-				.statusCode(404)
-				.body("message", equalTo("Asset with id 1234 was not found."))
+			mvc.perform(patch("/assets/1234")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(
+					asJson(
+						[qualityType: 'Critical']
+					)
+				),
+			)
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath('$.message', equalTo("Asset with id 1234 was not found.")))
 	}
 
 	def "should not update quality type with invalid request body"() {
+		given:
+			authenticatedUser(KeycloakRole.ADMIN)
+
 		expect:
-			given()
-				.header(jwtAuthorization(ADMIN))
-				.contentType(ContentType.JSON)
-				.body(asJson(requestBody))
-				.when()
-				.patch("/api/assets/1234")
-				.then()
-				.statusCode(400)
-				.body("message", equalTo(errorMessage))
+			mvc.perform(patch("/assets/1234")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(
+					asJson(
+						requestBody
+					)
+				),
+			)
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath('$.message', equalTo(errorMessage)))
 
 		where:
 			requestBody                                | errorMessage
@@ -459,42 +407,39 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 
 	def "should update quality type for existing asset"() {
 		given:
+			authenticatedUser(KeycloakRole.ADMIN)
+			keycloakApiReturnsToken()
+
+		and:
 			defaultAssetsStored()
 
 		and:
 			def existingAssetId = "urn:uuid:1ae94880-e6b0-4bf3-ab74-8148b63c0640"
 
 		expect:
-			given()
-				.header(jwtAuthorization(ADMIN))
-				.when()
-				.get("/api/assets/$existingAssetId")
-				.then()
-				.statusCode(200)
-				.body("qualityType", equalTo("Ok"))
+			mvc.perform(get("/assets/$existingAssetId").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath('$.qualityType', equalTo("Ok")))
 
 		and:
-			given()
-				.header(jwtAuthorization(ADMIN))
-				.contentType(ContentType.JSON)
-				.body(asJson(
-					[
-						qualityType: 'Critical'
-					]
-				))
-				.when()
-				.patch("/api/assets/$existingAssetId")
-				.then()
-				.statusCode(200)
-				.body("qualityType", equalTo("Critical"))
+			authenticatedUser(KeycloakRole.ADMIN)
+
+			mvc.perform(patch("/assets/$existingAssetId")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(
+					asJson(
+						[qualityType: 'Critical']
+					)
+				),
+			)
+				.andExpect(status().isOk())
+				.andExpect(jsonPath('$.qualityType', equalTo("Critical")))
 
 		and:
-			given()
-				.header(jwtAuthorization(ADMIN))
-				.when()
-				.get("/api/assets/$existingAssetId")
-				.then()
-				.statusCode(200)
-				.body("qualityType", equalTo("Critical"))
+			authenticatedUser(KeycloakRole.ADMIN)
+
+			mvc.perform(get("/assets/$existingAssetId").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath('$.qualityType', equalTo("Critical")))
 	}
 }

@@ -25,6 +25,7 @@ import io.github.resilience4j.core.registry.EntryReplacedEvent;
 import io.github.resilience4j.core.registry.RegistryEventConsumer;
 import io.github.resilience4j.retry.Retry;
 import net.catenax.traceability.common.docs.SwaggerPageable;
+import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -55,6 +56,8 @@ import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger.web.SecurityConfiguration;
+import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -72,8 +75,14 @@ public class ApplicationConfig {
 		new AuthorizationScope("uma_authorization", "UMA authorization")
 	};
 
-	@Value("${spring.security.oauth2.client.provider.keycloak.token-uri}")
-	private String keycloakTokenUrl;
+	@Value("${keycloak.realm:}")
+	private String realm;
+
+	@Value("${keycloak.resource:}")
+	private String clientId;
+
+	@Value("${keycloak.auth-server-url:}")
+	private String authServerUrl;
 
 	@Value("${spring.mail.templates.path}")
 	private String mailTemplatesPath;
@@ -81,6 +90,11 @@ public class ApplicationConfig {
 	@Bean
 	public InternalResourceViewResolver defaultViewResolver() {
 		return new InternalResourceViewResolver();
+	}
+
+	@Bean
+	public KeycloakSpringBootConfigResolver keycloakConfigResolver() {
+		return new KeycloakSpringBootConfigResolver();
 	}
 
 	@Bean
@@ -136,6 +150,17 @@ public class ApplicationConfig {
 	}
 
 	@Bean
+	public SecurityConfiguration security() {
+		return SecurityConfigurationBuilder.builder()
+			.clientId(clientId)
+			.realm(realm)
+			.appName(clientId)
+			.scopeSeparator(",")
+			.additionalQueryStringParams(null)
+			.build();
+	}
+
+	@Bean
 	public RegistryEventConsumer<Retry> myRetryRegistryEventConsumer() {
 		final Logger logger = LoggerFactory.getLogger("RetryLogger");
 
@@ -164,8 +189,8 @@ public class ApplicationConfig {
 	private SecurityScheme keycloakAuthenticationScheme() {
 		return new OAuth2SchemeBuilder("authorizationCode")
 			.name("Keycloak")
-			.authorizationUrl(keycloakTokenUrl.replace("token", "auth"))
-			.tokenUrl(keycloakTokenUrl)
+			.authorizationUrl(authServerUrl + "/realms/" + realm + "/protocol/openid-connect/auth")
+			.tokenUrl(authServerUrl + "/realms/" + realm + "/protocol/openid-connect/token")
 			.scopes(Arrays.asList(DEFAULT_SCOPES))
 			.build();
 	}
