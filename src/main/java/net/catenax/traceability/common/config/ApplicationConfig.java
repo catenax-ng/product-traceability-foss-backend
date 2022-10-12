@@ -19,8 +19,14 @@
 
 package net.catenax.traceability.common.config;
 
+import io.github.resilience4j.core.registry.EntryAddedEvent;
+import io.github.resilience4j.core.registry.EntryRemovedEvent;
+import io.github.resilience4j.core.registry.EntryReplacedEvent;
+import io.github.resilience4j.core.registry.RegistryEventConsumer;
+import io.github.resilience4j.retry.Retry;
 import net.catenax.traceability.common.docs.SwaggerPageable;
-import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
@@ -49,8 +55,6 @@ import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger.web.SecurityConfiguration;
-import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -68,14 +72,8 @@ public class ApplicationConfig {
 		new AuthorizationScope("uma_authorization", "UMA authorization")
 	};
 
-	@Value("${keycloak.realm:}")
-	private String realm;
-
-	@Value("${keycloak.resource:}")
-	private String clientId;
-
-	@Value("${keycloak.auth-server-url:}")
-	private String authServerUrl;
+	@Value("${spring.security.oauth2.client.provider.keycloak.token-uri}")
+	private String keycloakTokenUrl;
 
 	@Value("${spring.mail.templates.path}")
 	private String mailTemplatesPath;
@@ -83,11 +81,6 @@ public class ApplicationConfig {
 	@Bean
 	public InternalResourceViewResolver defaultViewResolver() {
 		return new InternalResourceViewResolver();
-	}
-
-	@Bean
-	public KeycloakSpringBootConfigResolver keycloakConfigResolver() {
-		return new KeycloakSpringBootConfigResolver();
 	}
 
 	@Bean
@@ -143,14 +136,22 @@ public class ApplicationConfig {
 	}
 
 	@Bean
-	public SecurityConfiguration security() {
-		return SecurityConfigurationBuilder.builder()
-			.clientId(clientId)
-			.realm(realm)
-			.appName(clientId)
-			.scopeSeparator(",")
-			.additionalQueryStringParams(null)
-			.build();
+	public RegistryEventConsumer<Retry> myRetryRegistryEventConsumer() {
+		final Logger logger = LoggerFactory.getLogger("RetryLogger");
+
+		return new RegistryEventConsumer<>() {
+			@Override
+			public void onEntryAddedEvent(EntryAddedEvent<Retry> entryAddedEvent) {
+				entryAddedEvent.getAddedEntry().getEventPublisher()
+					.onEvent(event -> logger.info(event.toString()));
+			}
+
+			@Override
+			public void onEntryReplacedEvent(EntryReplacedEvent<Retry> entryReplacedEvent) {}
+
+			@Override
+			public void onEntryRemovedEvent(EntryRemovedEvent<Retry> entryRemoveEvent) {}
+		};
 	}
 
 	private static SecurityScheme bearerTokenAuthenticationScheme() {
@@ -163,8 +164,8 @@ public class ApplicationConfig {
 	private SecurityScheme keycloakAuthenticationScheme() {
 		return new OAuth2SchemeBuilder("authorizationCode")
 			.name("Keycloak")
-			.authorizationUrl(authServerUrl + "/realms/" + realm + "/protocol/openid-connect/auth")
-			.tokenUrl(authServerUrl + "/realms/" + realm + "/protocol/openid-connect/token")
+			.authorizationUrl(keycloakTokenUrl.replace("token", "auth"))
+			.tokenUrl(keycloakTokenUrl)
 			.scopes(Arrays.asList(DEFAULT_SCOPES))
 			.build();
 	}

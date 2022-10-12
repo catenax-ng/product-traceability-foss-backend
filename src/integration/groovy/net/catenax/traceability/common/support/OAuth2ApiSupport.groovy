@@ -25,16 +25,18 @@ import static com.xebialabs.restito.builder.stub.StubHttp.whenHttp
 import static com.xebialabs.restito.builder.verify.VerifyHttp.verifyHttp
 import static com.xebialabs.restito.semantics.Action.header
 import static com.xebialabs.restito.semantics.Action.ok
+import static com.xebialabs.restito.semantics.Action.stringContent
 import static com.xebialabs.restito.semantics.Action.unauthorized
 import static com.xebialabs.restito.semantics.Condition.basicAuth
+import static com.xebialabs.restito.semantics.Condition.get
 import static com.xebialabs.restito.semantics.Condition.post
 import static com.xebialabs.restito.semantics.Condition.startsWithUri
 
-trait KeycloakApiSupport implements RestitoProvider {
+trait OAuth2ApiSupport implements RestitoProvider {
 
-	void keycloakApiReturnsToken() {
+	void oauth2ApiReturnsTechnicalUserToken() {
 		whenHttp(stubServer()).match(
-			post(RestitoConfig.KEYCLOAK_TOKEN_PATH),
+			post(RestitoConfig.OAUTH2_TOKEN_PATH),
 			basicAuth("traceability-foss-integration-tests", "integration-tests")
 		)
 			.then(
@@ -44,9 +46,20 @@ trait KeycloakApiSupport implements RestitoProvider {
 			)
 	}
 
-	void keycloakApiReturnsUnauthorized() {
+	void oauth2ApiReturnsJwkCerts(String jwk) {
 		whenHttp(stubServer()).match(
-			post(RestitoConfig.KEYCLOAK_TOKEN_PATH)
+			get(RestitoConfig.OAUTH2_JWK_PATH)
+		)
+			.then(
+				ok(),
+				header("Content-Type", "application/json"),
+				stringContent(jwk)
+			)
+	}
+
+	void oauth2ApiReturnsUnauthorized() {
+		whenHttp(stubServer()).match(
+			post(RestitoConfig.OAUTH2_TOKEN_PATH)
 		)
 			.then(
 				unauthorized(),
@@ -55,15 +68,15 @@ trait KeycloakApiSupport implements RestitoProvider {
 			)
 	}
 
-	void verifyKeycloakApiCalledOnceForToken() {
+	void verifyOAuth2ApiCalledOnceForTechnicalUserToken() {
 		verifyHttp(stubServer()).once(
-			startsWithUri(RestitoConfig.KEYCLOAK_TOKEN_PATH)
+			startsWithUri(RestitoConfig.OAUTH2_TOKEN_PATH)
 		)
 	}
 
-	void verifyKeycloakApiNotCalledForToken() {
+	void verifyOAuth2ApiNotCalledForTechnicalUserToken() {
 		verifyHttp(stubServer()).never(
-			startsWithUri(RestitoConfig.KEYCLOAK_TOKEN_PATH)
+			startsWithUri(RestitoConfig.OAUTH2_TOKEN_PATH)
 		)
 	}
 }

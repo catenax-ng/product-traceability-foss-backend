@@ -19,17 +19,17 @@
 
 package net.catenax.traceability.common.config
 
+import io.restassured.RestAssured
 import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+
+import org.springframework.boot.web.context.WebServerInitializedEvent
+import org.springframework.context.event.EventListener
 
 @TestConfiguration
-class SecurityTestConfig extends WebSecurityConfigurerAdapter {
+class RestAssuredConfig {
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		super.configure(http)
-
-		http.csrf().disable()
+	@EventListener(WebServerInitializedEvent.class)
+	void onServletContainerInitialized(WebServerInitializedEvent event) {
+		RestAssured.port = event.webServer.port
 	}
 }

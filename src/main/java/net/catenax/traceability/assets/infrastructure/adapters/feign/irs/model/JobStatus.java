@@ -1,4 +1,4 @@
-/********************************************************************************
+/*
  * Copyright (c) 2021,2022 Contributors to the CatenaX (ng) GitHub Organisation
  *
  * See the NOTICE file(s) distributed with this work for additional
@@ -15,17 +15,14 @@
  * under the License.
  *
  * SPDX-License-Identifier: Apache-2.0
- ********************************************************************************/
+ */
 
-package net.catenax.traceability.assets.infrastructure.config.openapi;
+package net.catenax.traceability.assets.infrastructure.adapters.feign.irs.model;
 
-public class KeycloakTechnicalUserAuthorizationException extends RuntimeException {
+import java.util.Date;
 
-	public KeycloakTechnicalUserAuthorizationException(String message) {
-		super(message);
-	}
-
-	public KeycloakTechnicalUserAuthorizationException(Throwable cause) {
-		super(cause);
-	}
-}
+public record JobStatus(
+	String jobState,
+	Date startedOn,
+	Date lastModifiedOn
+) {}

@@ -19,8 +19,10 @@
 
 package net.catenax.traceability.assets.domain.ports;
 
+import java.util.Map;
 import java.util.Optional;
 
 public interface BpnRepository {
 	Optional<String> findManufacturerName(String manufacturerId);
+	void updateManufacturers(Map<String, String> bpns);
 }

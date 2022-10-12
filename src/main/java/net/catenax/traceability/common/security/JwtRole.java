@@ -19,12 +19,34 @@
 
 package net.catenax.traceability.common.security;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Target(ElementType.PARAMETER)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface InjectedKeycloakAuthentication {
+public enum JwtRole {
+	USER("User"),
+	SUPERVISOR("Supervisor"),
+	ADMIN("Admin");
+
+	private final String description;
+
+	private static final Map<String, JwtRole> ROLE_MAPPINGS;
+
+	static {
+		ROLE_MAPPINGS = Arrays.stream(JwtRole.values())
+			.collect(Collectors.toMap(jwtRole -> jwtRole.description, jwtRole -> jwtRole));
+	}
+
+	JwtRole(String description) {
+		this.description = description;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public static Optional<JwtRole> parse(String roleRaw) {
+		return Optional.ofNullable(ROLE_MAPPINGS.get(roleRaw));
+	}
 }

@@ -17,38 +17,40 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.common.security;
+package net.catenax.traceability.assets.infrastructure.adapters.jpa.bpn;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Set;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-public class KeycloakAuthentication {
+@Entity
+@Table(name = "bpn_storage")
+public class BpnEntity {
+	@Id
+	private String manufacturerId;
+	private String manufacturerName;
 
-	public static final KeycloakAuthentication NO_ROLES = new KeycloakAuthentication(Set.of());
-
-	private final Set<KeycloakRole> keycloakRoles;
-
-	public KeycloakAuthentication(Set<KeycloakRole> keycloakRoles) {
-		this.keycloakRoles = Collections.unmodifiableSet(keycloakRoles);
+	public BpnEntity() {
 	}
 
-	public boolean hasRole(KeycloakRole keycloakRole) {
-		return keycloakRoles.contains(keycloakRole);
+	public BpnEntity(String manufacturerId, String manufacturerName) {
+		this.manufacturerId = manufacturerId;
+		this.manufacturerName = manufacturerName;
 	}
 
-	public boolean hasAtLeastOneRole(KeycloakRole... keycloakRole) {
-		return Arrays.stream(keycloakRole)
-			.map(this::hasRole)
-			.filter(hasRole -> hasRole)
-			.findFirst()
-			.orElse(false);
+	public String getManufacturerId() {
+		return manufacturerId;
 	}
 
-	@Override
-	public String toString() {
-		return "KeycloakAuthentication{" +
-			"keycloakRoles=" + keycloakRoles +
-			'}';
+	public void setManufacturerId(String manufacturerId) {
+		this.manufacturerId = manufacturerId;
+	}
+
+	public String getManufacturerName() {
+		return manufacturerName;
+	}
+
+	public void setManufacturerName(String manufacturerName) {
+		this.manufacturerName = manufacturerName;
 	}
 }

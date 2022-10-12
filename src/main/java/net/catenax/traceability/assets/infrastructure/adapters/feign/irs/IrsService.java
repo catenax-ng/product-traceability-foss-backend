@@ -20,9 +20,11 @@
 package net.catenax.traceability.assets.infrastructure.adapters.feign.irs;
 
 import net.catenax.traceability.assets.domain.model.Asset;
+import net.catenax.traceability.assets.domain.ports.BpnRepository;
 import net.catenax.traceability.assets.domain.ports.IrsRepository;
 import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.model.AssetsConverter;
 import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.model.JobResponse;
+import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.model.JobStatus;
 import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.model.StartJobRequest;
 import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.model.StartJobResponse;
 import org.slf4j.Logger;
@@ -39,10 +41,12 @@ public class IrsService implements IrsRepository {
 
 	private final IRSApiClient irsClient;
 	private final AssetsConverter assetsConverter;
+	private final BpnRepository bpnRepository;
 
-	public IrsService(IRSApiClient irsClient, AssetsConverter assetsConverter) {
+	public IrsService(IRSApiClient irsClient, AssetsConverter assetsConverter, BpnRepository bpnRepository) {
 		this.irsClient = irsClient;
 		this.assetsConverter = assetsConverter;
+		this.bpnRepository = bpnRepository;
 	}
 
 	@Override
@@ -50,9 +54,12 @@ public class IrsService implements IrsRepository {
 		StartJobResponse job = irsClient.registerJob(StartJobRequest.forGlobalAssetId(globalAssetId));
 		JobResponse jobDetails = irsClient.getJobDetails(job.jobId());
 
-		logger.info("IRS call for globalAssetId: {} finished with status: {} ", globalAssetId, jobDetails.jobStatus());
+		JobStatus jobStatus = jobDetails.jobStatus();
+		long runtime = (jobStatus.lastModifiedOn().getTime() - jobStatus.startedOn().getTime()) / 1000;
+		logger.info("IRS call for globalAssetId: {} finished with status: {}, runtime {} s.", globalAssetId, jobStatus.jobState(), runtime);
 
 		if (jobDetails.isCompleted()) {
+			bpnRepository.updateManufacturers(jobDetails.bpns());
 			return assetsConverter.convertAssets(jobDetails);
 		}
 

@@ -1,4 +1,7 @@
-# ![Product Traceability FOSS Backend Installation Guide](./catena-x-logo.svg) Product Traceability FOSS Backend Installation guide
+<div style="display: flex; align-items: center;justify-content: center;align-content: center;">
+   <img src="./trace-x-logo.svg" alt="Product Traceability FOSS Backend Installation Guide" style="width:200px;"/>
+   <h1 style="margin: 10px 0 0 10px">Product Traceability FOSS Backend Installation guide</h1>
+</div>
 
 ## Clone the source locally:
 
@@ -13,8 +16,11 @@ $ cd product-traceability-foss-backend
   * `SPRING_DATASOURCE_URL` - with value `jdbc:postgresql://localhost:5432/trace`
   * `SPRING_DATASOURCE_USERNAME` - with value `trace` [see database initialization script](../docker/db-init/create_db.sql)
   * `SPRING_DATASOURCE_PASSWORD` - with value `docker` [see docker-compose file](../docker/docker-compose.yml)
-  * `KEYCLOAK_OAUTH2_CLIENT_ID` - with Keycloak client registration id specific value
-  * `KEYCLOAK_OAUTH2_CLIENT_SECRET` - with Keycloak client registration secret specific value
+  * `OAUTH2_CLIENT_ID` - with OAuth2 provider client registration id specific value
+  * `OAUTH2_CLIENT_SECRET` - with OAuth2 provider client registration secret specific value
+  * `OAUTH2_PROVIDER_TOKEN_URI` - with OAuth2 provider url to obtain tokens
+  * `OAUTH2_JWK_SET_URI` - with OAuth2 provider certs url
+  * `JWT_RESOURCE_CLIENT` - with JWT resource client name
   * `MAILSERVER_HOST` - with host for the email server of your choice
   * `MAILSERVER_PORT` - with port for the email server of your choice
   * `MAILSERVER_USERNAME` - with username for the email server of your choice
@@ -36,8 +42,8 @@ In order to deploy the service following secrets needs to be provided for specif
 
 ### Keycloak
 
-* `keycloak.oauth2.clientId` - Keycloak client registration id credentials
-* `keycloak.oauth2.clientSecret` - Keycloak client registration secret credentials
+* `oauth2.clientId` - OAuth2 client registration id credentials
+* `oauth2.clientSecret` - OAuth2 client registration secret credentials
 
 ### Database
 
