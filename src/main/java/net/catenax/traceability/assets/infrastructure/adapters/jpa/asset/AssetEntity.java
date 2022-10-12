@@ -19,7 +19,7 @@
 
 package net.catenax.traceability.assets.infrastructure.adapters.jpa.asset;
 
-import net.catenax.traceability.assets.domain.model.InvestigationStatus;
+import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 import net.catenax.traceability.assets.domain.model.QualityType;
 import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity;
 

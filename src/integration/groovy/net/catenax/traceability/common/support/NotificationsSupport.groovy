@@ -16,13 +16,17 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-package net.catenax.traceability.investigations.adapters.rest;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
-import java.util.List;
+package net.catenax.traceability.common.support
 
-public record StartInvestigationRequest(
-	@NotEmpty(message = "Specify at least one partId") List<String> partIds,
-	@Size(min = 15, message = "Description should have at least 15 characters") String description
-) {}
+import net.catenax.traceability.infrastructure.jpa.notification.NotificationEntity
+
+trait NotificationsSupport implements NotificationsRepositoryProvider {
+
+	void assertNotificationsSize(int size) {
+		List<NotificationEntity> notifications = jpaNotificationRepository().findAll()
+
+		assert notifications.size() == 2
+	}
+
+}

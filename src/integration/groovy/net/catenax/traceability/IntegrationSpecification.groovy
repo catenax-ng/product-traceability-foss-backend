@@ -30,9 +30,13 @@ import net.catenax.traceability.common.config.PostgreSQLConfig
 import net.catenax.traceability.common.config.RestitoConfig
 import net.catenax.traceability.common.config.SecurityTestConfig
 import net.catenax.traceability.common.support.AssetRepositoryProvider
+import net.catenax.traceability.common.support.InvestigationsSupport
 import net.catenax.traceability.common.support.KeycloakApiSupport
 import net.catenax.traceability.common.support.KeycloakSupport
+import net.catenax.traceability.common.support.NotificationsSupport
 import net.catenax.traceability.common.support.ShellDescriptorStoreProvider
+import net.catenax.traceability.infrastructure.jpa.investigation.JpaInvestigationRepository
+import net.catenax.traceability.infrastructure.jpa.notification.JpaNotificationRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -52,7 +56,8 @@ import javax.persistence.EntityManager
 	initializers = [RestitoConfig.Initializer.class, PostgreSQLConfig.Initializer.class]
 )
 @Testcontainers
-abstract class IntegrationSpecification extends DatabaseAwareSpecification implements KeycloakSupport, KeycloakApiSupport, AssetRepositoryProvider, ShellDescriptorStoreProvider {
+abstract class IntegrationSpecification extends DatabaseAwareSpecification
+	implements KeycloakSupport, KeycloakApiSupport, AssetRepositoryProvider, ShellDescriptorStoreProvider, InvestigationsSupport, NotificationsSupport {
 
 	@Autowired
 	protected MockMvc mvc
@@ -68,6 +73,12 @@ abstract class IntegrationSpecification extends DatabaseAwareSpecification imple
 
 	@Autowired
 	private EntityManager entityManager
+
+	@Autowired
+	private JpaInvestigationRepository jpaInvestigationRepository
+
+	@Autowired
+	private JpaNotificationRepository jpaNotificationRepository
 
 	def cleanup() {
 		RestitoConfig.clear()
@@ -92,6 +103,16 @@ abstract class IntegrationSpecification extends DatabaseAwareSpecification imple
 	@Override
 	ShellDescriptorRepository shellDescriptorRepository() {
 		return shellDescriptorRepository
+	}
+
+	@Override
+	JpaNotificationRepository jpaNotificationRepository() {
+		return jpaNotificationRepository
+	}
+
+	@Override
+	JpaInvestigationRepository jpaInvestigationRepository() {
+		return jpaInvestigationRepository
 	}
 
 	protected void eventually(Closure<?> conditions) {

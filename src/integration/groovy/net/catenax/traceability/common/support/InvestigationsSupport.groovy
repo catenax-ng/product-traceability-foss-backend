@@ -17,30 +17,15 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.assets.domain.model;
+package net.catenax.traceability.common.support
 
-import org.springframework.beans.support.PagedListHolder;
-import org.springframework.data.domain.Page;
+import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity
 
-import java.util.List;
-import java.util.function.Function;
+trait InvestigationsSupport implements InvestigationsRepositoryProvider {
 
-public record PageResult<T>(
-	List<T> content,
-	Integer page,
-	Integer pageCount,
-	Integer pageSize,
-	Long totalItems
-) {
-	public PageResult(PagedListHolder<T> pagedListHolder) {
-		this(pagedListHolder.getPageList(), pagedListHolder.getPage(), pagedListHolder.getPageSize(), pagedListHolder.getPageSize(), (long)pagedListHolder.getNrOfElements());
-	}
-
-	public PageResult(Page<T> page) {
-		this(page, Function.identity());
-	}
-
-	public <R> PageResult(Page<R> page, Function<R, T> mapping) {
-		this(page.getContent().stream().map(mapping).toList(), page.getPageable().getPageNumber(), page.getTotalPages(), page.getPageable().getPageSize(), page.getTotalElements());
+	void storedInvestigations(InvestigationEntity... investigations) {
+		investigations.each {
+			jpaInvestigationRepository().save(it)
+		}
 	}
 }

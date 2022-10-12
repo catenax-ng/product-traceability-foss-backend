@@ -1,6 +1,6 @@
 package net.catenax.traceability.infrastructure.jpa.investigation;
 
-import net.catenax.traceability.assets.domain.model.InvestigationStatus;
+import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.AssetEntity;
 
 import javax.persistence.CascadeType;
@@ -38,12 +38,15 @@ public class InvestigationEntity {
 	}
 
 	public InvestigationEntity(List<AssetEntity> assets, String description, InvestigationStatus status) {
-		ZonedDateTime now = ZonedDateTime.now();
+		this(assets, status, description, ZonedDateTime.now());
+	}
+
+	public InvestigationEntity(List<AssetEntity> assets, InvestigationStatus status, String description, ZonedDateTime created) {
 		this.assets = assets;
 		this.status = status;
 		this.description = description;
-		this.created = now;
-		this.updated = now;
+		this.created = created;
+		this.updated = created;
 	}
 
 	public Long getId() {
