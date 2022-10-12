@@ -42,8 +42,8 @@ In order to deploy the service following secrets needs to be provided for specif
 
 ### Keycloak
 
-* `keycloak.oauth2.clientId` - Keycloak client registration id credentials
-* `keycloak.oauth2.clientSecret` - Keycloak client registration secret credentials
+* `oauth2.clientId` - OAuth2 client registration id credentials
+* `oauth2.clientSecret` - OAuth2 client registration secret credentials
 
 ### Database
 

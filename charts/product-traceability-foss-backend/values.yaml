@@ -134,13 +134,12 @@ datasource:
   username: ""
   password: ""
 
-keycloak:
-  oauth2:
-    clientId: ""
-    clientSecret: ""
-    clientTokenUri: ""
-    jwkSetUri: ""
-    resourceClient: ""
+oauth2:
+  clientId: ""
+  clientSecret: ""
+  clientTokenUri: ""
+  jwkSetUri: ""
+  resourceClient: ""
 
 postgresql:
   enabled: false
