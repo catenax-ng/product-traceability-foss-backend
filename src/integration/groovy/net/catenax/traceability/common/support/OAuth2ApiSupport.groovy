@@ -32,11 +32,11 @@ import static com.xebialabs.restito.semantics.Condition.get
 import static com.xebialabs.restito.semantics.Condition.post
 import static com.xebialabs.restito.semantics.Condition.startsWithUri
 
-trait KeycloakApiSupport implements RestitoProvider {
+trait OAuth2ApiSupport implements RestitoProvider {
 
-	void keycloakApiReturnsTechnicalUserToken() {
+	void oauth2ApiReturnsTechnicalUserToken() {
 		whenHttp(stubServer()).match(
-			post(RestitoConfig.KEYCLOAK_TOKEN_PATH),
+			post(RestitoConfig.OAUTH2_TOKEN_PATH),
 			basicAuth("traceability-foss-integration-tests", "integration-tests")
 		)
 			.then(
@@ -46,9 +46,9 @@ trait KeycloakApiSupport implements RestitoProvider {
 			)
 	}
 
-	void keycloakApiReturnsJwkCerts(String jwk) {
+	void oauth2ApiReturnsJwkCerts(String jwk) {
 		whenHttp(stubServer()).match(
-			get(RestitoConfig.KEYCLOAK_JWK_PATH)
+			get(RestitoConfig.OAUTH2_JWK_PATH)
 		)
 			.then(
 				ok(),
@@ -57,9 +57,9 @@ trait KeycloakApiSupport implements RestitoProvider {
 			)
 	}
 
-	void keycloakApiReturnsUnauthorized() {
+	void oauth2ApiReturnsUnauthorized() {
 		whenHttp(stubServer()).match(
-			post(RestitoConfig.KEYCLOAK_TOKEN_PATH)
+			post(RestitoConfig.OAUTH2_TOKEN_PATH)
 		)
 			.then(
 				unauthorized(),
@@ -68,15 +68,15 @@ trait KeycloakApiSupport implements RestitoProvider {
 			)
 	}
 
-	void verifyKeycloakApiCalledOnceForTechnicalUserToken() {
+	void verifyOAuth2ApiCalledOnceForTechnicalUserToken() {
 		verifyHttp(stubServer()).once(
-			startsWithUri(RestitoConfig.KEYCLOAK_TOKEN_PATH)
+			startsWithUri(RestitoConfig.OAUTH2_TOKEN_PATH)
 		)
 	}
 
-	void verifyKeycloakApiNotCalledForTechnicalUserToken() {
+	void verifyOAuth2ApiNotCalledForTechnicalUserToken() {
 		verifyHttp(stubServer()).never(
-			startsWithUri(RestitoConfig.KEYCLOAK_TOKEN_PATH)
+			startsWithUri(RestitoConfig.OAUTH2_TOKEN_PATH)
 		)
 	}
 }

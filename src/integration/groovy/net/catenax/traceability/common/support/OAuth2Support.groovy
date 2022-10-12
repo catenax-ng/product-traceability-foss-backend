@@ -28,7 +28,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService
 
-trait KeycloakSupport extends RsaJsonWebKeyProvider {
+trait OAuth2Support extends RsaJsonWebKeyProvider {
 
 	@Value('${jwt.resource-client}')
 	private String resourceClient
@@ -36,7 +36,7 @@ trait KeycloakSupport extends RsaJsonWebKeyProvider {
 	@Autowired
 	private InMemoryOAuth2AuthorizedClientService authorizedClientService
 
-	void clearOAuth2KeycloakClient() {
+	void clearOAuth2Client() {
 		authorizedClientService.removeAuthorizedClient("keycloak", "feignClient")
 	}
 

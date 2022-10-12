@@ -33,7 +33,7 @@ class RegistryControllerIT extends IntegrationSpec implements IrsApiSupport, Reg
 	def "should synchronize descriptors and assets"() {
 		given:
 			String syncId = "urn:uuid:46e51326-0c00-4eae-85ea-d8a505b432e9"
-			keycloakApiReturnsTechnicalUserToken()
+			oauth2ApiReturnsTechnicalUserToken()
 
 		and:
 			assetShellsLookupReturnsData()
@@ -61,7 +61,7 @@ class RegistryControllerIT extends IntegrationSpec implements IrsApiSupport, Reg
 			}
 
 		and:
-			verifyKeycloakApiCalledOnceForTechnicalUserToken()
+			verifyOAuth2ApiCalledOnceForTechnicalUserToken()
 			verifyIrsApiTriggerJobCalledOnce()
 	}
 
@@ -69,7 +69,7 @@ class RegistryControllerIT extends IntegrationSpec implements IrsApiSupport, Reg
 		given:
 			String[] syncIds = ["urn:uuid:46e51326-0c00-4eae-85ea-d8a505b432e7", "urn:uuid:46e51326-0c00-4eae-85ea-d8a505b432e8"]
 			String[] updateIds = ["urn:uuid:46e51326-0c00-4eae-85ea-d8a505b432e6", "urn:uuid:46e51326-0c00-4eae-85ea-d8a505b432e8"]
-			keycloakApiReturnsTechnicalUserToken()
+			oauth2ApiReturnsTechnicalUserToken()
 
 		and:
 			assetShellsLookupReturnsDataForUpdate()
@@ -91,7 +91,7 @@ class RegistryControllerIT extends IntegrationSpec implements IrsApiSupport, Reg
 			}
 
 		and:
-			verifyKeycloakApiCalledOnceForTechnicalUserToken()
+			verifyOAuth2ApiCalledOnceForTechnicalUserToken()
 			verifyIrsApiTriggerJobCalledOnceFor(syncIds)
 
 		when:
@@ -115,7 +115,7 @@ class RegistryControllerIT extends IntegrationSpec implements IrsApiSupport, Reg
 
 	def "should not synchronize descriptors and assets when asset shells lookup failed"() {
 		given:
-			keycloakApiReturnsTechnicalUserToken()
+			oauth2ApiReturnsTechnicalUserToken()
 
 		and:
 			assetShellsLookupFailed()
@@ -134,7 +134,7 @@ class RegistryControllerIT extends IntegrationSpec implements IrsApiSupport, Reg
 			}
 
 		and:
-			verifyKeycloakApiCalledOnceForTechnicalUserToken()
+			verifyOAuth2ApiCalledOnceForTechnicalUserToken()
 			verifyFetchRegistryShellDescriptorsLookupNotCalled()
 			verifyIrsApiTriggerJobNotCalled()
 			verifyIrsJobDetailsApiNotCalled()
@@ -142,7 +142,7 @@ class RegistryControllerIT extends IntegrationSpec implements IrsApiSupport, Reg
 
 	def "should not synchronize descriptors and assets when fetch registry shell descriptors lookup failed"() {
 		given:
-			keycloakApiReturnsTechnicalUserToken()
+			oauth2ApiReturnsTechnicalUserToken()
 
 		and:
 			assetShellsLookupReturnsData()
@@ -163,7 +163,7 @@ class RegistryControllerIT extends IntegrationSpec implements IrsApiSupport, Reg
 			}
 
 		and:
-			verifyKeycloakApiCalledOnceForTechnicalUserToken()
+			verifyOAuth2ApiCalledOnceForTechnicalUserToken()
 			verifyIrsApiTriggerJobNotCalled()
 	}
 }

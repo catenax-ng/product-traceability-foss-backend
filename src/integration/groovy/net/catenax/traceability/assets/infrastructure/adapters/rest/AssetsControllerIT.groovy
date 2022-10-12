@@ -47,7 +47,7 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 
 	def "should synchronize assets"() {
 		given:
-			keycloakApiReturnsTechnicalUserToken()
+			oauth2ApiReturnsTechnicalUserToken()
 			irsApiTriggerJob()
 			irsApiReturnsJobDetails()
 
@@ -74,13 +74,13 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 			}
 
 		and:
-			verifyKeycloakApiCalledOnceForTechnicalUserToken()
+			verifyOAuth2ApiCalledOnceForTechnicalUserToken()
 			verifyIrsApiTriggerJobCalledOnce()
 	}
 
 	def "should use cached BPNs when empty list is returned"() {
 		given:
-			keycloakApiReturnsTechnicalUserToken()
+			oauth2ApiReturnsTechnicalUserToken()
 			irsApiTriggerJob()
 			irsApiReturnsJobDetailsWithNoBPNs()
 
@@ -112,13 +112,13 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 			}
 
 		and:
-			verifyKeycloakApiCalledOnceForTechnicalUserToken()
+			verifyOAuth2ApiCalledOnceForTechnicalUserToken()
 			verifyIrsApiTriggerJobCalledOnce()
 	}
 
 	def "should synchronize assets using retry"() {
 		given:
-			keycloakApiReturnsTechnicalUserToken()
+			oauth2ApiReturnsTechnicalUserToken()
 
 		and:
 			irsApiTriggerJob()
@@ -148,13 +148,13 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 			}
 
 		and:
-			verifyKeycloakApiCalledOnceForTechnicalUserToken()
+			verifyOAuth2ApiCalledOnceForTechnicalUserToken()
 			verifyIrsApiTriggerJobCalledOnce()
 	}
 
 	def "should not synchronize assets when irs failed to trigger job"() {
 		given:
-			keycloakApiReturnsTechnicalUserToken()
+			oauth2ApiReturnsTechnicalUserToken()
 			irsApiTriggerJobFailed()
 
 		when:
@@ -179,14 +179,14 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 			}
 
 		and:
-			verifyKeycloakApiCalledOnceForTechnicalUserToken()
+			verifyOAuth2ApiCalledOnceForTechnicalUserToken()
 			verifyIrsApiTriggerJobCalledOnce()
 			verifyIrsJobDetailsApiNotCalled()
 	}
 
 	def "should not synchronize assets when irs failed to return job details"() {
 		given:
-			keycloakApiReturnsTechnicalUserToken()
+			oauth2ApiReturnsTechnicalUserToken()
 			irsApiTriggerJob()
 
 		and:
@@ -214,13 +214,13 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 			}
 
 		and:
-			verifyKeycloakApiCalledOnceForTechnicalUserToken()
+			verifyOAuth2ApiCalledOnceForTechnicalUserToken()
 			verifyIrsApiTriggerJobCalledOnce()
 	}
 
 	def "should not synchronize assets when irs keeps returning job in running state"() {
 		given:
-			keycloakApiReturnsTechnicalUserToken()
+			oauth2ApiReturnsTechnicalUserToken()
 			irsApiTriggerJob()
 
 		and:
@@ -248,7 +248,7 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 			}
 
 		and:
-			verifyKeycloakApiCalledOnceForTechnicalUserToken()
+			verifyOAuth2ApiCalledOnceForTechnicalUserToken()
 			verifyIrsApiTriggerJobCalledOnce()
 	}
 

@@ -30,8 +30,8 @@ import net.catenax.traceability.common.config.PostgreSQLConfig
 import net.catenax.traceability.common.config.RestAssuredConfig
 import net.catenax.traceability.common.config.RestitoConfig
 import net.catenax.traceability.common.support.AssetRepositoryProvider
-import net.catenax.traceability.common.support.KeycloakApiSupport
-import net.catenax.traceability.common.support.KeycloakSupport
+import net.catenax.traceability.common.support.OAuth2ApiSupport
+import net.catenax.traceability.common.support.OAuth2Support
 import net.catenax.traceability.common.support.ShellDescriptorStoreProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -49,7 +49,7 @@ import spock.util.concurrent.PollingConditions
 )
 @Testcontainers
 abstract class IntegrationSpec extends Specification
-	implements KeycloakSupport, KeycloakApiSupport, AssetRepositoryProvider, ShellDescriptorStoreProvider {
+	implements OAuth2Support, OAuth2ApiSupport, AssetRepositoryProvider, ShellDescriptorStoreProvider {
 
 	@Autowired
 	private AssetRepository assetRepository
@@ -61,12 +61,12 @@ abstract class IntegrationSpec extends Specification
 	private ShellDescriptorRepository shellDescriptorRepository
 
 	def setup() {
-		keycloakApiReturnsJwkCerts(jwk())
+		oauth2ApiReturnsJwkCerts(jwk())
 	}
 
 	def cleanup() {
 		RestitoConfig.clear()
-		clearOAuth2KeycloakClient()
+		clearOAuth2Client()
 		assetRepository.clean()
 		shellDescriptorRepository.clean()
 	}

@@ -27,8 +27,8 @@ import org.springframework.context.ConfigurableApplicationContext
 
 @TestConfiguration
 class RestitoConfig {
-	public static final String KEYCLOAK_JWK_PATH = "/auth/realms/CX-Central/protocol/openid-connect/certs"
-	public static final String KEYCLOAK_TOKEN_PATH = "/auth/realms/CX-Central/protocol/openid-connect/token"
+	public static final String OAUTH2_JWK_PATH = "/auth/realms/CX-Central/protocol/openid-connect/certs"
+	public static final String OAUTH2_TOKEN_PATH = "/auth/realms/CX-Central/protocol/openid-connect/token"
 
 	private static final StubServer STUB_SERVER
 	private static final int STUB_SERVER_PORT
@@ -41,8 +41,8 @@ class RestitoConfig {
 	static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 		void initialize(ConfigurableApplicationContext configurableApplicationContext) {
 			TestPropertyValues.of(
-				"spring.security.oauth2.resourceserver.jwt.jwk-set-uri=http://127.0.0.1:$STUB_SERVER_PORT$KEYCLOAK_JWK_PATH",
-				"spring.security.oauth2.client.provider.keycloak.token-uri=http://127.0.0.1:$STUB_SERVER_PORT$KEYCLOAK_TOKEN_PATH",
+				"spring.security.oauth2.resourceserver.jwt.jwk-set-uri=http://127.0.0.1:$STUB_SERVER_PORT$OAUTH2_JWK_PATH",
+				"spring.security.oauth2.client.provider.keycloak.token-uri=http://127.0.0.1:$STUB_SERVER_PORT$OAUTH2_TOKEN_PATH",
 				"feign.bpnApi.url=http://127.0.0.1:$STUB_SERVER_PORT",
 				"feign.irsApi.url=http://127.0.0.1:$STUB_SERVER_PORT",
 				"feign.irsApi.globalAssetId=testAssetId",
