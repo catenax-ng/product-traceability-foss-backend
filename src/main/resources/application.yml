@@ -51,13 +51,13 @@ spring:
     oauth2:
       client:
         registration:
-          keycloak:
+          default:
             client-id: ${OAUTH2_CLIENT_ID}
             client-secret: ${OAUTH2_CLIENT_SECRET}
             authorization-grant-type: client_credentials
             scope: openid
         provider:
-          keycloak:
+          default:
             token-uri: ${OAUTH2_PROVIDER_TOKEN_URI}
       resourceserver:
         jwt:

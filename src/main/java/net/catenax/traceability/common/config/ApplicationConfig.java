@@ -72,8 +72,8 @@ public class ApplicationConfig {
 		new AuthorizationScope("uma_authorization", "UMA authorization")
 	};
 
-	@Value("${spring.security.oauth2.client.provider.keycloak.token-uri}")
-	private String keycloakTokenUrl;
+	@Value("${spring.security.oauth2.client.provider.default.token-uri}")
+	private String oauthTokenUrl;
 
 	@Value("${spring.mail.templates.path}")
 	private String mailTemplatesPath;
@@ -127,7 +127,7 @@ public class ApplicationConfig {
 	@Bean
 	public Docket swaggerSpringMvcPlugin() {
 		return new Docket(DocumentationType.OAS_30)
-			.securitySchemes(List.of(keycloakAuthenticationScheme(), bearerTokenAuthenticationScheme()))
+			.securitySchemes(List.of(oauthAuthenticationScheme(), bearerTokenAuthenticationScheme()))
 			.securityContexts(List.of(securityContext()))
 			.select()
 			.apis(RequestHandlerSelectors.basePackage("net.catenax.traceability"))
@@ -161,11 +161,11 @@ public class ApplicationConfig {
 			.build();
 	}
 
-	private SecurityScheme keycloakAuthenticationScheme() {
+	private SecurityScheme oauthAuthenticationScheme() {
 		return new OAuth2SchemeBuilder("authorizationCode")
-			.name("Keycloak")
-			.authorizationUrl(keycloakTokenUrl.replace("token", "auth"))
-			.tokenUrl(keycloakTokenUrl)
+			.name("default")
+			.authorizationUrl(oauthTokenUrl.replace("token", "auth"))
+			.tokenUrl(oauthTokenUrl)
 			.scopes(Arrays.asList(DEFAULT_SCOPES))
 			.build();
 	}
@@ -174,7 +174,7 @@ public class ApplicationConfig {
 		return SecurityContext
 			.builder()
 			.securityReferences(List.of(
-				new SecurityReference("Keycloak", DEFAULT_SCOPES),
+				new SecurityReference("default", DEFAULT_SCOPES),
 				new SecurityReference("Bearer", DEFAULT_SCOPES)
 			))
 			.operationSelector(operationContext -> HttpMethod.GET.equals(operationContext.httpMethod()))
