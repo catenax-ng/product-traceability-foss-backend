@@ -84,7 +84,7 @@ public class ErrorHandlingConfig implements AuthenticationFailureHandler {
 
 	@ExceptionHandler(TechnicalUserAuthorizationException.class)
 	ResponseEntity<ErrorResponse> handleTechnicalUserAuthorizationException(TechnicalUserAuthorizationException technicalUserAuthorizationException) {
-		logger.error("Couldn't retrieve keycloak token for technical user", technicalUserAuthorizationException);
+		logger.error("Couldn't retrieve token for technical user", technicalUserAuthorizationException);
 
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 			.body(new ErrorResponse("Please try again later."));

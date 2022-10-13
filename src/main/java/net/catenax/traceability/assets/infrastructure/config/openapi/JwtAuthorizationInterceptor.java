@@ -49,7 +49,7 @@ public class JwtAuthorizationInterceptor implements RequestInterceptor {
 	public void apply(RequestTemplate template) {
 		if (!template.headers().containsKey(HttpHeaders.AUTHORIZATION)) {
 			OAuth2AccessToken accessToken = getAccessToken()
-				.orElseThrow(() -> new TechnicalUserAuthorizationException("Couldn't obtain access token for keycloak technical user"));
+				.orElseThrow(() -> new TechnicalUserAuthorizationException("Couldn't obtain access token for technical user"));
 
 			logger.debug("Injecting access token of type {}", accessToken.getTokenType());
 
@@ -58,7 +58,7 @@ public class JwtAuthorizationInterceptor implements RequestInterceptor {
 	}
 
 	private Optional<OAuth2AccessToken> getAccessToken() {
-		OAuth2AuthorizeRequest request = OAuth2AuthorizeRequest.withClientRegistrationId("keycloak")
+		OAuth2AuthorizeRequest request = OAuth2AuthorizeRequest.withClientRegistrationId("default")
 			.principal(new AnonymousAuthenticationToken("feignClient", "feignClient", createAuthorityList("ROLE_ANONYMOUS")))
 			.build();
 
