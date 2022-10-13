@@ -139,6 +139,12 @@ trait IrsApiSupport implements RestitoProvider {
 		}
 	}
 
+	void verifyIrsApiTriggerJobCalledOnce() {
+		verifyHttp(stubServer()).once(
+			post("/irs/jobs")
+		)
+	}
+
 	void verifyIrsApiTriggerJobNotCalled() {
 		verifyHttp(stubServer()).never(
 			post("/irs/jobs")
