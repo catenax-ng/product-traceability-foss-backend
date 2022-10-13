@@ -37,7 +37,7 @@ trait OAuth2Support extends RsaJsonWebKeyProvider {
 	private InMemoryOAuth2AuthorizedClientService authorizedClientService
 
 	void clearOAuth2Client() {
-		authorizedClientService.removeAuthorizedClient("keycloak", "feignClient")
+		authorizedClientService.removeAuthorizedClient("default", "feignClient")
 	}
 
 	Header jwtAuthorization(JwtRole... jwtRoles) {

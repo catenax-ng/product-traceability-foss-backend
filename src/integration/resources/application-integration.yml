@@ -21,7 +21,7 @@ spring:
     oauth2:
       client:
         registration:
-          keycloak:
+          default:
             client-id: "traceability-foss-integration-tests"
             client-secret: "integration-tests"
   main:

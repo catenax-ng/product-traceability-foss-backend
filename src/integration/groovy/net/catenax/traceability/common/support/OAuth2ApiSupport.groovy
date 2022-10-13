@@ -42,7 +42,7 @@ trait OAuth2ApiSupport implements RestitoProvider {
 			.then(
 				ok(),
 				header("Content-Type", "application/json"),
-				jsonResponseFromFile("./stubs/keycloak/post/auth/realms/CX-Central/protocol/openid-connect/token/response_200.json")
+				jsonResponseFromFile("./stubs/oauth/post/auth/realms/CX-Central/protocol/openid-connect/token/response_200.json")
 			)
 	}
 
@@ -64,7 +64,7 @@ trait OAuth2ApiSupport implements RestitoProvider {
 			.then(
 				unauthorized(),
 				header("Content-Type", "application/json"),
-				jsonResponseFromFile("./stubs/keycloak/post/auth/realms/CX-Central/protocol/openid-connect/token/response_401.json")
+				jsonResponseFromFile("./stubs/oauth/post/auth/realms/CX-Central/protocol/openid-connect/token/response_401.json")
 			)
 	}
 

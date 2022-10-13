@@ -7,21 +7,6 @@ on:
     branches: [main]
 
 jobs:
-  prepare-env:
-    runs-on: ubuntu-latest
-    outputs:
-      check_sha: ${{ steps.step1.outputs.check_sha }}
-    steps:
-      - name: Set commit SHA to check
-        id: step1
-        run: |
-          if [ -z "${{ github.event.workflow_run.head_sha }}" ]; then
-            # use the value that is set when triggering the workflow manually
-            echo "::set-output name=check_sha::$GITHUB_SHA"
-          else
-            echo "::set-output name=check_sha::${{ github.event.workflow_run.head_sha }}"
-          fi
-
   analyze-config:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
