@@ -22,6 +22,7 @@ package net.catenax.traceability.common.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.catenax.traceability.assets.domain.model.AssetNotFoundException;
 import net.catenax.traceability.assets.infrastructure.config.openapi.TechnicalUserAuthorizationException;
+import net.catenax.traceability.investigations.domain.model.exception.InvestigationNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -74,6 +75,12 @@ public class ErrorHandlingConfig implements AuthenticationFailureHandler {
 	ResponseEntity<ErrorResponse> handleAssetNotFoundException(AssetNotFoundException assetNotFoundException) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 			.body(new ErrorResponse(assetNotFoundException.getMessage()));
+	}
+
+	@ExceptionHandler(InvestigationNotFoundException.class)
+	ResponseEntity<ErrorResponse> handleInvestigationNotFoundException(InvestigationNotFoundException exception) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+			.body(new ErrorResponse(exception.getMessage()));
 	}
 
 	@ExceptionHandler(AccessDeniedException.class)

@@ -45,12 +45,14 @@ public class Investigation {
 	public static final Set<InvestigationStatus> CREATED_STATUSES = Set.of(InvestigationStatus.CREATED, InvestigationStatus.APPROVED, InvestigationStatus.SENT);
 	public static final Set<InvestigationStatus> RECEIVED_STATUSES = Set.of(InvestigationStatus.RECEIVED);
 
+	private final InvestigationId investigationId;
 	private final List<String> assetIds;
 	private final InvestigationStatus investigationStatus;
 	private final Instant createdAt;
 	private final String description;
 
-	public Investigation(List<String> assetIds, InvestigationStatus investigationStatus, String description, Instant createdAt) {
+	public Investigation(InvestigationId investigationId, List<String> assetIds, InvestigationStatus investigationStatus, String description, Instant createdAt) {
+		this.investigationId = investigationId;
 		this.assetIds = assetIds;
 		this.investigationStatus = investigationStatus;
 		this.createdAt = createdAt;
@@ -58,7 +60,11 @@ public class Investigation {
 	}
 
 	public static Investigation startInvestigation(Clock clock, List<String> assetIds, String description) {
-		return new Investigation(assetIds, InvestigationStatus.CREATED, description, clock.instant());
+		return new Investigation(null, assetIds, InvestigationStatus.CREATED, description, clock.instant());
+	}
+
+	public InvestigationId getInvestigationId() {
+		return investigationId;
 	}
 
 	public List<String> getAssetIds() {

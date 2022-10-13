@@ -31,11 +31,15 @@ import net.catenax.traceability.common.config.PostgreSQLConfig
 import net.catenax.traceability.common.config.RestAssuredConfig
 import net.catenax.traceability.common.config.RestitoConfig
 import net.catenax.traceability.common.support.AssetRepositoryProvider
-import net.catenax.traceability.common.support.BpnSupport
+import net.catenax.traceability.common.support.BpnRepositoryProvider
 import net.catenax.traceability.common.support.DatabaseSupport
+import net.catenax.traceability.common.support.InvestigationsRepositoryProvider
+import net.catenax.traceability.common.support.NotificationsRepositoryProvider
 import net.catenax.traceability.common.support.OAuth2ApiSupport
 import net.catenax.traceability.common.support.OAuth2Support
 import net.catenax.traceability.common.support.ShellDescriptorStoreProvider
+import net.catenax.traceability.infrastructure.jpa.investigation.JpaInvestigationRepository
+import net.catenax.traceability.infrastructure.jpa.notification.JpaNotificationRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
@@ -53,7 +57,8 @@ import spock.util.concurrent.PollingConditions
 )
 @Testcontainers
 abstract class IntegrationSpecification extends Specification
-	implements OAuth2Support, OAuth2ApiSupport, DatabaseSupport, BpnSupport, AssetRepositoryProvider, ShellDescriptorStoreProvider {
+	implements OAuth2Support, OAuth2ApiSupport, DatabaseSupport, AssetRepositoryProvider, ShellDescriptorStoreProvider,
+		BpnRepositoryProvider, InvestigationsRepositoryProvider, NotificationsRepositoryProvider {
 
 	@Autowired
 	private AssetRepository assetRepository
@@ -66,6 +71,12 @@ abstract class IntegrationSpecification extends Specification
 
 	@Autowired
 	private BpnRepository bpnRepository
+
+	@Autowired
+	private JpaInvestigationRepository jpaInvestigationRepository
+
+	@Autowired
+	private JpaNotificationRepository jpaNotificationRepository
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate
@@ -103,6 +114,16 @@ abstract class IntegrationSpecification extends Specification
 	@Override
 	BpnRepository bpnRepository() {
 		return bpnRepository
+	}
+
+	@Override
+	JpaInvestigationRepository jpaInvestigationRepository() {
+		return jpaInvestigationRepository
+	}
+
+	@Override
+	JpaNotificationRepository jpaNotificationRepository() {
+		return jpaNotificationRepository
 	}
 
 	@Override

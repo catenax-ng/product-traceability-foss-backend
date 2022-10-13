@@ -19,11 +19,13 @@
 
 package net.catenax.traceability.investigations.domain.service;
 
+import net.catenax.traceability.investigations.domain.model.InvestigationId;
 import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 import net.catenax.traceability.assets.domain.ports.AssetRepository;
 import net.catenax.traceability.common.model.PageResult;
 import net.catenax.traceability.investigations.adapters.rest.model.InvestigationData;
 import net.catenax.traceability.investigations.domain.model.Investigation;
+import net.catenax.traceability.investigations.domain.model.exception.InvestigationNotFoundException;
 import net.catenax.traceability.investigations.domain.ports.InvestigationsRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,13 +39,10 @@ public class InvestigationsService {
 
 	private final InvestigationsRepository repository;
 
-	private final AssetRepository assetRepository;
-
 	private final Clock clock;
 
-	public InvestigationsService(InvestigationsRepository repository, AssetRepository assetRepository, Clock clock) {
+	public InvestigationsService(InvestigationsRepository repository, Clock clock) {
 		this.repository = repository;
-		this.assetRepository = assetRepository;
 		this.clock = clock;
 	}
 
@@ -51,6 +50,14 @@ public class InvestigationsService {
 		Investigation investigation = Investigation.startInvestigation(clock, assetIds, description);
 
 		repository.save(investigation);
+	}
+
+	public InvestigationData findInvestigation(Long id) {
+		InvestigationId investigationId = new InvestigationId(id);
+
+		return repository.findById(investigationId)
+			.map(this::toData)
+			.orElseThrow(() -> new InvestigationNotFoundException(investigationId));
 	}
 
 	public PageResult<InvestigationData> getCreatedInvestigations(Pageable pageable) {
@@ -74,6 +81,7 @@ public class InvestigationsService {
 
 	private InvestigationData toData(Investigation investigation) {
 		return new InvestigationData(
+			investigation.getInvestigationId().value(),
 			investigation.getInvestigationStatus().name(),
 			investigation.getDescription(),
 			investigation.getAssetIds()

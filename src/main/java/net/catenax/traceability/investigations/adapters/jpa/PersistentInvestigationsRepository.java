@@ -19,7 +19,6 @@
 
 package net.catenax.traceability.investigations.adapters.jpa;
 
-import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.AssetEntity;
 import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.JpaAssetsRepository;
 import net.catenax.traceability.common.model.PageResult;
@@ -28,6 +27,8 @@ import net.catenax.traceability.infrastructure.jpa.investigation.JpaInvestigatio
 import net.catenax.traceability.infrastructure.jpa.notification.JpaNotificationRepository;
 import net.catenax.traceability.infrastructure.jpa.notification.NotificationEntity;
 import net.catenax.traceability.investigations.domain.model.Investigation;
+import net.catenax.traceability.investigations.domain.model.InvestigationId;
+import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 import net.catenax.traceability.investigations.domain.ports.InvestigationsRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -77,8 +79,15 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 		return new PageResult<>(entities, this::toInvestigation);
 	}
 
+	@Override
+	public Optional<Investigation> findById(InvestigationId investigationId) {
+		return investigationRepository.findById(investigationId.value())
+			.map(this::toInvestigation);
+	}
+
 	private Investigation toInvestigation(InvestigationEntity investigationEntity) {
 		return new Investigation(
+			new InvestigationId(investigationEntity.getId()),
 			investigationEntity.getAssets().stream().map(AssetEntity::getId).toList(),
 			investigationEntity.getStatus(),
 			investigationEntity.getDescription(),

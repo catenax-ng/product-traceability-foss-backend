@@ -28,4 +28,8 @@ trait InvestigationsSupport implements InvestigationsRepositoryProvider {
 			jpaInvestigationRepository().save(it)
 		}
 	}
+
+	Long storedInvestigation(InvestigationEntity investigation) {
+		return jpaInvestigationRepository().save(investigation).id
+	}
 }

@@ -26,6 +26,7 @@ import net.catenax.traceability.investigations.domain.service.InvestigationsServ
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,5 +56,10 @@ public class InvestigationsController {
 	@GetMapping("/investigations/received")
 	public PageResult<InvestigationData> getReceivedInvestigations(Pageable pageable) {
 		return investigationsService.getReceivedInvestigations(pageable);
+	}
+
+	@GetMapping("/investigations/{investigationId}")
+	public InvestigationData getInvestigation(@PathVariable Long investigationId) {
+		return investigationsService.findInvestigation(investigationId);
 	}
 }

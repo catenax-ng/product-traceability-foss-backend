@@ -19,24 +19,23 @@
 
 package net.catenax.traceability.investigations.adapters.rest
 
+import io.restassured.http.ContentType
 import net.catenax.traceability.IntegrationSpecification
 import net.catenax.traceability.assets.domain.model.Asset
-import net.catenax.traceability.investigations.domain.model.InvestigationStatus
-import net.catenax.traceability.common.security.KeycloakRole
 import net.catenax.traceability.common.support.AssetsSupport
+import net.catenax.traceability.common.support.InvestigationsSupport
 import net.catenax.traceability.common.support.IrsApiSupport
+import net.catenax.traceability.common.support.NotificationsSupport
 import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity
+import net.catenax.traceability.investigations.domain.model.InvestigationStatus
 import org.hamcrest.Matchers
-import org.springframework.http.MediaType
 
 import java.time.ZonedDateTime
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import static io.restassured.RestAssured.given
+import static net.catenax.traceability.common.security.JwtRole.ADMIN
 
-class InvestigationsControllerIT extends IntegrationSpecification implements IrsApiSupport, AssetsSupport {
+class InvestigationsControllerIT extends IntegrationSpecification implements IrsApiSupport, AssetsSupport, InvestigationsSupport, NotificationsSupport {
 
 	def "should start investigation"() {
 		given:
@@ -46,21 +45,26 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 				"urn:uuid:0ce83951-bc18-4e8f-892d-48bad4eb67ef"  // BPN: BPNL00000003AXS3
 			]
 			String description = "at least 15 characters long investigation description"
-			authenticatedUser(KeycloakRole.ADMIN)
 
 		and:
 			defaultAssetsStored()
 
 		when:
-			mvc.perform(post("/investigations")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(asJson(
-					[
-						partIds    : partIds,
-						description: description
-					]
-				))
-			).andExpect(status().isOk())
+			given()
+				.contentType(ContentType.JSON)
+				.body(
+					asJson(
+						[
+							partIds    : partIds,
+							description: description
+						]
+					)
+				)
+				.header(jwtAuthorization(ADMIN))
+				.when()
+				.post("/api/investigations")
+				.then()
+				.statusCode(200)
 
 		then:
 			partIds.each { partId ->
@@ -73,43 +77,48 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 			assertNotificationsSize(2)
 
 		and:
-			mvc.perform(get("/investigations/created")
-				.queryParam("page", "0")
-				.queryParam("size", "10")
-				.contentType(MediaType.APPLICATION_JSON)
-			)
-				.andExpect(status().isOk())
-				.andExpect(jsonPath('$.page', Matchers.is(0)))
-				.andExpect(jsonPath('$.pageSize', Matchers.is(10)))
-				.andExpect(jsonPath('$.content', Matchers.hasSize(1)))
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/created")
+				.then()
+				.statusCode(200)
+				.body("page", Matchers.is(0))
+				.body("pageSize", Matchers.is(10))
+				.body("content", Matchers.hasSize(1))
 	}
 
 	def "should not return investigations without authentication"() {
-		given:
-			unauthenticatedUser()
-
 		expect:
-			mvc.perform(get("/investigations")
-				.queryParam("page", "0")
-				.queryParam("size", "2")
-				.contentType(MediaType.APPLICATION_JSON)
-			).andExpect(status().isUnauthorized())
+			given()
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/$type")
+				.then()
+				.statusCode(401)
+		where:
+			type << ["created", "received"]
 	}
 
 	def "should return no investigations"() {
-		given:
-			authenticatedUser(KeycloakRole.ADMIN)
-
 		expect:
-			mvc.perform(get("/investigations/$type")
-				.queryParam("page", "1")
-				.queryParam("size", "10")
-				.contentType(MediaType.APPLICATION_JSON)
-			)
-				.andExpect(status().isOk())
-				.andExpect(jsonPath('$.page', Matchers.is(0)))
-				.andExpect(jsonPath('$.pageSize', Matchers.is(10)))
-				.andExpect(jsonPath('$.content', Matchers.hasSize(0)))
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/$type")
+				.then()
+				.statusCode(200)
+				.body("page", Matchers.is(0))
+				.body("pageSize", Matchers.is(10))
+				.body("content", Matchers.hasSize(0))
 
 		where:
 			type << ["created", "received"]
@@ -117,11 +126,9 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 
 	def "should return created investigations sorted by creation time"() {
 		given:
-			authenticatedUser(KeycloakRole.ADMIN)
-
-		and:
 			ZonedDateTime now = ZonedDateTime.now()
 
+		and:
 			storedInvestigations(
 				new InvestigationEntity([], InvestigationStatus.CREATED, "1", now.minusSeconds(10L)),
 				new InvestigationEntity([], InvestigationStatus.CREATED, "2", now.plusSeconds(21L)),
@@ -131,25 +138,26 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 			)
 
 		expect:
-			mvc.perform(get("/investigations/created")
-				.queryParam("page", "0")
-				.queryParam("size", "10")
-				.contentType(MediaType.APPLICATION_JSON)
-			)
-				.andExpect(status().isOk())
-				.andExpect(jsonPath('$.page', Matchers.is(0)))
-				.andExpect(jsonPath('$.pageSize', Matchers.is(10)))
-				.andExpect(jsonPath('$.content', Matchers.hasSize(4)))
-				.andExpect(jsonPath('$.content.*.description', Matchers.containsInRelativeOrder("2", "4", "3", "1")))
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/created")
+				.then()
+				.statusCode(200)
+				.body("page", Matchers.is(0))
+				.body("pageSize", Matchers.is(10))
+				.body("content", Matchers.hasSize(4))
+				.body("content.description", Matchers.containsInRelativeOrder("2", "4", "3", "1"))
 	}
 
 	def "should return received investigations sorted by creation time"() {
 		given:
-			authenticatedUser(KeycloakRole.ADMIN)
-
-		and:
 			ZonedDateTime now = ZonedDateTime.now()
 
+		and:
 			storedInvestigations(
 				new InvestigationEntity([], InvestigationStatus.RECEIVED, "1", now.minusSeconds(5L)),
 				new InvestigationEntity([], InvestigationStatus.RECEIVED, "2", now.plusSeconds(2L)),
@@ -159,15 +167,58 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 			)
 
 		expect:
-			mvc.perform(get("/investigations/received")
-				.queryParam("page", "0")
-				.queryParam("size", "10")
-				.contentType(MediaType.APPLICATION_JSON)
-			)
-				.andExpect(status().isOk())
-				.andExpect(jsonPath('$.page', Matchers.is(0)))
-				.andExpect(jsonPath('$.pageSize', Matchers.is(10)))
-				.andExpect(jsonPath('$.content', Matchers.hasSize(4)))
-				.andExpect(jsonPath('$.content.*.description', Matchers.containsInRelativeOrder("4", "2", "3", "1")))
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/received")
+				.then()
+				.statusCode(200)
+				.body("page", Matchers.is(0))
+				.body("pageSize", Matchers.is(10))
+				.body("content", Matchers.hasSize(4))
+				.body("content.description", Matchers.containsInRelativeOrder("4", "2", "3", "1"))
+	}
+
+	def "should not return investigation without authentication"() {
+		expect:
+			given()
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/123")
+				.then()
+				.statusCode(401)
+	}
+
+	def "should not find non existing investigation"() {
+		expect:
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/1234")
+				.then()
+				.statusCode(404)
+				.body("message", Matchers.is("Investigation not found for 1234 id"))
+	}
+
+	def "should return investigation by id"() {
+		given:
+			Long investigationId = storedInvestigation(new InvestigationEntity([], "1", InvestigationStatus.RECEIVED))
+
+		expect:
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/$investigationId")
+				.then()
+				.statusCode(200)
+				.body("id", Matchers.is(investigationId.toInteger()))
+				.body("status", Matchers.is("RECEIVED"))
+				.body("description", Matchers.is("1"))
+				.body("assetIds", Matchers.empty())
 	}
 }
