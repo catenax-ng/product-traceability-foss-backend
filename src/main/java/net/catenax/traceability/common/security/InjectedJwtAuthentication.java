@@ -17,22 +17,14 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.assets.infrastructure.adapters.feign.irs.model;
+package net.catenax.traceability.common.security;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-record AssemblyPartRelationship(
-	String catenaXId,
-	List<ChildPart> childParts
-) {
-	AssemblyPartRelationship(String catenaXId, List<ChildPart> childParts) {
-		this.catenaXId = catenaXId;
-		this.childParts = Objects.requireNonNullElse(childParts, Collections.emptyList());
-	}
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface InjectedJwtAuthentication {
 }
-
-record ChildPart(
-	String childCatenaXId
-) {}
