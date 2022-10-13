@@ -19,9 +19,9 @@
 
 package net.catenax.traceability.investigations.adapters.rest
 
+import io.restassured.http.ContentType
 import net.catenax.traceability.IntegrationSpecification
 import net.catenax.traceability.assets.domain.model.Asset
-import net.catenax.traceability.common.security.KeycloakRole
 import net.catenax.traceability.common.support.AssetsSupport
 import net.catenax.traceability.common.support.IrsApiSupport
 import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity
@@ -29,10 +29,9 @@ import net.catenax.traceability.infrastructure.jpa.investigation.JpaInvestigatio
 import net.catenax.traceability.infrastructure.jpa.notification.JpaNotificationRepository
 import net.catenax.traceability.infrastructure.jpa.notification.NotificationEntity
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.MediaType
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import static io.restassured.RestAssured.given
+import static net.catenax.traceability.common.security.JwtRole.ADMIN
 
 class InvestigationsControllerIT extends IntegrationSpecification implements IrsApiSupport, AssetsSupport {
 
@@ -50,24 +49,29 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 				"urn:uuid:0ce83951-bc18-4e8f-892d-48bad4eb67ef"  // BPN: BPNL00000003AXS3
 			]
 			String description = "at least 15 characters long investigation description"
-			authenticatedUser(KeycloakRole.ADMIN)
 
 		and:
 			defaultAssetsStored()
 
 		when:
-			mvc.perform(post("/investigations")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(asJson(
-					[
-						partIds: partIds,
-						description: description
-					]
-				))
-			).andExpect(status().isOk())
+			given()
+				.contentType(ContentType.JSON)
+				.body(
+					asJson(
+						[
+							partIds    : partIds,
+							description: description
+						]
+					)
+				)
+				.header(jwtAuthorization(ADMIN))
+				.when()
+				.post("/api/investigations")
+				.then()
+				.statusCode(200)
 
 		then:
-			partIds.each {partId ->
+			partIds.each { partId ->
 				Asset asset = assetRepository().getAssetById(partId)
 				assert asset
 				assert asset.isUnderInvestigation()

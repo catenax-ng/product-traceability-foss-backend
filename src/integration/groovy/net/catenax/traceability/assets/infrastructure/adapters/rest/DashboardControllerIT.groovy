@@ -20,7 +20,7 @@
 package net.catenax.traceability.assets.infrastructure.adapters.rest
 
 import io.restassured.http.ContentType
-import net.catenax.traceability.IntegrationSpec
+import net.catenax.traceability.IntegrationSpecification
 import net.catenax.traceability.common.support.AssetsSupport
 import spock.lang.Unroll
 
@@ -31,7 +31,7 @@ import static net.catenax.traceability.common.security.JwtRole.USER
 import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.nullValue
 
-class DashboardControllerIT extends IntegrationSpec implements AssetsSupport {
+class DashboardControllerIT extends IntegrationSpecification implements AssetsSupport {
 
 	@Unroll
 	def "should return all dashboard information for user with #role role"() {

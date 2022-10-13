@@ -20,11 +20,9 @@
 package net.catenax.traceability.assets.infrastructure.adapters.rest
 
 import io.restassured.http.ContentType
-import net.catenax.traceability.IntegrationSpec
+import net.catenax.traceability.IntegrationSpecification
 import net.catenax.traceability.assets.domain.model.Asset
-import net.catenax.traceability.assets.domain.model.InvestigationStatus
 import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.model.AssetsConverter
-import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.AssetEntity
 import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.JpaAssetsRepository
 import net.catenax.traceability.common.support.AssetsSupport
 import net.catenax.traceability.common.support.IrsApiSupport
@@ -40,7 +38,7 @@ import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.everyItem
 import static org.hamcrest.Matchers.not
 
-class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, AssetsSupport {
+class AssetsControllerIT extends IntegrationSpecification implements IrsApiSupport, AssetsSupport {
 
 	@Autowired
 	JpaAssetsRepository jpaAssetsRepository
@@ -70,7 +68,7 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 		then:
 			eventually {
 				assertAssetsSize(14)
-				assertHasRequiredIdentifiers();
+				assertHasRequiredIdentifiers()
 			}
 
 		and:
@@ -83,6 +81,9 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 			oauth2ApiReturnsTechnicalUserToken()
 			irsApiTriggerJob()
 			irsApiReturnsJobDetailsWithNoBPNs()
+
+		and:
+			cachedBpnsForDefaultAssets()
 
 		when:
 			given()
@@ -264,6 +265,9 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 
 	def "should return assets with manufacturer name"() {
 		given:
+			cachedBpnsForDefaultAssets()
+
+		and:
 			defaultAssetsStored()
 
 		expect:
@@ -288,46 +292,6 @@ class AssetsControllerIT extends IntegrationSpec implements IrsApiSupport, Asset
 				.then()
 				.statusCode(200)
 				.body("totalItems", equalTo(12))
-	}
-
-	def "should start investigation"() {
-		given:
-			List<String> partIds = ["urn:uuid:fe99da3d-b0de-4e80-81da-882aebcca978", "urn:uuid:0ce83951-bc18-4e8f-892d-48bad4eb67ef"]
-			String description = "at least 15 characters long investigation description"
-
-		and:
-			defaultAssetsStored()
-
-		when:
-			given()
-				.header(jwtAuthorization(ADMIN))
-				.contentType(ContentType.JSON)
-				.body(asJson(
-					[
-						partIds    : partIds,
-						description: description
-					]
-				))
-				.when()
-				.post("/api/investigations")
-				.then()
-				.statusCode(200)
-
-		then:
-			List<AssetEntity> parts = jpaAssetsRepository.findByIdIn(partIds)
-			parts.size() == 2
-			parts.each { part ->
-				assert part.pendingInvestigation
-				assert part.pendingInvestigation.status == InvestigationStatus.PENDING
-				assert part.pendingInvestigation.description == description
-			}
-
-		and:
-			partIds.each { partId ->
-				Asset asset = assetRepository().getAssetById(partId)
-				assert asset
-				assert asset.isUnderInvestigation()
-			}
 	}
 
 	def "should return own assets"() {

@@ -22,6 +22,7 @@ package net.catenax.traceability
 import com.xebialabs.restito.server.StubServer
 import groovy.json.JsonBuilder
 import net.catenax.traceability.assets.domain.ports.AssetRepository
+import net.catenax.traceability.assets.domain.ports.BpnRepository
 import net.catenax.traceability.assets.domain.ports.ShellDescriptorRepository
 import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.model.AssetsConverter
 import net.catenax.traceability.common.config.ApplicationProfiles
@@ -30,11 +31,14 @@ import net.catenax.traceability.common.config.PostgreSQLConfig
 import net.catenax.traceability.common.config.RestAssuredConfig
 import net.catenax.traceability.common.config.RestitoConfig
 import net.catenax.traceability.common.support.AssetRepositoryProvider
+import net.catenax.traceability.common.support.BpnSupport
+import net.catenax.traceability.common.support.DatabaseSupport
 import net.catenax.traceability.common.support.OAuth2ApiSupport
 import net.catenax.traceability.common.support.OAuth2Support
 import net.catenax.traceability.common.support.ShellDescriptorStoreProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.testcontainers.spock.Testcontainers
@@ -48,8 +52,8 @@ import spock.util.concurrent.PollingConditions
 	initializers = [RestitoConfig.Initializer.class, PostgreSQLConfig.Initializer.class]
 )
 @Testcontainers
-abstract class IntegrationSpec extends Specification
-	implements OAuth2Support, OAuth2ApiSupport, AssetRepositoryProvider, ShellDescriptorStoreProvider {
+abstract class IntegrationSpecification extends Specification
+	implements OAuth2Support, OAuth2ApiSupport, DatabaseSupport, BpnSupport, AssetRepositoryProvider, ShellDescriptorStoreProvider {
 
 	@Autowired
 	private AssetRepository assetRepository
@@ -60,6 +64,12 @@ abstract class IntegrationSpec extends Specification
 	@Autowired
 	private ShellDescriptorRepository shellDescriptorRepository
 
+	@Autowired
+	private BpnRepository bpnRepository
+
+	@Autowired
+	private JdbcTemplate jdbcTemplate
+
 	def setup() {
 		oauth2ApiReturnsJwkCerts(jwk())
 	}
@@ -67,8 +77,7 @@ abstract class IntegrationSpec extends Specification
 	def cleanup() {
 		RestitoConfig.clear()
 		clearOAuth2Client()
-		assetRepository.clean()
-		shellDescriptorRepository.clean()
+		clearAllTables()
 	}
 
 	@Override
@@ -89,6 +98,16 @@ abstract class IntegrationSpec extends Specification
 	@Override
 	ShellDescriptorRepository shellDescriptorRepository() {
 		return shellDescriptorRepository
+	}
+
+	@Override
+	BpnRepository bpnRepository() {
+		return bpnRepository
+	}
+
+	@Override
+	JdbcTemplate jdbcTemplate() {
+		return jdbcTemplate
 	}
 
 	protected void eventually(Closure<?> conditions) {
