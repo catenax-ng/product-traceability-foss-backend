@@ -25,10 +25,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
 import java.util.Set;
 
 @Repository
 public interface JpaInvestigationRepository extends JpaRepository<InvestigationEntity, Long> {
 	Page<InvestigationEntity> findAllByStatusIn(Set<InvestigationStatus> statuses, Pageable pageable);
+	Page<InvestigationEntity> findAllByStatusInAndAssetsManufacturerIdEquals(Set<InvestigationStatus> investigationStatuses, String manufacturerId, Pageable pageable);
 }

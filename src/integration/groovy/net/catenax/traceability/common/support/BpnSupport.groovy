@@ -1,6 +1,11 @@
 package net.catenax.traceability.common.support
 
+import org.springframework.beans.factory.annotation.Value
+
 trait BpnSupport implements BpnRepositoryProvider, AssetRepositoryProvider {
+
+	@Value('${traceability.bpn}')
+	private String bpn
 
 	void cachedBpnsForDefaultAssets() {
 		List<String> assetIds = assetsConverter().readAndConvertAssets().collect { it.manufacturerId }
@@ -11,5 +16,9 @@ trait BpnSupport implements BpnRepositoryProvider, AssetRepositoryProvider {
 		}
 
 		bpnRepository().updateManufacturers(bpnMappings)
+	}
+
+	String testBPN() {
+		return bpn
 	}
 }

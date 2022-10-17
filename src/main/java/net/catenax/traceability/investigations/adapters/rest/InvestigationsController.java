@@ -20,6 +20,7 @@
 package net.catenax.traceability.investigations.adapters.rest;
 
 import net.catenax.traceability.common.model.PageResult;
+import net.catenax.traceability.common.properties.TraceabilityProperties;
 import net.catenax.traceability.investigations.adapters.rest.model.InvestigationData;
 import net.catenax.traceability.investigations.adapters.rest.model.StartInvestigationRequest;
 import net.catenax.traceability.investigations.domain.service.InvestigationsService;
@@ -38,14 +39,26 @@ import javax.validation.Valid;
 public class InvestigationsController {
 
 	private final InvestigationsService investigationsService;
+	private final TraceabilityProperties traceabilityProperties;
 
-	public InvestigationsController(InvestigationsService investigationsService) {
+	public InvestigationsController(InvestigationsService investigationsService, TraceabilityProperties traceabilityProperties) {
 		this.investigationsService = investigationsService;
+		this.traceabilityProperties = traceabilityProperties;
 	}
 
 	@PostMapping("/investigations")
 	public void investigateAssets(@RequestBody @Valid StartInvestigationRequest request) {
 		investigationsService.startInvestigation(request.partIds(), request.description());
+	}
+
+	@GetMapping("/investigations/my/created")
+	public PageResult<InvestigationData> getOwnCreatedInvestigations(Pageable pageable) {
+		return investigationsService.getOwnCreatedInvestigations(traceabilityProperties.getBpn(), pageable);
+	}
+
+	@GetMapping("/investigations/my/received")
+	public PageResult<InvestigationData> getOwnReceivedInvestigations(Pageable pageable) {
+		return investigationsService.getOwnReceivedInvestigations(traceabilityProperties.getBpn(), pageable);
 	}
 
 	@GetMapping("/investigations/created")

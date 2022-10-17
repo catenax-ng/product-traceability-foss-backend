@@ -22,7 +22,9 @@ package net.catenax.traceability.investigations.adapters.rest
 import io.restassured.http.ContentType
 import net.catenax.traceability.IntegrationSpecification
 import net.catenax.traceability.assets.domain.model.Asset
+import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.AssetEntity
 import net.catenax.traceability.common.support.AssetsSupport
+import net.catenax.traceability.common.support.BpnSupport
 import net.catenax.traceability.common.support.InvestigationsSupport
 import net.catenax.traceability.common.support.IrsApiSupport
 import net.catenax.traceability.common.support.NotificationsSupport
@@ -35,7 +37,7 @@ import java.time.ZonedDateTime
 import static io.restassured.RestAssured.given
 import static net.catenax.traceability.common.security.JwtRole.ADMIN
 
-class InvestigationsControllerIT extends IntegrationSpecification implements IrsApiSupport, AssetsSupport, InvestigationsSupport, NotificationsSupport {
+class InvestigationsControllerIT extends IntegrationSpecification implements IrsApiSupport, AssetsSupport, InvestigationsSupport, NotificationsSupport, BpnSupport {
 
 	def "should start investigation"() {
 		given:
@@ -105,25 +107,6 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 			type << ["created", "received"]
 	}
 
-	def "should return no investigations"() {
-		expect:
-			given()
-				.header(jwtAuthorization(ADMIN))
-				.param("page", "0")
-				.param("size", "10")
-				.contentType(ContentType.JSON)
-				.when()
-				.get("/api/investigations/$type")
-				.then()
-				.statusCode(200)
-				.body("page", Matchers.is(0))
-				.body("pageSize", Matchers.is(10))
-				.body("content", Matchers.hasSize(0))
-
-		where:
-			type << ["created", "received"]
-	}
-
 	def "should return created investigations sorted by creation time"() {
 		given:
 			ZonedDateTime now = ZonedDateTime.now()
@@ -180,6 +163,142 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 				.body("pageSize", Matchers.is(10))
 				.body("content", Matchers.hasSize(4))
 				.body("content.description", Matchers.containsInRelativeOrder("4", "2", "3", "1"))
+	}
+
+	def "should not return own investigations without authentication"() {
+		expect:
+			given()
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/my/$type")
+				.then()
+				.statusCode(401)
+		where:
+			type << ["created", "received"]
+	}
+
+	def "should return zero investigations"() {
+		expect:
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/$type")
+				.then()
+				.statusCode(200)
+				.body("page", Matchers.is(0))
+				.body("pageSize", Matchers.is(10))
+				.body("content", Matchers.hasSize(0))
+
+		where:
+			type << ["created", "received"]
+	}
+
+	def "should return own created investigations sorted by creation time"() {
+		given:
+			ZonedDateTime now = ZonedDateTime.now()
+			String bpn = testBPN()
+
+		and:
+			AssetEntity firstAsset = new AssetEntity()
+			firstAsset.setId(UUID.randomUUID().toString())
+			firstAsset.setManufacturerId(bpn)
+			InvestigationEntity firstInvestigation = new InvestigationEntity([firstAsset], InvestigationStatus.CREATED, "1", now.minusSeconds(10L))
+
+		and:
+			AssetEntity secondAsset = new AssetEntity()
+			secondAsset.setId(UUID.randomUUID().toString())
+			secondAsset.setManufacturerId("BPN00000002")
+			InvestigationEntity secondInvestigation = new InvestigationEntity([secondAsset], InvestigationStatus.CREATED, "2", now)
+
+		and:
+			AssetEntity thirdAsset = new AssetEntity()
+			thirdAsset.setId(UUID.randomUUID().toString())
+			thirdAsset.setManufacturerId(bpn)
+			InvestigationEntity thirdInvestigation = new InvestigationEntity([thirdAsset], InvestigationStatus.CREATED, "3", now.plusSeconds(21L))
+
+		and:
+			storedInvestigations(firstInvestigation, secondInvestigation, thirdInvestigation)
+
+		expect:
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/my/created")
+				.then()
+				.statusCode(200)
+				.body("page", Matchers.is(0))
+				.body("pageSize", Matchers.is(10))
+				.body("content", Matchers.hasSize(2))
+				.body("content.description", Matchers.containsInRelativeOrder("3", "1"))
+	}
+
+	def "should return own received investigations sorted by creation time"() {
+		given:
+			ZonedDateTime now = ZonedDateTime.now()
+			String bpn = testBPN()
+
+		and:
+			AssetEntity firstAsset = new AssetEntity()
+			firstAsset.setId(UUID.randomUUID().toString())
+			firstAsset.setManufacturerId(bpn)
+			InvestigationEntity firstInvestigation = new InvestigationEntity([firstAsset], InvestigationStatus.RECEIVED, "1", now.minusSeconds(10L))
+
+		and:
+			AssetEntity secondAsset = new AssetEntity()
+			secondAsset.setId(UUID.randomUUID().toString())
+			secondAsset.setManufacturerId("BPN00000003")
+			InvestigationEntity secondInvestigation = new InvestigationEntity([secondAsset], InvestigationStatus.RECEIVED, "2", now)
+
+		and:
+			AssetEntity thirdAsset = new AssetEntity()
+			thirdAsset.setId(UUID.randomUUID().toString())
+			thirdAsset.setManufacturerId(bpn)
+			InvestigationEntity thirdInvestigation = new InvestigationEntity([thirdAsset], InvestigationStatus.RECEIVED, "3", now.plusSeconds(21L))
+
+		and:
+			storedInvestigations(firstInvestigation, secondInvestigation, thirdInvestigation)
+
+		expect:
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/my/received")
+				.then()
+				.statusCode(200)
+				.body("page", Matchers.is(0))
+				.body("pageSize", Matchers.is(10))
+				.body("content", Matchers.hasSize(2))
+				.body("content.description", Matchers.containsInRelativeOrder("3", "1"))
+	}
+
+	def "should return zero own investigations"() {
+		expect:
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/my/$type")
+				.then()
+				.statusCode(200)
+				.body("page", Matchers.is(0))
+				.body("pageSize", Matchers.is(10))
+				.body("content", Matchers.hasSize(0))
+
+		where:
+			type << ["created", "received"]
 	}
 
 	def "should not return investigation without authentication"() {

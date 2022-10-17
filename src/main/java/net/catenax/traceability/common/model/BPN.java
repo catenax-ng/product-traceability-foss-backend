@@ -17,31 +17,15 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.common.properties;
+package net.catenax.traceability.common.model;
 
-import java.time.Duration;
+import org.springframework.util.StringUtils;
 
-public class CacheProperties {
+public record BPN(String value) {
 
-	private final String name;
-	private final int maximumSize;
-	private final Duration expireAfterWrite;
-
-	public CacheProperties(String name, int maximumSize, Duration expireAfterWrite) {
-		this.name = name;
-		this.maximumSize = maximumSize;
-		this.expireAfterWrite = expireAfterWrite;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public int getMaximumSize() {
-		return maximumSize;
-	}
-
-	public Duration getExpireAfterWrite() {
-		return expireAfterWrite;
+	public BPN {
+		if (!StringUtils.hasText(value)) {
+			throw new IllegalArgumentException("BPN must be present");
+		}
 	}
 }

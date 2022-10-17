@@ -19,12 +19,12 @@
 
 package net.catenax.traceability.investigations.domain.service;
 
-import net.catenax.traceability.investigations.domain.model.InvestigationId;
-import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
-import net.catenax.traceability.assets.domain.ports.AssetRepository;
 import net.catenax.traceability.common.model.PageResult;
+import net.catenax.traceability.common.model.BPN;
 import net.catenax.traceability.investigations.adapters.rest.model.InvestigationData;
 import net.catenax.traceability.investigations.domain.model.Investigation;
+import net.catenax.traceability.investigations.domain.model.InvestigationId;
+import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationNotFoundException;
 import net.catenax.traceability.investigations.domain.ports.InvestigationsRepository;
 import org.springframework.data.domain.Pageable;
@@ -64,12 +64,32 @@ public class InvestigationsService {
 		return getInvestigations(pageable, Investigation.CREATED_STATUSES);
 	}
 
+	public PageResult<InvestigationData> getOwnCreatedInvestigations(BPN bpn, Pageable pageable) {
+		return getOwnInvestigations(bpn, pageable, Investigation.CREATED_STATUSES);
+	}
+
+	public PageResult<InvestigationData> getOwnReceivedInvestigations(BPN bpn, Pageable pageable) {
+		return getOwnInvestigations(bpn, pageable, Investigation.RECEIVED_STATUSES);
+	}
+
 	public PageResult<InvestigationData> getReceivedInvestigations(Pageable pageable) {
 		return getInvestigations(pageable, Investigation.RECEIVED_STATUSES);
 	}
 
 	private PageResult<InvestigationData> getInvestigations(Pageable pageable, Set<InvestigationStatus> statuses) {
-		List<InvestigationData> investigationData = repository.getInvestigations(statuses, pageable)
+		PageResult<Investigation> investigations = repository.getInvestigations(statuses, pageable);
+
+		return sortAndConvert(investigations);
+	}
+
+	private PageResult<InvestigationData> getOwnInvestigations(BPN bpn, Pageable pageable, Set<InvestigationStatus> statuses) {
+		PageResult<Investigation> ownInvestigations = repository.getOwnInvestigations(bpn, statuses, pageable);
+
+		return sortAndConvert(ownInvestigations);
+	}
+
+	private PageResult<InvestigationData> sortAndConvert(PageResult<Investigation> investigations) {
+		List<InvestigationData> investigationData = investigations
 			.content()
 			.stream()
 			.sorted(Investigation.COMPARE_BY_NEWEST_INVESTIGATION_CREATION_TIME)

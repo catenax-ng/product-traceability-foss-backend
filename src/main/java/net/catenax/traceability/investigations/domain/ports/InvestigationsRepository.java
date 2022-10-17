@@ -19,6 +19,7 @@
 
 package net.catenax.traceability.investigations.domain.ports;
 
+import net.catenax.traceability.common.model.BPN;
 import net.catenax.traceability.investigations.domain.model.InvestigationId;
 import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 import net.catenax.traceability.common.model.PageResult;
@@ -31,5 +32,6 @@ import java.util.Set;
 public interface InvestigationsRepository {
 	void save(Investigation investigation);
 	PageResult<Investigation> getInvestigations(Set<InvestigationStatus> investigationStatuses, Pageable pageable);
+	PageResult<Investigation> getOwnInvestigations(BPN bpn, Set<InvestigationStatus> investigationStatuses, Pageable pageable);
 	Optional<Investigation> findById(InvestigationId investigationId);
 }

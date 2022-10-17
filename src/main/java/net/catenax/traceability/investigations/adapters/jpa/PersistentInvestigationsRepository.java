@@ -21,6 +21,7 @@ package net.catenax.traceability.investigations.adapters.jpa;
 
 import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.AssetEntity;
 import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.JpaAssetsRepository;
+import net.catenax.traceability.common.model.BPN;
 import net.catenax.traceability.common.model.PageResult;
 import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity;
 import net.catenax.traceability.infrastructure.jpa.investigation.JpaInvestigationRepository;
@@ -75,6 +76,13 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 	@Override
 	public PageResult<Investigation> getInvestigations(Set<InvestigationStatus> investigationStatuses, Pageable pageable) {
 		Page<InvestigationEntity> entities = investigationRepository.findAllByStatusIn(investigationStatuses, pageable);
+
+		return new PageResult<>(entities, this::toInvestigation);
+	}
+
+	@Override
+	public PageResult<Investigation> getOwnInvestigations(BPN bpn, Set<InvestigationStatus> investigationStatuses, Pageable pageable) {
+		Page<InvestigationEntity> entities = investigationRepository.findAllByStatusInAndAssetsManufacturerIdEquals(investigationStatuses, bpn.value(), pageable);
 
 		return new PageResult<>(entities, this::toInvestigation);
 	}
