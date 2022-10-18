@@ -19,6 +19,9 @@
 
 package net.catenax.traceability.investigations.domain.model;
 
+import net.catenax.traceability.common.model.BPN;
+import net.catenax.traceability.investigations.adapters.rest.model.InvestigationData;
+
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Comparator;
@@ -46,25 +49,28 @@ public class Investigation {
 	public static final Set<InvestigationStatus> RECEIVED_STATUSES = Set.of(InvestigationStatus.RECEIVED);
 
 	private final InvestigationId investigationId;
-	private final List<String> assetIds;
+	private final BPN bpn;
 	private final InvestigationStatus investigationStatus;
-	private final Instant createdAt;
 	private final String description;
+	private final Instant createdAt;
+	private final List<String> assetIds;
 
-	public Investigation(InvestigationId investigationId, List<String> assetIds, InvestigationStatus investigationStatus, String description, Instant createdAt) {
+	public Investigation(InvestigationId investigationId,
+						 BPN bpn,
+						 InvestigationStatus investigationStatus,
+						 String description,
+						 Instant createdAt,
+						 List<String> assetIds) {
 		this.investigationId = investigationId;
-		this.assetIds = assetIds;
+		this.bpn = bpn;
 		this.investigationStatus = investigationStatus;
-		this.createdAt = createdAt;
 		this.description = description;
+		this.createdAt = createdAt;
+		this.assetIds = assetIds;
 	}
 
-	public static Investigation startInvestigation(Clock clock, List<String> assetIds, String description) {
-		return new Investigation(null, assetIds, InvestigationStatus.CREATED, description, clock.instant());
-	}
-
-	public InvestigationId getInvestigationId() {
-		return investigationId;
+	public static Investigation startInvestigation(Clock clock, BPN bpn, List<String> assetIds, String description) {
+		return new Investigation(null, bpn, InvestigationStatus.CREATED, description, clock.instant(), assetIds);
 	}
 
 	public List<String> getAssetIds() {
@@ -77,5 +83,20 @@ public class Investigation {
 
 	public String getDescription() {
 		return description;
+	}
+
+	public InvestigationData toData() {
+		return new InvestigationData(
+			investigationId.value(),
+			investigationStatus.name(),
+			description,
+			bpn.value(),
+			createdAt.toString(),
+			assetIds
+		);
+	}
+
+	public String getBpn() {
+		return bpn.value();
 	}
 }

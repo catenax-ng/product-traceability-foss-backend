@@ -17,9 +17,15 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.investigations.adapters.rest.model;
+package net.catenax.traceability.common.model;
 
-import java.util.List;
+import org.springframework.util.StringUtils;
 
-public record InvestigationData(Long id, String status, String description, String createdBy, String createdDate, List<String> assetIds) {
+public record BPN(String value) {
+
+	public BPN {
+		if (!StringUtils.hasText(value)) {
+			throw new IllegalArgumentException("BPN must be present");
+		}
+	}
 }

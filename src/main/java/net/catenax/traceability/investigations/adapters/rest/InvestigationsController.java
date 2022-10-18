@@ -20,15 +20,20 @@
 package net.catenax.traceability.investigations.adapters.rest;
 
 import net.catenax.traceability.common.model.PageResult;
+import net.catenax.traceability.common.properties.TraceabilityProperties;
 import net.catenax.traceability.investigations.adapters.rest.model.InvestigationData;
 import net.catenax.traceability.investigations.adapters.rest.model.StartInvestigationRequest;
+import net.catenax.traceability.investigations.adapters.rest.model.StartInvestigationResponse;
+import net.catenax.traceability.investigations.domain.model.InvestigationId;
 import net.catenax.traceability.investigations.domain.service.InvestigationsService;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -39,13 +44,19 @@ public class InvestigationsController {
 
 	private final InvestigationsService investigationsService;
 
-	public InvestigationsController(InvestigationsService investigationsService) {
+	private final TraceabilityProperties traceabilityProperties;
+
+	public InvestigationsController(InvestigationsService investigationsService, TraceabilityProperties traceabilityProperties) {
 		this.investigationsService = investigationsService;
+		this.traceabilityProperties = traceabilityProperties;
 	}
 
 	@PostMapping("/investigations")
-	public void investigateAssets(@RequestBody @Valid StartInvestigationRequest request) {
-		investigationsService.startInvestigation(request.partIds(), request.description());
+	@ResponseStatus(HttpStatus.CREATED)
+	public StartInvestigationResponse investigateAssets(@RequestBody @Valid StartInvestigationRequest request) {
+		InvestigationId investigationId = investigationsService.startInvestigation(traceabilityProperties.getBpn(), request.partIds(), request.description());
+
+		return new StartInvestigationResponse(investigationId.value());
 	}
 
 	@GetMapping("/investigations/created")

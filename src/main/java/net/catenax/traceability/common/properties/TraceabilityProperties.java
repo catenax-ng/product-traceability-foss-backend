@@ -17,9 +17,23 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.investigations.adapters.rest.model;
+package net.catenax.traceability.common.properties;
 
-import java.util.List;
+import net.catenax.traceability.common.model.BPN;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
-public record InvestigationData(Long id, String status, String description, String createdBy, String createdDate, List<String> assetIds) {
+@ConstructorBinding
+@ConfigurationProperties("traceability")
+public class TraceabilityProperties {
+
+	private final BPN bpn;
+
+	public TraceabilityProperties(String bpn) {
+		this.bpn = new BPN(bpn);
+	}
+
+	public BPN getBpn() {
+		return bpn;
+	}
 }

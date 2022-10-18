@@ -23,6 +23,7 @@ import io.restassured.http.ContentType
 import net.catenax.traceability.IntegrationSpecification
 import net.catenax.traceability.assets.domain.model.Asset
 import net.catenax.traceability.common.support.AssetsSupport
+import net.catenax.traceability.common.support.BpnSupport
 import net.catenax.traceability.common.support.InvestigationsSupport
 import net.catenax.traceability.common.support.IrsApiSupport
 import net.catenax.traceability.common.support.NotificationsSupport
@@ -34,8 +35,9 @@ import java.time.ZonedDateTime
 
 import static io.restassured.RestAssured.given
 import static net.catenax.traceability.common.security.JwtRole.ADMIN
+import static net.catenax.traceability.common.support.ISO8601DateTimeMatcher.isIso8601DateTime
 
-class InvestigationsControllerIT extends IntegrationSpecification implements IrsApiSupport, AssetsSupport, InvestigationsSupport, NotificationsSupport {
+class InvestigationsControllerIT extends IntegrationSpecification implements IrsApiSupport, AssetsSupport, InvestigationsSupport, NotificationsSupport, BpnSupport {
 
 	def "should start investigation"() {
 		given:
@@ -64,7 +66,8 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 				.when()
 				.post("/api/investigations")
 				.then()
-				.statusCode(200)
+				.statusCode(201)
+				.body("id", Matchers.isA(Number.class))
 
 		then:
 			partIds.each { partId ->
@@ -127,14 +130,15 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 	def "should return created investigations sorted by creation time"() {
 		given:
 			ZonedDateTime now = ZonedDateTime.now()
+			String testBpn = testBpn()
 
 		and:
 			storedInvestigations(
-				new InvestigationEntity([], InvestigationStatus.CREATED, "1", now.minusSeconds(10L)),
-				new InvestigationEntity([], InvestigationStatus.CREATED, "2", now.plusSeconds(21L)),
-				new InvestigationEntity([], InvestigationStatus.CREATED, "3", now),
-				new InvestigationEntity([], InvestigationStatus.CREATED, "4", now.plusSeconds(20L)),
-				new InvestigationEntity([], InvestigationStatus.RECEIVED, "5", now.plusSeconds(40L))
+				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "1", now.minusSeconds(10L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "2", now.plusSeconds(21L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "3", now),
+				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "4", now.plusSeconds(20L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "5", now.plusSeconds(40L))
 			)
 
 		expect:
@@ -151,19 +155,22 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 				.body("pageSize", Matchers.is(10))
 				.body("content", Matchers.hasSize(4))
 				.body("content.description", Matchers.containsInRelativeOrder("2", "4", "3", "1"))
+				.body("content.createdBy", Matchers.hasItems(testBpn))
+				.body("content.createdDate", Matchers.hasItems(isIso8601DateTime()))
 	}
 
 	def "should return received investigations sorted by creation time"() {
 		given:
 			ZonedDateTime now = ZonedDateTime.now()
+			String testBpn = testBpn()
 
 		and:
 			storedInvestigations(
-				new InvestigationEntity([], InvestigationStatus.RECEIVED, "1", now.minusSeconds(5L)),
-				new InvestigationEntity([], InvestigationStatus.RECEIVED, "2", now.plusSeconds(2L)),
-				new InvestigationEntity([], InvestigationStatus.RECEIVED, "3", now),
-				new InvestigationEntity([], InvestigationStatus.RECEIVED, "4", now.plusSeconds(20L)),
-				new InvestigationEntity([], InvestigationStatus.CREATED, "5", now.plusSeconds(40L))
+				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "1", now.minusSeconds(5L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "2", now.plusSeconds(2L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "3", now),
+				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "4", now.plusSeconds(20L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "5", now.plusSeconds(40L))
 			)
 
 		expect:
@@ -180,6 +187,8 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 				.body("pageSize", Matchers.is(10))
 				.body("content", Matchers.hasSize(4))
 				.body("content.description", Matchers.containsInRelativeOrder("4", "2", "3", "1"))
+				.body("content.createdBy", Matchers.hasItems(testBpn))
+				.body("content.createdDate", Matchers.hasItems(isIso8601DateTime()))
 	}
 
 	def "should not return investigation without authentication"() {
@@ -206,7 +215,8 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 
 	def "should return investigation by id"() {
 		given:
-			Long investigationId = storedInvestigation(new InvestigationEntity([], "1", InvestigationStatus.RECEIVED))
+			String testBpn = testBpn()
+			Long investigationId = storedInvestigation(new InvestigationEntity([], testBpn, "1", InvestigationStatus.RECEIVED))
 
 		expect:
 			given()
@@ -220,5 +230,7 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 				.body("status", Matchers.is("RECEIVED"))
 				.body("description", Matchers.is("1"))
 				.body("assetIds", Matchers.empty())
+				.body("createdBy", Matchers.is(testBpn))
+				.body("createdDate", isIso8601DateTime())
 	}
 }

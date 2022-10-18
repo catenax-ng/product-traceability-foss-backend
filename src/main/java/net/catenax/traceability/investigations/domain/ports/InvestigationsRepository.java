@@ -29,7 +29,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface InvestigationsRepository {
-	void save(Investigation investigation);
+	InvestigationId save(Investigation investigation);
 	PageResult<Investigation> getInvestigations(Set<InvestigationStatus> investigationStatuses, Pageable pageable);
 	Optional<Investigation> findById(InvestigationId investigationId);
 }

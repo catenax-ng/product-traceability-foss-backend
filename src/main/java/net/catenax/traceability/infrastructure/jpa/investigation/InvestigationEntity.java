@@ -1,3 +1,22 @@
+/********************************************************************************
+ * Copyright (c) 2021,2022 Contributors to the CatenaX (ng) GitHub Organisation
+ *
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License, Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+
 package net.catenax.traceability.infrastructure.jpa.investigation;
 
 import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
@@ -29,6 +48,7 @@ public class InvestigationEntity {
 		inverseJoinColumns = @JoinColumn(name = "asset_id")
 	)
 	private List<AssetEntity> assets;
+	private String bpn;
 	private InvestigationStatus status;
 	private String description;
 	private ZonedDateTime created;
@@ -37,12 +57,13 @@ public class InvestigationEntity {
 	public InvestigationEntity() {
 	}
 
-	public InvestigationEntity(List<AssetEntity> assets, String description, InvestigationStatus status) {
-		this(assets, status, description, ZonedDateTime.now());
+	public InvestigationEntity(List<AssetEntity> assets, String bpn, String description, InvestigationStatus status) {
+		this(assets, bpn, status, description, ZonedDateTime.now());
 	}
 
-	public InvestigationEntity(List<AssetEntity> assets, InvestigationStatus status, String description, ZonedDateTime created) {
+	public InvestigationEntity(List<AssetEntity> assets, String bpn, InvestigationStatus status, String description, ZonedDateTime created) {
 		this.assets = assets;
+		this.bpn = bpn;
 		this.status = status;
 		this.description = description;
 		this.created = created;
@@ -63,6 +84,14 @@ public class InvestigationEntity {
 
 	public void setAssets(List<AssetEntity> assets) {
 		this.assets = assets;
+	}
+
+	public String getBpn() {
+		return bpn;
+	}
+
+	public void setBpn(String bpn) {
+		this.bpn = bpn;
 	}
 
 	public InvestigationStatus getStatus() {

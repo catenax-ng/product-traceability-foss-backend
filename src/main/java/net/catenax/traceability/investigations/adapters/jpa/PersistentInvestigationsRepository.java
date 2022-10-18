@@ -21,6 +21,7 @@ package net.catenax.traceability.investigations.adapters.jpa;
 
 import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.AssetEntity;
 import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.JpaAssetsRepository;
+import net.catenax.traceability.common.model.BPN;
 import net.catenax.traceability.common.model.PageResult;
 import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity;
 import net.catenax.traceability.infrastructure.jpa.investigation.JpaInvestigationRepository;
@@ -49,27 +50,37 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 
 	private final JpaNotificationRepository notificationRepository;
 
-	public PersistentInvestigationsRepository(JpaInvestigationRepository investigationRepository, JpaAssetsRepository assetsRepository, JpaNotificationRepository notificationRepository) {
+	public PersistentInvestigationsRepository(JpaInvestigationRepository investigationRepository,
+											  JpaAssetsRepository assetsRepository,
+											  JpaNotificationRepository notificationRepository) {
 		this.investigationRepository = investigationRepository;
 		this.assetsRepository = assetsRepository;
 		this.notificationRepository = notificationRepository;
 	}
 
 	@Override
-	public void save(Investigation investigation) {
-		List<AssetEntity> assets = assetsRepository.findByIdIn(investigation.getAssetIds());
+	public InvestigationId save(Investigation investigation) {
+		List<String> assetIds = investigation.getAssetIds();
+
+		List<AssetEntity> assets = assetsRepository.findByIdIn(assetIds);
 
 		if (!assets.isEmpty()) {
-			InvestigationEntity savedInvestigation = investigationRepository.save(new InvestigationEntity(assets, investigation.getDescription(), investigation.getInvestigationStatus()));
+			InvestigationEntity investigationEntity = new InvestigationEntity(assets, investigation.getBpn(), investigation.getDescription(), investigation.getInvestigationStatus());
+			InvestigationEntity savedInvestigation = investigationRepository.save(investigationEntity);
+
 			Map<String, List<AssetEntity>> manufacturerAssets = assets.stream()
 				.collect(Collectors.groupingBy(AssetEntity::getManufacturerId));
+
 			List<NotificationEntity> notifications = manufacturerAssets.entrySet().stream()
 				.map((entry) -> new NotificationEntity(savedInvestigation, entry.getKey(), entry.getValue()))
 				.toList();
 
 			notificationRepository.saveAll(notifications);
-		}
 
+			return new InvestigationId(savedInvestigation.getId());
+		} else {
+			throw new IllegalArgumentException("No assets found for %s asset ids".formatted(String.join(", ", assetIds)));
+		}
 	}
 
 	@Override
@@ -88,10 +99,11 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 	private Investigation toInvestigation(InvestigationEntity investigationEntity) {
 		return new Investigation(
 			new InvestigationId(investigationEntity.getId()),
-			investigationEntity.getAssets().stream().map(AssetEntity::getId).toList(),
+			new BPN(investigationEntity.getBpn()),
 			investigationEntity.getStatus(),
 			investigationEntity.getDescription(),
-			investigationEntity.getCreated().toInstant()
+			investigationEntity.getCreated().toInstant(),
+			investigationEntity.getAssets().stream().map(AssetEntity::getId).toList()
 		);
 	}
 }

@@ -19,9 +19,9 @@
 
 package net.catenax.traceability.investigations.domain.service;
 
+import net.catenax.traceability.common.model.BPN;
 import net.catenax.traceability.investigations.domain.model.InvestigationId;
 import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
-import net.catenax.traceability.assets.domain.ports.AssetRepository;
 import net.catenax.traceability.common.model.PageResult;
 import net.catenax.traceability.investigations.adapters.rest.model.InvestigationData;
 import net.catenax.traceability.investigations.domain.model.Investigation;
@@ -46,17 +46,17 @@ public class InvestigationsService {
 		this.clock = clock;
 	}
 
-	public void startInvestigation(List<String> assetIds, String description) {
-		Investigation investigation = Investigation.startInvestigation(clock, assetIds, description);
+	public InvestigationId startInvestigation(BPN bpn, List<String> assetIds, String description) {
+		Investigation investigation = Investigation.startInvestigation(clock, bpn, assetIds, description);
 
-		repository.save(investigation);
+		return repository.save(investigation);
 	}
 
 	public InvestigationData findInvestigation(Long id) {
 		InvestigationId investigationId = new InvestigationId(id);
 
 		return repository.findById(investigationId)
-			.map(this::toData)
+			.map(Investigation::toData)
 			.orElseThrow(() -> new InvestigationNotFoundException(investigationId));
 	}
 
@@ -73,18 +73,10 @@ public class InvestigationsService {
 			.content()
 			.stream()
 			.sorted(Investigation.COMPARE_BY_NEWEST_INVESTIGATION_CREATION_TIME)
-			.map(this::toData)
+			.map(Investigation::toData)
 			.toList();
 
 		return new PageResult<>(investigationData);
 	}
 
-	private InvestigationData toData(Investigation investigation) {
-		return new InvestigationData(
-			investigation.getInvestigationId().value(),
-			investigation.getInvestigationStatus().name(),
-			investigation.getDescription(),
-			investigation.getAssetIds()
-		);
-	}
 }

@@ -17,9 +17,35 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.investigations.adapters.rest.model;
+package net.catenax.traceability.common.support
 
-import java.util.List;
+import org.hamcrest.Description
+import org.hamcrest.Matcher
+import org.hamcrest.TypeSafeMatcher
 
-public record InvestigationData(Long id, String status, String description, String createdBy, String createdDate, List<String> assetIds) {
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+
+class ISO8601DateTimeMatcher extends TypeSafeMatcher<String> {
+
+
+	@Override
+	protected boolean matchesSafely(String item) {
+		try {
+			DateTimeFormatter.ISO_INSTANT.parse(item)
+		} catch (DateTimeParseException ignored) {
+			return false
+		}
+
+		return true
+	}
+
+	@Override
+	void describeTo(Description description) {
+		description.appendText("ISO 8601 date")
+	}
+
+	static Matcher<String> isIso8601DateTime() {
+		return new ISO8601DateTimeMatcher()
+	}
 }
