@@ -22,6 +22,7 @@ package net.catenax.traceability.investigations.adapters.rest
 import io.restassured.http.ContentType
 import net.catenax.traceability.IntegrationSpecification
 import net.catenax.traceability.assets.domain.model.Asset
+import net.catenax.traceability.assets.domain.model.InvestigationStatus
 import net.catenax.traceability.common.support.AssetsSupport
 import net.catenax.traceability.common.support.IrsApiSupport
 import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity
@@ -65,9 +66,9 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 					)
 				)
 				.header(jwtAuthorization(ADMIN))
-				.when()
+			.when()
 				.post("/api/investigations")
-				.then()
+			.then()
 				.statusCode(200)
 
 		then:
@@ -84,6 +85,58 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 		and:
 			List<InvestigationEntity> investigations = jpaInvestigationRepository.findAll()
 			investigations.size() == 1
+	}
+
+	def "should change investigation status"() {
+		given:
+			List<String> partIds = [
+				"urn:uuid:fe99da3d-b0de-4e80-81da-882aebcca978", // BPN: BPNL00000003AYRE
+				"urn:uuid:0ce83951-bc18-4e8f-892d-48bad4eb67ef"  // BPN: BPNL00000003AXS3
+			]
+			String description = "at least 15 characters long investigation description"
+			InvestigationStatus status = InvestigationStatus.APPROVED
+
+		and:
+			defaultAssetsStored()
+
+		and:
+			given()
+				.contentType(ContentType.JSON)
+				.body(asJson([
+						partIds    : partIds,
+						description: description
+				]))
+				.header(jwtAuthorization(ADMIN))
+			.when()
+				.post("/api/investigations")
+			.then()
+				.statusCode(200)
+
+		when:
+			given()
+				.contentType(ContentType.JSON)
+				.body(asJson([
+					status    : status
+				]))
+				.header(jwtAuthorization(ADMIN))
+			.when()
+				.put("/api/investigations/1/status")
+			.then()
+				.statusCode(200)
+
+		then:
+			List<NotificationEntity> notifications = jpaNotificationRepository.findAll()
+			notifications.size() == 2
+			notifications.each { notification ->
+				assert notification.edcUrl != null
+			}
+
+		and:
+			List<InvestigationEntity> investigations = jpaInvestigationRepository.findAll()
+			investigations.size() == 1
+			investigations.each {investigation ->
+				investigation.status = status
+			}
 	}
 
 }
