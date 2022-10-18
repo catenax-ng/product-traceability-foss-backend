@@ -46,7 +46,7 @@ import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
 
 @ActiveProfiles(profiles = [ApplicationProfiles.TESTS])
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ContextConfiguration(
 	classes = [RestAssuredConfig.class, MailboxConfig.class, RestitoConfig.class, PostgreSQLConfig.class],
 	initializers = [RestitoConfig.Initializer.class, PostgreSQLConfig.Initializer.class]

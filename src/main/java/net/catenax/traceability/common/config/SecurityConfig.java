@@ -44,7 +44,7 @@ public class SecurityConfig {
 		"/api/v3/api-docs/**",
 		"/api/swagger-ui/**",
 		"/api/swagger-ui.html",
-		"/actuator/**",
+		"/actuator/**"
 	};
 
 	@Value("${jwt.resource-client}")

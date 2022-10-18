@@ -41,7 +41,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-    show-sql: true
+#    show-sql: true
   flyway:
     enabled: false
 
@@ -57,4 +57,5 @@ resilience4j:
         waitDuration: 10s
         enableExponentialBackoff: true
         exponentialBackoffMultiplier: 2
-
+server:
+  port: 9999
