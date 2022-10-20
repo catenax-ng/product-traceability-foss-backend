@@ -22,6 +22,7 @@ package net.catenax.traceability.common.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.catenax.traceability.assets.domain.model.AssetNotFoundException;
 import net.catenax.traceability.assets.infrastructure.config.openapi.TechnicalUserAuthorizationException;
+import net.catenax.traceability.investigations.domain.model.exception.InvestigationIllegalUpdate;
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationNotFoundException;
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationStatusTransitionNotAllowed;
 import org.slf4j.Logger;
@@ -87,6 +88,12 @@ public class ErrorHandlingConfig implements AuthenticationFailureHandler {
 	@ExceptionHandler(InvestigationStatusTransitionNotAllowed.class)
 	ResponseEntity<ErrorResponse> handleInvestigationStatusTransitionNotAllowed(InvestigationStatusTransitionNotAllowed exception) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+			.body(new ErrorResponse(exception.getMessage()));
+	}
+
+	@ExceptionHandler(InvestigationIllegalUpdate.class)
+	ResponseEntity<ErrorResponse> handleInvestigationIllegalUpdate(InvestigationIllegalUpdate exception) {
+		return ResponseEntity.status(HttpStatus.FORBIDDEN)
 			.body(new ErrorResponse(exception.getMessage()));
 	}
 

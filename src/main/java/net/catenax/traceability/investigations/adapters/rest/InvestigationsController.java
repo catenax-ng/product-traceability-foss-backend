@@ -76,6 +76,6 @@ public class InvestigationsController {
 
 	@PostMapping("/investigations/{investigationId}/cancel")
 	public void cancelInvestigation(@PathVariable Long investigationId) {
-		investigationsService.cancelInvestigation(investigationId);
+		investigationsService.cancelInvestigation(traceabilityProperties.getBpn(), investigationId);
 	}
 }

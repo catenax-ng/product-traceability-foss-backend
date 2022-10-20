@@ -79,13 +79,13 @@ public class InvestigationsService {
 		return new PageResult<>(investigationData);
 	}
 
-	public void cancelInvestigation(Long id) {
+	public void cancelInvestigation(BPN bpn, Long id) {
 		InvestigationId investigationId = new InvestigationId(id);
 
 		Investigation investigation = repository.findById(investigationId)
 			.orElseThrow(() -> new InvestigationNotFoundException(investigationId));
 
-		investigation.cancel();
+		investigation.cancel(bpn);
 
 		repository.save(investigation);
 	}

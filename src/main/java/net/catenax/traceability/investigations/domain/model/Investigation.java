@@ -21,6 +21,7 @@ package net.catenax.traceability.investigations.domain.model;
 
 import net.catenax.traceability.common.model.BPN;
 import net.catenax.traceability.investigations.adapters.rest.model.InvestigationData;
+import net.catenax.traceability.investigations.domain.model.exception.InvestigationIllegalUpdate;
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationStatusTransitionNotAllowed;
 
 import java.time.Clock;
@@ -106,7 +107,11 @@ public class Investigation {
 		return bpn.value();
 	}
 
-	public void cancel() {
+	public void cancel(BPN callerBpn) {
+		if (!callerBpn.equals(this.bpn)) {
+			throw new InvestigationIllegalUpdate("%s bpn has no permissions to update investigation with %s id.".formatted(callerBpn.value(), investigationId.value()));
+		}
+
 		changeStatusTo(InvestigationStatus.CLOSED);
 	}
 

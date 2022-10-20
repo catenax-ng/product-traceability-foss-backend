@@ -20,6 +20,7 @@
 package net.catenax.traceability.investigations.domain.model
 
 import net.catenax.traceability.common.model.BPN
+import net.catenax.traceability.investigations.domain.model.exception.InvestigationIllegalUpdate
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationStatusTransitionNotAllowed
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -30,20 +31,23 @@ import static net.catenax.traceability.investigations.domain.model.Investigation
 import static net.catenax.traceability.investigations.domain.model.InvestigationStatus.ACKNOWLEDGED
 import static net.catenax.traceability.investigations.domain.model.InvestigationStatus.APPROVED
 import static net.catenax.traceability.investigations.domain.model.InvestigationStatus.CLOSED
-import static net.catenax.traceability.investigations.domain.model.InvestigationStatus.CONFIRMED
 import static net.catenax.traceability.investigations.domain.model.InvestigationStatus.CREATED
 import static net.catenax.traceability.investigations.domain.model.InvestigationStatus.DECLINED
 import static net.catenax.traceability.investigations.domain.model.InvestigationStatus.RECEIVED
+import static net.catenax.traceability.investigations.domain.model.InvestigationStatus.SENT
 
 class InvestigationSpec extends Specification {
 
 	@Unroll
 	def "should not allow to cancel investigation with #investigationStatus status"() {
 		given:
-			Investigation investigation = investigationWithStatus(investigationStatus)
+			BPN bpn = new BPN("BPNL000000000001")
+
+		and:
+			Investigation investigation = investigationWithStatus(bpn, investigationStatus)
 
 		when:
-			investigation.cancel()
+			investigation.cancel(bpn)
 
 		then:
 			thrown(InvestigationStatusTransitionNotAllowed)
@@ -52,16 +56,39 @@ class InvestigationSpec extends Specification {
 			investigation.getInvestigationStatus() == investigationStatus
 
 		where:
-			investigationStatus << [RECEIVED, ACKNOWLEDGED, DECLINED, CLOSED, CONFIRMED]
+			investigationStatus << [RECEIVED, ACKNOWLEDGED, DECLINED, ACCEPTED, CLOSED]
+	}
+
+	def "should not allow to cancel investigation for different bpn"() {
+		given:
+			BPN bpn = new BPN("BPNL000000000001")
+
+		and:
+			Investigation investigation = investigationWithStatus(bpn, investigationStatus)
+
+		when:
+			investigation.cancel(new BPN("BPNL000000000002"))
+
+		then:
+			thrown(InvestigationIllegalUpdate)
+
+		and:
+			investigation.getInvestigationStatus() == investigationStatus
+
+		where:
+			investigationStatus << InvestigationStatus.values().toList()
 	}
 
 	@Unroll
 	def "should allow to cancel investigation with #investigationStatus status"() {
 		given:
-			Investigation investigation = investigationWithStatus(investigationStatus)
+			BPN bpn = new BPN("BPNL000000000001")
+
+		and:
+			Investigation investigation = investigationWithStatus(bpn, investigationStatus)
 
 		when:
-			investigation.cancel()
+			investigation.cancel(bpn)
 
 		then:
 			noExceptionThrown()
@@ -70,10 +97,10 @@ class InvestigationSpec extends Specification {
 			investigation.getInvestigationStatus() == CLOSED
 
 		where:
-			investigationStatus << [CREATED, APPROVED, ACCEPTED]
+			investigationStatus << [CREATED, APPROVED, SENT]
 	}
 
-	private Investigation investigationWithStatus(InvestigationStatus status) {
-		new Investigation(new InvestigationId(1L), new BPN("1"), status, "", Instant.now(), [])
+	private Investigation investigationWithStatus(BPN bpn, InvestigationStatus status) {
+		new Investigation(new InvestigationId(1L), bpn, status, "", Instant.now(), [])
 	}
 }

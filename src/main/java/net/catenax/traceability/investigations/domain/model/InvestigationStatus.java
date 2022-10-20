@@ -19,41 +19,59 @@
 
 package net.catenax.traceability.investigations.domain.model;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import static java.util.Collections.emptySet;
+import static java.util.Set.of;
+
 
 public enum InvestigationStatus {
-	CREATED,
-	APPROVED,
-	SENT,
-	RECEIVED,
-	ACKNOWLEDGED,
-	ACCEPTED,
-	DECLINED,
-	CLOSED,
-	CONFIRMED;
+	CREATED(InvestigationSide.SENDER, emptySet()),
+	APPROVED(InvestigationSide.SENDER, of(InvestigationSide.SENDER)),
+	SENT(InvestigationSide.SENDER, of(InvestigationSide.SENDER)),
+	RECEIVED(InvestigationSide.RECEIVER, emptySet()),
+	ACKNOWLEDGED(InvestigationSide.RECEIVER, of(InvestigationSide.RECEIVER)),
+	ACCEPTED(InvestigationSide.RECEIVER, of(InvestigationSide.RECEIVER)),
+	DECLINED(InvestigationSide.RECEIVER, of(InvestigationSide.RECEIVER)),
+	CLOSED(InvestigationSide.SENDER, of(InvestigationSide.SENDER));
+
+	private final InvestigationSide investigationSide;
+	private final Set<InvestigationSide> allowedTransitionFromSide;
+
+	InvestigationStatus(InvestigationSide investigationSide, Set<InvestigationSide> allowedTransitionFromSide) {
+		this.investigationSide = investigationSide;
+		this.allowedTransitionFromSide = allowedTransitionFromSide;
+	}
 
 	private static final Map<InvestigationStatus, Set<InvestigationStatus>> STATE_MACHINE;
 
-	private static final Set<InvestigationStatus> NO_TRANSITION_ALLOWED = Collections.emptySet();
+	private static final Set<InvestigationStatus> NO_TRANSITION_ALLOWED = emptySet();
 
 	static {
 		STATE_MACHINE = Map.of(
-			CREATED, Set.of(APPROVED, CLOSED),
-			APPROVED, Set.of(CLOSED, SENT),
-			SENT, NO_TRANSITION_ALLOWED,
-			RECEIVED, Set.of(ACKNOWLEDGED),
-			ACKNOWLEDGED, Set.of(ACCEPTED),
-			ACCEPTED, Set.of(CONFIRMED, CLOSED),
-			DECLINED, NO_TRANSITION_ALLOWED,
-			CLOSED, NO_TRANSITION_ALLOWED,
-			CONFIRMED, NO_TRANSITION_ALLOWED
+			CREATED, of(APPROVED, CLOSED),
+			APPROVED, of(SENT, CLOSED),
+			SENT, of(RECEIVED, CLOSED),
+			RECEIVED, of(ACKNOWLEDGED, CLOSED),
+			ACKNOWLEDGED, of(DECLINED, ACCEPTED, CLOSED),
+			ACCEPTED, of(CLOSED),
+			DECLINED, of(CLOSED),
+			CLOSED, NO_TRANSITION_ALLOWED
 		);
 	}
 
 	public boolean transitionAllowed(InvestigationStatus to) {
-		return STATE_MACHINE.get(this).contains(to);
+		Set<InvestigationStatus> allowedStatusesToTransition = STATE_MACHINE.get(this);
+
+		if (!allowedStatusesToTransition.contains(to)) {
+			return false;
+		}
+
+		return isSideEligibleForTransition(this, to);
+	}
+
+	private boolean isSideEligibleForTransition(InvestigationStatus from, InvestigationStatus to) {
+		return to.allowedTransitionFromSide.contains(from.investigationSide);
 	}
 }
