@@ -22,6 +22,7 @@ package net.catenax.traceability.assets.infrastructure.adapters.rest
 import io.restassured.http.ContentType
 import net.catenax.traceability.IntegrationSpecification
 import net.catenax.traceability.common.support.AssetsSupport
+import net.catenax.traceability.common.support.InvestigationsSupport
 import spock.lang.Unroll
 
 import static io.restassured.RestAssured.given
@@ -31,7 +32,7 @@ import static net.catenax.traceability.common.security.JwtRole.USER
 import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.nullValue
 
-class DashboardControllerIT extends IntegrationSpecification implements AssetsSupport {
+class DashboardControllerIT extends IntegrationSpecification implements AssetsSupport, InvestigationsSupport {
 
 	@Unroll
 	def "should return all dashboard information for user with #role role"() {
@@ -81,7 +82,10 @@ class DashboardControllerIT extends IntegrationSpecification implements AssetsSu
 	def "should return dashboard information for pending investigation"() {
 		given:
 			String assetId = "urn:uuid:fe99da3d-b0de-4e80-81da-882aebcca978"
+
+		and:
 			defaultAssetsStored()
+			defaultReceivedInvestigationStored()
 
 		when:
 			given()
