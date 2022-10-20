@@ -17,43 +17,14 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.investigations.domain.model;
+package net.catenax.traceability.investigations.domain.model.exception;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import net.catenax.traceability.investigations.domain.model.InvestigationId;
+import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 
+public class InvestigationStatusTransitionNotAllowed extends RuntimeException {
 
-public enum InvestigationStatus {
-	CREATED,
-	APPROVED,
-	SENT,
-	RECEIVED,
-	ACKNOWLEDGED,
-	ACCEPTED,
-	DECLINED,
-	CLOSED,
-	CONFIRMED;
-
-	private static final Map<InvestigationStatus, Set<InvestigationStatus>> STATE_MACHINE;
-
-	private static final Set<InvestigationStatus> NO_TRANSITION_ALLOWED = Collections.emptySet();
-
-	static {
-		STATE_MACHINE = Map.of(
-			CREATED, Set.of(APPROVED, CLOSED),
-			APPROVED, Set.of(CLOSED, SENT),
-			SENT, NO_TRANSITION_ALLOWED,
-			RECEIVED, Set.of(ACKNOWLEDGED),
-			ACKNOWLEDGED, Set.of(ACCEPTED),
-			ACCEPTED, Set.of(CONFIRMED, CLOSED),
-			DECLINED, NO_TRANSITION_ALLOWED,
-			CLOSED, NO_TRANSITION_ALLOWED,
-			CONFIRMED, NO_TRANSITION_ALLOWED
-		);
-	}
-
-	public boolean transitionAllowed(InvestigationStatus to) {
-		return STATE_MACHINE.get(this).contains(to);
+	public InvestigationStatusTransitionNotAllowed(InvestigationId investigationId, InvestigationStatus from, InvestigationStatus to) {
+		super("Can't transit from %s status to %s status for %s investigation id".formatted(from.name(), to.name(), investigationId.value()));
 	}
 }

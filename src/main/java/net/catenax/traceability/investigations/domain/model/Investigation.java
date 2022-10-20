@@ -21,9 +21,11 @@ package net.catenax.traceability.investigations.domain.model;
 
 import net.catenax.traceability.common.model.BPN;
 import net.catenax.traceability.investigations.adapters.rest.model.InvestigationData;
+import net.catenax.traceability.investigations.domain.model.exception.InvestigationStatusTransitionNotAllowed;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -50,7 +52,7 @@ public class Investigation {
 
 	private final InvestigationId investigationId;
 	private final BPN bpn;
-	private final InvestigationStatus investigationStatus;
+	private InvestigationStatus investigationStatus;
 	private final String description;
 	private final Instant createdAt;
 	private final List<String> assetIds;
@@ -74,7 +76,7 @@ public class Investigation {
 	}
 
 	public List<String> getAssetIds() {
-		return assetIds;
+		return Collections.unmodifiableList(assetIds);
 	}
 
 	public InvestigationStatus getInvestigationStatus() {
@@ -92,11 +94,37 @@ public class Investigation {
 			description,
 			bpn.value(),
 			createdAt.toString(),
-			assetIds
+			Collections.unmodifiableList(assetIds)
 		);
+	}
+
+	public boolean hasIdentity() {
+		return investigationId != null;
 	}
 
 	public String getBpn() {
 		return bpn.value();
+	}
+
+	public void cancel() {
+		changeStatusTo(InvestigationStatus.CLOSED);
+	}
+
+	private void changeStatusTo(InvestigationStatus to) {
+		boolean transitionAllowed = investigationStatus.transitionAllowed(to);
+
+		if (!transitionAllowed) {
+			throw new InvestigationStatusTransitionNotAllowed(investigationId, investigationStatus, to);
+		}
+
+		this.investigationStatus = to;
+	}
+
+	public InvestigationId getId() {
+		return investigationId;
+	}
+
+	public Instant getCreationTime() {
+		return createdAt;
 	}
 }

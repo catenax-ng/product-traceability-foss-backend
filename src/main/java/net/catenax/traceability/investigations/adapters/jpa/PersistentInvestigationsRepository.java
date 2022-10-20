@@ -35,6 +35,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.time.Clock;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,22 +51,52 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 
 	private final JpaNotificationRepository notificationRepository;
 
+	private final Clock clock;
+
 	public PersistentInvestigationsRepository(JpaInvestigationRepository investigationRepository,
 											  JpaAssetsRepository assetsRepository,
-											  JpaNotificationRepository notificationRepository) {
+											  JpaNotificationRepository notificationRepository,
+											  Clock clock) {
 		this.investigationRepository = investigationRepository;
 		this.assetsRepository = assetsRepository;
 		this.notificationRepository = notificationRepository;
+		this.clock = clock;
 	}
 
 	@Override
 	public InvestigationId save(Investigation investigation) {
+		if (investigation.hasIdentity()) {
+			return merge(investigation);
+		} else {
+			return saveNew(investigation);
+		}
+	}
+
+	private InvestigationId merge(Investigation investigation) {
+		List<AssetEntity> assets = assetsRepository.findByIdIn(investigation.getAssetIds());
+
+		InvestigationEntity investigationEntity = new InvestigationEntity(
+			investigation.getId().value(),
+			assets,
+			investigation.getBpn(),
+			investigation.getInvestigationStatus(),
+			investigation.getDescription(),
+			investigation.getCreationTime(),
+			clock.instant()
+		);
+
+		investigationRepository.save(investigationEntity);
+
+		return investigation.getId();
+	}
+
+	private InvestigationId saveNew(Investigation investigation) {
 		List<String> assetIds = investigation.getAssetIds();
 
 		List<AssetEntity> assets = assetsRepository.findByIdIn(assetIds);
 
 		if (!assets.isEmpty()) {
-			InvestigationEntity investigationEntity = new InvestigationEntity(assets, investigation.getBpn(), investigation.getDescription(), investigation.getInvestigationStatus());
+			InvestigationEntity investigationEntity = new InvestigationEntity(assets, investigation.getBpn(), investigation.getDescription(), investigation.getInvestigationStatus(), investigation.getCreationTime());
 			InvestigationEntity savedInvestigation = investigationRepository.save(investigationEntity);
 
 			Map<String, List<AssetEntity>> manufacturerAssets = assets.stream()
@@ -102,7 +133,7 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 			new BPN(investigationEntity.getBpn()),
 			investigationEntity.getStatus(),
 			investigationEntity.getDescription(),
-			investigationEntity.getCreated().toInstant(),
+			investigationEntity.getCreated(),
 			investigationEntity.getAssets().stream().map(AssetEntity::getId).toList()
 		);
 	}

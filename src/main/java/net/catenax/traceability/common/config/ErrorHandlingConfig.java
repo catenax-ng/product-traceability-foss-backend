@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.catenax.traceability.assets.domain.model.AssetNotFoundException;
 import net.catenax.traceability.assets.infrastructure.config.openapi.TechnicalUserAuthorizationException;
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationNotFoundException;
+import net.catenax.traceability.investigations.domain.model.exception.InvestigationStatusTransitionNotAllowed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -80,6 +81,12 @@ public class ErrorHandlingConfig implements AuthenticationFailureHandler {
 	@ExceptionHandler(InvestigationNotFoundException.class)
 	ResponseEntity<ErrorResponse> handleInvestigationNotFoundException(InvestigationNotFoundException exception) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+			.body(new ErrorResponse(exception.getMessage()));
+	}
+
+	@ExceptionHandler(InvestigationStatusTransitionNotAllowed.class)
+	ResponseEntity<ErrorResponse> handleInvestigationStatusTransitionNotAllowed(InvestigationStatusTransitionNotAllowed exception) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 			.body(new ErrorResponse(exception.getMessage()));
 	}
 
