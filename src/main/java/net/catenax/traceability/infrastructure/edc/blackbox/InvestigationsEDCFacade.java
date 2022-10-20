@@ -111,26 +111,25 @@ public class InvestigationsEDCFacade {
 				dataReference = getDataReference(agreementId);
 			}
 
-			try {
-				EDCNotification edcNotification = new EDCNotification(senderBPN, senderEdcUrl, notification);
-				String body = objectMapper.writeValueAsString(edcNotification);
-				HttpUrl url = httpCallService.getUrl(dataReference.getEndpoint(), null, null);
-				Request request = new Request.Builder()
-					.url(url)
-					.addHeader(dataReference.getAuthKey(), dataReference.getAuthCode())
-					.addHeader("Content-Type", Constants.JSON.type())
-					.post(RequestBody.create(body, Constants.JSON))
-					.build();
+			EDCNotification edcNotification = new EDCNotification(senderBPN, senderEdcUrl, notification);
+			String body = objectMapper.writeValueAsString(edcNotification);
+			HttpUrl url = httpCallService.getUrl(dataReference.getEndpoint(), null, null);
+			Request request = new Request.Builder()
+				.url(url)
+				.addHeader(dataReference.getAuthKey(), dataReference.getAuthCode())
+				.addHeader("Content-Type", Constants.JSON.type())
+				.post(RequestBody.create(body, Constants.JSON))
+				.build();
 
-				logger.info(":::: Send notification Data  body :{}, dataReferenceEndpoint :{}",body,dataReference.getEndpoint());
-				httpCallService.sendRequest(request);
+			logger.info(":::: Send notification Data  body :{}, dataReferenceEndpoint :{}",body,dataReference.getEndpoint());
+			httpCallService.sendRequest(request);
 
-				logger.info(":::: EDC Data Transfer Completed :::::");
-			} catch (IOException e) {
-				throw new BadRequestException("EDC Data Transfer fail");
-			}
-		} catch (Exception e) {
+			logger.info(":::: EDC Data Transfer Completed :::::");
+		} catch (IOException e) {
+			throw new BadRequestException("EDC Data Transfer fail");
+		} catch (InterruptedException e) {
 			logger.error("Exception", e);
+			Thread.currentThread().interrupt();
 		}
 	}
 
