@@ -52,7 +52,8 @@ sonarqube {
 				"src/main/java/net/catenax/traceability/common/**",
 				"src/main/java/net/catenax/traceability/assets/domain/model/**",
 				"src/main/java/net/catenax/traceability/assets/infrastructure/**",
-				"src/main/java/net/catenax/traceability/assets/config/**"
+				"src/main/java/net/catenax/traceability/assets/config/**",
+				"src/main/java/net/catenax/traceability/infrastructure/edc/blackbox/**"
 			)
 		)
 	}
