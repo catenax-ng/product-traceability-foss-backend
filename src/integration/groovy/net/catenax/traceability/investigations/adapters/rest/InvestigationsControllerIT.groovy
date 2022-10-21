@@ -137,7 +137,7 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 				.when()
 				.post("/api/investigations/$investigationId/cancel")
 				.then()
-				.statusCode(200)
+				.statusCode(204)
 
 		and:
 			given()
