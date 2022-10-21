@@ -104,11 +104,6 @@ public class PersistentAssetsRepository implements AssetRepository {
 		return assetsRepository.countBySupplierPartIsFalse();
 	}
 
-	@Override
-	public long countPendingInvestigations() {
-		return 1L;//assetsRepository.countByPendingInvestigationStatus(InvestigationStatus.PENDING);
-	}
-
 	private List<Asset> toAssets(List<AssetEntity> entities) {
 		return entities.stream()
 			.map(this::toAsset)

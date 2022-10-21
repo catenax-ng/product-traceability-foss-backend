@@ -32,5 +32,4 @@ public interface JpaAssetsRepository extends JpaRepository<AssetEntity, String> 
 	Page<AssetEntity> findBySupplierPartIsFalse(Pageable pageable);
 	List<AssetEntity> findByIdIn(List<String> assetIds);
 	long countBySupplierPartIsFalse();
-//	long countByPendingInvestigationStatus(InvestigationStatus status);
 }
