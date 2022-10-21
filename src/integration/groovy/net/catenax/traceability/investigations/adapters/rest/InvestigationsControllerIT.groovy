@@ -31,7 +31,7 @@ import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEn
 import net.catenax.traceability.investigations.domain.model.InvestigationStatus
 import org.hamcrest.Matchers
 
-import java.time.ZonedDateTime
+import java.time.Instant
 
 import static io.restassured.RestAssured.given
 import static net.catenax.traceability.common.security.JwtRole.ADMIN
@@ -94,6 +94,78 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 				.body("content", Matchers.hasSize(1))
 	}
 
+	def "should cancel investigation"() {
+		given:
+			defaultAssetsStored()
+
+		and:
+			def investigationId = given()
+				.contentType(ContentType.JSON)
+				.body(
+					asJson(
+						[
+							partIds    : ["urn:uuid:fe99da3d-b0de-4e80-81da-882aebcca978"],
+							description: "at least 15 characters long investigation description"
+						]
+					)
+				)
+				.header(jwtAuthorization(ADMIN))
+				.when()
+				.post("/api/investigations")
+				.then()
+				.statusCode(201)
+				.extract().path("id")
+
+		and:
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/created")
+				.then()
+				.statusCode(200)
+				.body("page", Matchers.is(0))
+				.body("pageSize", Matchers.is(10))
+				.body("content", Matchers.hasSize(1))
+
+		expect:
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.contentType(ContentType.JSON)
+				.when()
+				.post("/api/investigations/$investigationId/cancel")
+				.then()
+				.statusCode(204)
+
+		and:
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/created")
+				.then()
+				.statusCode(200)
+				.body("page", Matchers.is(0))
+				.body("pageSize", Matchers.is(10))
+				.body("content", Matchers.hasSize(0))
+	}
+
+	def "should not cancel not existing investigation"() {
+		expect:
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.contentType(ContentType.JSON)
+				.when()
+				.post("/api/investigations/1/cancel")
+				.then()
+				.statusCode(404)
+				.body("message", Matchers.is("Investigation not found for 1 id"))
+	}
+
 	def "should not return investigations without authentication"() {
 		expect:
 			given()
@@ -106,6 +178,18 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 				.statusCode(401)
 		where:
 			type << ["created", "received"]
+	}
+
+	def "should not cancel investigations without authentication"() {
+		expect:
+			given()
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.post("/api/investigations/1/cancel")
+				.then()
+				.statusCode(401)
 	}
 
 	def "should return no investigations"() {
@@ -129,7 +213,7 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 
 	def "should return created investigations sorted by creation time"() {
 		given:
-			ZonedDateTime now = ZonedDateTime.now()
+			Instant now = Instant.now()
 			String testBpn = testBpn()
 
 		and:
@@ -161,7 +245,7 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 
 	def "should return received investigations sorted by creation time"() {
 		given:
-			ZonedDateTime now = ZonedDateTime.now()
+			Instant now = Instant.now()
 			String testBpn = testBpn()
 
 		and:
@@ -216,7 +300,7 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 	def "should return investigation by id"() {
 		given:
 			String testBpn = testBpn()
-			Long investigationId = storedInvestigation(new InvestigationEntity([], testBpn, "1", InvestigationStatus.RECEIVED))
+			Long investigationId = storedInvestigation(new InvestigationEntity([], testBpn, "1", InvestigationStatus.RECEIVED, Instant.now()))
 
 		expect:
 			given()

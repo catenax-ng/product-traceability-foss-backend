@@ -33,12 +33,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/investigations")
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERVISOR', 'ROLE_USER')")
 public class InvestigationsController {
 
@@ -51,7 +53,7 @@ public class InvestigationsController {
 		this.traceabilityProperties = traceabilityProperties;
 	}
 
-	@PostMapping("/investigations")
+	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public StartInvestigationResponse investigateAssets(@RequestBody @Valid StartInvestigationRequest request) {
 		InvestigationId investigationId = investigationsService.startInvestigation(traceabilityProperties.getBpn(), request.partIds(), request.description());
@@ -59,18 +61,24 @@ public class InvestigationsController {
 		return new StartInvestigationResponse(investigationId.value());
 	}
 
-	@GetMapping("/investigations/created")
+	@GetMapping("/created")
 	public PageResult<InvestigationData> getCreatedInvestigations(Pageable pageable) {
 		return investigationsService.getCreatedInvestigations(pageable);
 	}
 
-	@GetMapping("/investigations/received")
+	@GetMapping("/received")
 	public PageResult<InvestigationData> getReceivedInvestigations(Pageable pageable) {
 		return investigationsService.getReceivedInvestigations(pageable);
 	}
 
-	@GetMapping("/investigations/{investigationId}")
+	@GetMapping("/{investigationId}")
 	public InvestigationData getInvestigation(@PathVariable Long investigationId) {
 		return investigationsService.findInvestigation(investigationId);
+	}
+
+	@PostMapping("/{investigationId}/cancel")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void cancelInvestigation(@PathVariable Long investigationId) {
+		investigationsService.cancelInvestigation(traceabilityProperties.getBpn(), investigationId);
 	}
 }

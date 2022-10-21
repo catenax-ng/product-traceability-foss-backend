@@ -31,7 +31,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Entity
@@ -51,17 +51,27 @@ public class InvestigationEntity {
 	private String bpn;
 	private InvestigationStatus status;
 	private String description;
-	private ZonedDateTime created;
-	private ZonedDateTime updated;
+	private Instant created;
+	private Instant updated;
 
 	public InvestigationEntity() {
 	}
 
-	public InvestigationEntity(List<AssetEntity> assets, String bpn, String description, InvestigationStatus status) {
-		this(assets, bpn, status, description, ZonedDateTime.now());
+	public InvestigationEntity(Long id, List<AssetEntity> assets, String bpn, InvestigationStatus status, String description, Instant created, Instant updated) {
+		this.id = id;
+		this.assets = assets;
+		this.bpn = bpn;
+		this.status = status;
+		this.description = description;
+		this.created = created;
+		this.updated = updated;
 	}
 
-	public InvestigationEntity(List<AssetEntity> assets, String bpn, InvestigationStatus status, String description, ZonedDateTime created) {
+	public InvestigationEntity(List<AssetEntity> assets, String bpn, String description, InvestigationStatus status, Instant created) {
+		this(assets, bpn, status, description, created);
+	}
+
+	public InvestigationEntity(List<AssetEntity> assets, String bpn, InvestigationStatus status, String description, Instant created) {
 		this.assets = assets;
 		this.bpn = bpn;
 		this.status = status;
@@ -110,19 +120,19 @@ public class InvestigationEntity {
 		this.description = description;
 	}
 
-	public ZonedDateTime getCreated() {
+	public Instant getCreated() {
 		return created;
 	}
 
-	public void setCreated(ZonedDateTime created) {
+	public void setCreated(Instant created) {
 		this.created = created;
 	}
 
-	public ZonedDateTime getUpdated() {
+	public Instant getUpdated() {
 		return updated;
 	}
 
-	public void setUpdated(ZonedDateTime updated) {
+	public void setUpdated(Instant updated) {
 		this.updated = updated;
 	}
 }
