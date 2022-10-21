@@ -23,11 +23,10 @@ import io.restassured.http.ContentType
 import net.catenax.traceability.IntegrationSpecification
 import net.catenax.traceability.assets.domain.model.Asset
 import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.model.AssetsConverter
-import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.JpaAssetsRepository
 import net.catenax.traceability.common.support.AssetsSupport
+import net.catenax.traceability.common.support.BpnSupport
 import net.catenax.traceability.common.support.IrsApiSupport
 import org.hamcrest.Matchers
-import org.springframework.beans.factory.annotation.Autowired
 import spock.util.concurrent.PollingConditions
 
 import static io.restassured.RestAssured.given
@@ -38,10 +37,7 @@ import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.everyItem
 import static org.hamcrest.Matchers.not
 
-class AssetsControllerIT extends IntegrationSpecification implements IrsApiSupport, AssetsSupport {
-
-	@Autowired
-	JpaAssetsRepository jpaAssetsRepository
+class AssetsControllerIT extends IntegrationSpecification implements IrsApiSupport, AssetsSupport, BpnSupport {
 
 	def "should synchronize assets"() {
 		given:
@@ -460,5 +456,57 @@ class AssetsControllerIT extends IntegrationSpecification implements IrsApiSuppo
 				.then()
 				.statusCode(200)
 				.body("qualityType", equalTo("Critical"))
+	}
+
+	def "should not return assets detail information when user is not authenticated"() {
+		given:
+			cachedBpnsForDefaultAssets()
+
+		and:
+			defaultAssetsStored()
+
+		expect:
+			given()
+				.contentType(ContentType.JSON)
+				.body(
+					asJson(
+						[
+							assetIds: []
+						]
+					)
+				)
+				.when()
+				.post("/api/assets/detail-information")
+				.then()
+				.statusCode(401)
+	}
+
+	def "should return assets detail information"() {
+		given:
+			cachedBpnsForDefaultAssets()
+
+		and:
+			defaultAssetsStored()
+
+		expect:
+			given()
+				.contentType(ContentType.JSON)
+				.body(
+					asJson(
+						[
+							assetIds: [
+								"urn:uuid:fe99da3d-b0de-4e80-81da-882aebcca978",
+								"urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb",
+								"urn:uuid:0ce83951-bc18-4e8f-892d-48bad4eb67ef"
+							]
+						]
+					)
+				)
+				.header(jwtAuthorization(ADMIN))
+				.when()
+				.post("/api/assets/detail-information")
+				.then()
+				.statusCode(200)
+				.body("", Matchers.hasSize(3))
 	}
 }

@@ -2,7 +2,6 @@ package net.catenax.traceability.assets.infrastructure.rest;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import net.catenax.traceability.assets.domain.model.InvestigationStatus;
 import net.catenax.traceability.infrastructure.edc.blackbox.Constants;
 import net.catenax.traceability.infrastructure.edc.blackbox.asset.Asset;
 import net.catenax.traceability.infrastructure.edc.blackbox.cache.EndpointDataReference;
@@ -15,6 +14,7 @@ import net.catenax.traceability.infrastructure.edc.blackbox.notification.Transfe
 import net.catenax.traceability.infrastructure.edc.blackbox.offer.ContractOffer;
 import net.catenax.traceability.infrastructure.edc.blackbox.policy.Policy;
 import net.catenax.traceability.infrastructure.edc.blackbox.transfer.TransferRequestDto;
+import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -102,7 +102,7 @@ public class EDCReceiverController {
 
 		return ContractNegotiationDto.Builder.newInstance()
 			.contractAgreementId(contractAgreementId)
-			.state(InvestigationStatus.CONFIRMED.name())
+			.state(InvestigationStatus.ACKNOWLEDGED.name())
 			.build();
 	}
 

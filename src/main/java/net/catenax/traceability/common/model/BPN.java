@@ -16,13 +16,16 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-package net.catenax.traceability.investigations.adapters.rest;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
-import java.util.List;
+package net.catenax.traceability.common.model;
 
-public record StartInvestigationRequest(
-	@NotEmpty(message = "Specify at least one partId") List<String> partIds,
-	@Size(min = 15, message = "Description should have at least 15 characters") String description
-) {}
+import org.springframework.util.StringUtils;
+
+public record BPN(String value) {
+
+	public BPN {
+		if (!StringUtils.hasText(value)) {
+			throw new IllegalArgumentException("BPN must be present");
+		}
+	}
+}

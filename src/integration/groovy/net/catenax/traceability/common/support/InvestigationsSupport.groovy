@@ -17,17 +17,25 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.infrastructure.jpa.investigation;
+package net.catenax.traceability.common.support
 
-import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity
 
-import java.util.Set;
+trait InvestigationsSupport implements InvestigationsRepositoryProvider {
 
-@Repository
-public interface JpaInvestigationRepository extends JpaRepository<InvestigationEntity, Long> {
-	Page<InvestigationEntity> findAllByStatusIn(Set<InvestigationStatus> statuses, Pageable pageable);
+	void assertInvestigationsSize(int size) {
+		List<InvestigationEntity> investigations = jpaInvestigationRepository().findAll()
+
+		assert investigations.size() == size
+	}
+
+	void storedInvestigations(InvestigationEntity... investigations) {
+		investigations.each {
+			jpaInvestigationRepository().save(it)
+		}
+	}
+
+	Long storedInvestigation(InvestigationEntity investigation) {
+		return jpaInvestigationRepository().save(investigation).id
+	}
 }

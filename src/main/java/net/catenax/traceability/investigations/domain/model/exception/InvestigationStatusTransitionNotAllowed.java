@@ -17,17 +17,14 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.infrastructure.jpa.investigation;
+package net.catenax.traceability.investigations.domain.model.exception;
 
+import net.catenax.traceability.investigations.domain.model.InvestigationId;
 import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import java.util.Set;
+public class InvestigationStatusTransitionNotAllowed extends RuntimeException {
 
-@Repository
-public interface JpaInvestigationRepository extends JpaRepository<InvestigationEntity, Long> {
-	Page<InvestigationEntity> findAllByStatusIn(Set<InvestigationStatus> statuses, Pageable pageable);
+	public InvestigationStatusTransitionNotAllowed(InvestigationId investigationId, InvestigationStatus from, InvestigationStatus to) {
+		super("Can't transit from %s status to %s status for %s investigation id".formatted(from.name(), to.name(), investigationId.value()));
+	}
 }

@@ -1,10 +1,8 @@
 package net.catenax.traceability.investigations.domain.model;
 
-import net.catenax.traceability.assets.domain.model.InvestigationStatus;
-
 import java.util.List;
 
-public final class Notification {
+public class Notification {
 	private Long id;
 	private String bpnNumber;
 	private String edcUrl;

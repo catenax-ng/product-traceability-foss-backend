@@ -17,16 +17,9 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.assets.domain.model;
+package net.catenax.traceability.investigations.domain.model;
 
-public enum InvestigationStatus {
-	CREATED,
-	APPROVED,
-	SENT,
-	RECEIVED,
-	ACKNOWLEDGED,
-	ACCEPTED,
-	DECLINED,
-	CLOSED,
-	CONFIRMED;
+enum InvestigationSide {
+	SENDER,
+	RECEIVER
 }

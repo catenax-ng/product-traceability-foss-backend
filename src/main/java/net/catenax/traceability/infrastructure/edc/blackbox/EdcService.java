@@ -1,7 +1,6 @@
 package net.catenax.traceability.infrastructure.edc.blackbox;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.catenax.traceability.assets.domain.model.InvestigationStatus;
 import net.catenax.traceability.infrastructure.edc.blackbox.catalog.Catalog;
 import net.catenax.traceability.infrastructure.edc.blackbox.notification.ContractNegotiationDto;
 import net.catenax.traceability.infrastructure.edc.blackbox.notification.ContractOfferDescription;
@@ -12,6 +11,7 @@ import net.catenax.traceability.infrastructure.edc.blackbox.policy.Policy;
 import net.catenax.traceability.infrastructure.edc.blackbox.transfer.DataAddress;
 import net.catenax.traceability.infrastructure.edc.blackbox.transfer.TransferRequestDto;
 import net.catenax.traceability.infrastructure.edc.blackbox.transfer.TransferType;
+import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.slf4j.Logger;
@@ -88,7 +88,7 @@ public class EdcService {
 		ContractNegotiationDto negotiation = null;
 
 		// Check negotiation state
-		while (negotiation == null || !negotiation.getState().equals(InvestigationStatus.CONFIRMED.name())) {
+		while (negotiation == null || !negotiation.getState().equals(InvestigationStatus.ACKNOWLEDGED.name())) {
 
 			logger.info(":::: waiting for contract to get confirmed");
 			ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);

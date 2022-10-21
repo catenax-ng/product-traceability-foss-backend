@@ -1,7 +1,7 @@
 package net.catenax.traceability.infrastructure.edc.blackbox.model;
 
-import net.catenax.traceability.assets.domain.model.InvestigationStatus;
 import net.catenax.traceability.investigations.domain.model.AffectedPart;
+import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 import net.catenax.traceability.investigations.domain.model.Notification;
 
 import java.util.List;

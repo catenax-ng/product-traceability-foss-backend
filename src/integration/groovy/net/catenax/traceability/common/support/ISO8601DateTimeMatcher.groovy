@@ -17,17 +17,35 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.infrastructure.jpa.investigation;
+package net.catenax.traceability.common.support
 
-import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.hamcrest.Description
+import org.hamcrest.Matcher
+import org.hamcrest.TypeSafeMatcher
 
-import java.util.Set;
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
-@Repository
-public interface JpaInvestigationRepository extends JpaRepository<InvestigationEntity, Long> {
-	Page<InvestigationEntity> findAllByStatusIn(Set<InvestigationStatus> statuses, Pageable pageable);
+class ISO8601DateTimeMatcher extends TypeSafeMatcher<String> {
+
+
+	@Override
+	protected boolean matchesSafely(String item) {
+		try {
+			DateTimeFormatter.ISO_INSTANT.parse(item)
+		} catch (DateTimeParseException ignored) {
+			return false
+		}
+
+		return true
+	}
+
+	@Override
+	void describeTo(Description description) {
+		description.appendText("ISO 8601 date")
+	}
+
+	static Matcher<String> isIso8601DateTime() {
+		return new ISO8601DateTimeMatcher()
+	}
 }

@@ -17,17 +17,23 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.infrastructure.jpa.investigation;
+package net.catenax.traceability.common.properties;
 
-import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import net.catenax.traceability.common.model.BPN;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
-import java.util.Set;
+@ConstructorBinding
+@ConfigurationProperties("traceability")
+public class TraceabilityProperties {
 
-@Repository
-public interface JpaInvestigationRepository extends JpaRepository<InvestigationEntity, Long> {
-	Page<InvestigationEntity> findAllByStatusIn(Set<InvestigationStatus> statuses, Pageable pageable);
+	private final BPN bpn;
+
+	public TraceabilityProperties(String bpn) {
+		this.bpn = new BPN(bpn);
+	}
+
+	public BPN getBpn() {
+		return bpn;
+	}
 }
