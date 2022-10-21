@@ -17,18 +17,35 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.infrastructure.jpa.investigation;
+package net.catenax.traceability.common.model;
 
-import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.List;
+import java.util.function.Function;
 
-@Repository
-public interface JpaInvestigationRepository extends JpaRepository<InvestigationEntity, Long> {
-	Page<InvestigationEntity> findAllByStatusIn(Set<InvestigationStatus> statuses, Pageable pageable);
+public record PageResult<T>(
+	List<T> content,
+	Integer page,
+	Integer pageCount,
+	Integer pageSize,
+	Long totalItems
+) {
+
+	public PageResult(List<T> data) {
+		this(new PagedListHolder<>(data));
+	}
+
+	public PageResult(PagedListHolder<T> pagedListHolder) {
+		this(pagedListHolder.getPageList(), pagedListHolder.getPage(), pagedListHolder.getPageSize(), pagedListHolder.getPageSize(), (long)pagedListHolder.getNrOfElements());
+	}
+
+	public PageResult(Page<T> page) {
+		this(page, Function.identity());
+	}
+
+	public <R> PageResult(Page<R> page, Function<R, T> mapping) {
+		this(page.getContent().stream().map(mapping).toList(), page.getPageable().getPageNumber(), page.getTotalPages(), page.getPageable().getPageSize(), page.getTotalElements());
+	}
 }

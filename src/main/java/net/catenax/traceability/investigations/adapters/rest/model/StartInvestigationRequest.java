@@ -16,19 +16,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
+package net.catenax.traceability.investigations.adapters.rest.model;
 
-package net.catenax.traceability.infrastructure.jpa.investigation;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+import java.util.List;
 
-import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
-import java.util.Set;
-
-@Repository
-public interface JpaInvestigationRepository extends JpaRepository<InvestigationEntity, Long> {
-	Page<InvestigationEntity> findAllByStatusIn(Set<InvestigationStatus> statuses, Pageable pageable);
-}
+public record StartInvestigationRequest(
+	@NotEmpty(message = "Specify at least one partId") List<String> partIds,
+	@Size(min = 15, message = "Description should have at least 15 characters") String description
+) {}

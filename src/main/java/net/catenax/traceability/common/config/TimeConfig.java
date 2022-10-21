@@ -17,18 +17,18 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.infrastructure.jpa.investigation;
+package net.catenax.traceability.common.config;
 
-import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import java.util.Optional;
-import java.util.Set;
+import java.time.Clock;
 
-@Repository
-public interface JpaInvestigationRepository extends JpaRepository<InvestigationEntity, Long> {
-	Page<InvestigationEntity> findAllByStatusIn(Set<InvestigationStatus> statuses, Pageable pageable);
+@Configuration
+public class TimeConfig {
+
+	@Bean
+	Clock clock() {
+		return Clock.systemUTC();
+	}
 }

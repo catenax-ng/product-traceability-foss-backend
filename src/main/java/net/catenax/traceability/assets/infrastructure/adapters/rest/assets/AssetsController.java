@@ -21,7 +21,7 @@ package net.catenax.traceability.assets.infrastructure.adapters.rest.assets;
 
 import net.catenax.traceability.assets.application.AssetFacade;
 import net.catenax.traceability.assets.domain.model.Asset;
-import net.catenax.traceability.assets.domain.model.PageResult;
+import net.catenax.traceability.common.model.PageResult;
 import net.catenax.traceability.assets.domain.ports.AssetRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -85,5 +86,10 @@ public class AssetsController {
 	@PatchMapping("/assets/{assetId}")
 	public Asset updateAsset(@PathVariable String assetId, @Valid @RequestBody UpdateAsset updateAsset) {
 		return assetFacade.updateAsset(assetId, updateAsset);
+	}
+
+	@PostMapping("/assets/detail-information")
+	public List<Asset> getDetailInformation(@RequestBody GetDetailInformationRequest getDetailInformationRequest) {
+		return assetRepository.getAssetsById(getDetailInformationRequest.assetIds());
 	}
 }

@@ -96,7 +96,7 @@ class DashboardControllerIT extends IntegrationSpecification implements AssetsSu
 				.when()
 				.post("/api/investigations")
 				.then()
-				.statusCode(200)
+				.statusCode(201)
 
 		then:
 			given()

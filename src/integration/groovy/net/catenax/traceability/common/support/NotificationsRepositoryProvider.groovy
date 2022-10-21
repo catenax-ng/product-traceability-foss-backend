@@ -17,18 +17,10 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.infrastructure.jpa.investigation;
+package net.catenax.traceability.common.support
 
-import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import net.catenax.traceability.infrastructure.jpa.notification.JpaNotificationRepository
 
-import java.util.Optional;
-import java.util.Set;
-
-@Repository
-public interface JpaInvestigationRepository extends JpaRepository<InvestigationEntity, Long> {
-	Page<InvestigationEntity> findAllByStatusIn(Set<InvestigationStatus> statuses, Pageable pageable);
+interface NotificationsRepositoryProvider {
+	JpaNotificationRepository jpaNotificationRepository()
 }

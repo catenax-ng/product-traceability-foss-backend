@@ -22,25 +22,22 @@ package net.catenax.traceability.investigations.adapters.rest
 import io.restassured.http.ContentType
 import net.catenax.traceability.IntegrationSpecification
 import net.catenax.traceability.assets.domain.model.Asset
-import net.catenax.traceability.assets.domain.model.InvestigationStatus
 import net.catenax.traceability.common.support.AssetsSupport
+import net.catenax.traceability.common.support.BpnSupport
+import net.catenax.traceability.common.support.InvestigationsSupport
 import net.catenax.traceability.common.support.IrsApiSupport
+import net.catenax.traceability.common.support.NotificationsSupport
 import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity
-import net.catenax.traceability.infrastructure.jpa.investigation.JpaInvestigationRepository
-import net.catenax.traceability.infrastructure.jpa.notification.JpaNotificationRepository
-import net.catenax.traceability.infrastructure.jpa.notification.NotificationEntity
-import org.springframework.beans.factory.annotation.Autowired
+import net.catenax.traceability.investigations.domain.model.InvestigationStatus
+import org.hamcrest.Matchers
+
+import java.time.ZonedDateTime
 
 import static io.restassured.RestAssured.given
 import static net.catenax.traceability.common.security.JwtRole.ADMIN
+import static net.catenax.traceability.common.support.ISO8601DateTimeMatcher.isIso8601DateTime
 
-class InvestigationsControllerIT extends IntegrationSpecification implements IrsApiSupport, AssetsSupport {
-
-	@Autowired
-	JpaInvestigationRepository jpaInvestigationRepository
-
-	@Autowired
-	JpaNotificationRepository jpaNotificationRepository
+class InvestigationsControllerIT extends IntegrationSpecification implements IrsApiSupport, AssetsSupport, InvestigationsSupport, NotificationsSupport, BpnSupport {
 
 	def "should start investigation"() {
 		given:
@@ -66,10 +63,11 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 					)
 				)
 				.header(jwtAuthorization(ADMIN))
-			.when()
+				.when()
 				.post("/api/investigations")
-			.then()
-				.statusCode(200)
+				.then()
+				.statusCode(201)
+				.body("id", Matchers.isA(Number.class))
 
 		then:
 			partIds.each { partId ->
@@ -79,64 +77,160 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 			}
 
 		and:
-			List<NotificationEntity> notifications = jpaNotificationRepository.findAll()
-			notifications.size() == 2
+			assertNotificationsSize(2)
 
 		and:
-			List<InvestigationEntity> investigations = jpaInvestigationRepository.findAll()
-			investigations.size() == 1
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/created")
+				.then()
+				.statusCode(200)
+				.body("page", Matchers.is(0))
+				.body("pageSize", Matchers.is(10))
+				.body("content", Matchers.hasSize(1))
 	}
 
-	def "should change investigation status"() {
+	def "should not return investigations without authentication"() {
+		expect:
+			given()
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/$type")
+				.then()
+				.statusCode(401)
+		where:
+			type << ["created", "received"]
+	}
+
+	def "should return no investigations"() {
+		expect:
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/$type")
+				.then()
+				.statusCode(200)
+				.body("page", Matchers.is(0))
+				.body("pageSize", Matchers.is(10))
+				.body("content", Matchers.hasSize(0))
+
+		where:
+			type << ["created", "received"]
+	}
+
+	def "should return created investigations sorted by creation time"() {
 		given:
-			List<String> partIds = [
-				"urn:uuid:fe99da3d-b0de-4e80-81da-882aebcca978", // BPN: BPNL00000003AYRE
-				"urn:uuid:0ce83951-bc18-4e8f-892d-48bad4eb67ef"  // BPN: BPNL00000003AXS3
-			]
-			String description = "at least 15 characters long investigation description"
-			InvestigationStatus status = InvestigationStatus.APPROVED
+			ZonedDateTime now = ZonedDateTime.now()
+			String testBpn = testBpn()
 
 		and:
-			defaultAssetsStored()
+			storedInvestigations(
+				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "1", now.minusSeconds(10L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "2", now.plusSeconds(21L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "3", now),
+				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "4", now.plusSeconds(20L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "5", now.plusSeconds(40L))
+			)
 
-		and:
+		expect:
 			given()
-				.contentType(ContentType.JSON)
-				.body(asJson([
-						partIds    : partIds,
-						description: description
-				]))
 				.header(jwtAuthorization(ADMIN))
-			.when()
-				.post("/api/investigations")
-			.then()
-				.statusCode(200)
-
-		when:
-			given()
+				.param("page", "0")
+				.param("size", "10")
 				.contentType(ContentType.JSON)
-				.body(asJson([
-					status    : status
-				]))
-				.header(jwtAuthorization(ADMIN))
-			.when()
-				.put("/api/investigations/1/status")
-			.then()
+				.when()
+				.get("/api/investigations/created")
+				.then()
 				.statusCode(200)
-
-		then:
-			List<NotificationEntity> notifications = jpaNotificationRepository.findAll()
-			notifications.size() == 2
-			notifications.each { notification ->
-				assert notification.edcUrl != null
-			}
-
-		and:
-			List<InvestigationEntity> investigations = jpaInvestigationRepository.findAll()
-			investigations.size() == 1
-			investigations.each {investigation ->
-				investigation.status = status
-			}
+				.body("page", Matchers.is(0))
+				.body("pageSize", Matchers.is(10))
+				.body("content", Matchers.hasSize(4))
+				.body("content.description", Matchers.containsInRelativeOrder("2", "4", "3", "1"))
+				.body("content.createdBy", Matchers.hasItems(testBpn))
+				.body("content.createdDate", Matchers.hasItems(isIso8601DateTime()))
 	}
 
+	def "should return received investigations sorted by creation time"() {
+		given:
+			ZonedDateTime now = ZonedDateTime.now()
+			String testBpn = testBpn()
+
+		and:
+			storedInvestigations(
+				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "1", now.minusSeconds(5L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "2", now.plusSeconds(2L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "3", now),
+				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "4", now.plusSeconds(20L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "5", now.plusSeconds(40L))
+			)
+
+		expect:
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.param("page", "0")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/received")
+				.then()
+				.statusCode(200)
+				.body("page", Matchers.is(0))
+				.body("pageSize", Matchers.is(10))
+				.body("content", Matchers.hasSize(4))
+				.body("content.description", Matchers.containsInRelativeOrder("4", "2", "3", "1"))
+				.body("content.createdBy", Matchers.hasItems(testBpn))
+				.body("content.createdDate", Matchers.hasItems(isIso8601DateTime()))
+	}
+
+	def "should not return investigation without authentication"() {
+		expect:
+			given()
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/123")
+				.then()
+				.statusCode(401)
+	}
+
+	def "should not find non existing investigation"() {
+		expect:
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/1234")
+				.then()
+				.statusCode(404)
+				.body("message", Matchers.is("Investigation not found for 1234 id"))
+	}
+
+	def "should return investigation by id"() {
+		given:
+			String testBpn = testBpn()
+			Long investigationId = storedInvestigation(new InvestigationEntity([], testBpn, "1", InvestigationStatus.RECEIVED))
+
+		expect:
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/$investigationId")
+				.then()
+				.statusCode(200)
+				.body("id", Matchers.is(investigationId.toInteger()))
+				.body("status", Matchers.is("RECEIVED"))
+				.body("description", Matchers.is("1"))
+				.body("assetIds", Matchers.empty())
+				.body("createdBy", Matchers.is(testBpn))
+				.body("createdDate", isIso8601DateTime())
+	}
 }

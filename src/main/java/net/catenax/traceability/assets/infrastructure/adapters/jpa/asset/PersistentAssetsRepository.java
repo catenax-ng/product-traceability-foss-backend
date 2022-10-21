@@ -22,7 +22,7 @@ package net.catenax.traceability.assets.infrastructure.adapters.jpa.asset;
 import net.catenax.traceability.assets.domain.model.Asset;
 import net.catenax.traceability.assets.domain.model.Asset.ChildDescriptions;
 import net.catenax.traceability.assets.domain.model.AssetNotFoundException;
-import net.catenax.traceability.assets.domain.model.PageResult;
+import net.catenax.traceability.common.model.PageResult;
 import net.catenax.traceability.assets.domain.ports.AssetRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;

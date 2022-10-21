@@ -1,46 +1,76 @@
+/********************************************************************************
+ * Copyright (c) 2021,2022 Contributors to the CatenaX (ng) GitHub Organisation
+ *
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License, Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+
 package net.catenax.traceability.investigations.domain.model;
 
-import net.catenax.traceability.assets.domain.model.InvestigationStatus;
+import net.catenax.traceability.common.model.BPN;
+import net.catenax.traceability.investigations.adapters.rest.model.InvestigationData;
 
-import java.util.ArrayList;
+import java.time.Clock;
+import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 public class Investigation {
-	private Long id;
-	private List<String> assetIds;
-	private InvestigationStatus investigationStatus;
-	private String description;
-	private Map<Long, Notification> notifications;
 
-	public Investigation(List<String> assetIds, String description) {
-		this.assetIds = assetIds;
-		this.description = description;
-		this.investigationStatus = InvestigationStatus.CREATED;
-	}
+	public static final Comparator<Investigation> COMPARE_BY_NEWEST_INVESTIGATION_CREATION_TIME = (o1, o2) -> {
+		Instant o1CreationTime = o1.createdAt;
+		Instant o2CreationTime = o2.createdAt;
 
-	public Investigation(Long id, InvestigationStatus investigationStatus, String description, List<String> assetIds, List<Notification> notifications) {
-		this.id = id;
-		this.assetIds = assetIds;
+		if (o1CreationTime.equals(o2CreationTime)) {
+			return 0;
+		}
+
+		if (o1CreationTime.isBefore(o2CreationTime)) {
+			return 1;
+		}
+
+		return -1;
+	};
+
+	public static final Set<InvestigationStatus> CREATED_STATUSES = Set.of(InvestigationStatus.CREATED, InvestigationStatus.APPROVED, InvestigationStatus.SENT);
+	public static final Set<InvestigationStatus> RECEIVED_STATUSES = Set.of(InvestigationStatus.RECEIVED);
+
+	private final InvestigationId investigationId;
+	private final BPN bpn;
+	private final InvestigationStatus investigationStatus;
+	private final String description;
+	private final Instant createdAt;
+	private final List<String> assetIds;
+
+	public Investigation(InvestigationId investigationId,
+						 BPN bpn,
+						 InvestigationStatus investigationStatus,
+						 String description,
+						 Instant createdAt,
+						 List<String> assetIds) {
+		this.investigationId = investigationId;
+		this.bpn = bpn;
 		this.investigationStatus = investigationStatus;
 		this.description = description;
-		this.notifications = notifications.stream()
-			.collect(Collectors.toMap(Notification::getId, Function.identity()));
+		this.createdAt = createdAt;
+		this.assetIds = assetIds;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public List<Notification> getNotifications() {
-		return new ArrayList<>(notifications.values());
-	}
-
-	public Optional<Notification> getNotification(Long notificationId) {
-		return Optional.ofNullable(notifications.get(notificationId));
+	public static Investigation startInvestigation(Clock clock, BPN bpn, List<String> assetIds, String description) {
+		return new Investigation(null, bpn, InvestigationStatus.CREATED, description, clock.instant(), assetIds);
 	}
 
 	public List<String> getAssetIds() {
@@ -55,7 +85,18 @@ public class Investigation {
 		return description;
 	}
 
-	public void updateStatus(InvestigationStatus investigationStatus) {
-		this.investigationStatus = investigationStatus;
+	public InvestigationData toData() {
+		return new InvestigationData(
+			investigationId.value(),
+			investigationStatus.name(),
+			description,
+			bpn.value(),
+			createdAt.toString(),
+			assetIds
+		);
+	}
+
+	public String getBpn() {
+		return bpn.value();
 	}
 }
