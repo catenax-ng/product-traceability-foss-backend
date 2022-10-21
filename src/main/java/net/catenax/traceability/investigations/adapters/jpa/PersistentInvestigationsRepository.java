@@ -137,4 +137,9 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 			investigationEntity.getAssets().stream().map(AssetEntity::getId).toList()
 		);
 	}
+
+	@Override
+	public long countPendingInvestigations() {
+		return investigationRepository.countAllByStatusEquals(InvestigationStatus.RECEIVED);
+	}
 }

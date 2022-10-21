@@ -32,4 +32,5 @@ public interface InvestigationsRepository {
 	InvestigationId save(Investigation investigation);
 	PageResult<Investigation> getInvestigations(Set<InvestigationStatus> investigationStatuses, Pageable pageable);
 	Optional<Investigation> findById(InvestigationId investigationId);
+	long countPendingInvestigations();
 }
