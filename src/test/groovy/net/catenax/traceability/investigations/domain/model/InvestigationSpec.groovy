@@ -101,6 +101,6 @@ class InvestigationSpec extends Specification {
 	}
 
 	private Investigation investigationWithStatus(BPN bpn, InvestigationStatus status) {
-		new Investigation(new InvestigationId(1L), bpn, status, "", Instant.now(), [])
+		new Investigation(new InvestigationId(1L), bpn, status, "", Instant.now(), [], [])
 	}
 }

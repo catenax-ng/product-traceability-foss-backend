@@ -26,10 +26,15 @@ import net.catenax.traceability.investigations.domain.model.exception.Investigat
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Investigation {
 
@@ -57,23 +62,28 @@ public class Investigation {
 	private final String description;
 	private final Instant createdAt;
 	private final List<String> assetIds;
+	private Map<Long, Notification> notifications;
 
 	public Investigation(InvestigationId investigationId,
 						 BPN bpn,
 						 InvestigationStatus investigationStatus,
 						 String description,
 						 Instant createdAt,
-						 List<String> assetIds) {
+						 List<String> assetIds,
+						 List<Notification> notifications
+	) {
 		this.investigationId = investigationId;
 		this.bpn = bpn;
 		this.investigationStatus = investigationStatus;
 		this.description = description;
 		this.createdAt = createdAt;
 		this.assetIds = assetIds;
+		this.notifications = notifications.stream()
+			.collect(Collectors.toMap(Notification::getId, Function.identity()));;
 	}
 
 	public static Investigation startInvestigation(Clock clock, BPN bpn, List<String> assetIds, String description) {
-		return new Investigation(null, bpn, InvestigationStatus.CREATED, description, clock.instant(), assetIds);
+		return new Investigation(null, bpn, InvestigationStatus.CREATED, description, clock.instant(), assetIds, Collections.emptyList());
 	}
 
 	public List<String> getAssetIds() {
@@ -115,6 +125,13 @@ public class Investigation {
 		changeStatusTo(InvestigationStatus.CLOSED);
 	}
 
+	public void approve(BPN callerBpn) {
+		if (!callerBpn.equals(this.bpn)) {
+			throw new InvestigationIllegalUpdate("%s bpn has no permissions to update investigation with %s id.".formatted(callerBpn.value(), investigationId.value()));
+		}
+		changeStatusTo(InvestigationStatus.APPROVED);
+	}
+
 	private void changeStatusTo(InvestigationStatus to) {
 		boolean transitionAllowed = investigationStatus.transitionAllowed(to);
 
@@ -131,5 +148,13 @@ public class Investigation {
 
 	public Instant getCreationTime() {
 		return createdAt;
+	}
+
+	public List<Notification> getNotifications() {
+		return new ArrayList<>(notifications.values());
+	}
+
+	public Optional<Notification> getNotification(Long notificationId) {
+		return Optional.ofNullable(notifications.get(notificationId));
 	}
 }
