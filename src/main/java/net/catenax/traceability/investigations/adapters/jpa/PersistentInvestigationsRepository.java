@@ -180,4 +180,9 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 				.toList()
 		);
 	}
+
+	@Override
+	public long countPendingInvestigations() {
+		return investigationRepository.countAllByStatusEquals(InvestigationStatus.RECEIVED);
+	}
 }

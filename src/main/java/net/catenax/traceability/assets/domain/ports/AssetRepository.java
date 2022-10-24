@@ -47,6 +47,4 @@ public interface AssetRepository {
     long countAssets();
 
 	long countMyAssets();
-
-	long countPendingInvestigations();
 }
