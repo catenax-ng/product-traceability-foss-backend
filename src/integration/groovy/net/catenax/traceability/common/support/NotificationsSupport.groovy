@@ -26,7 +26,11 @@ trait NotificationsSupport implements NotificationsRepositoryProvider {
 	void assertNotificationsSize(int size) {
 		List<NotificationEntity> notifications = jpaNotificationRepository().findAll()
 
-		assert notifications.size() == 2
+		assert notifications.size() == size
+	}
+
+	void assertNotifications(Closure closure) {
+		jpaNotificationRepository().findAll().each closure
 	}
 
 }

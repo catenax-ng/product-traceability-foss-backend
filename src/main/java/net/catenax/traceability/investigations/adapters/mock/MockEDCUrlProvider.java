@@ -30,4 +30,8 @@ public class MockEDCUrlProvider implements EDCUrlProvider {
 		return getEdcUrl(senderBpn);
 	}
 
+	public String getSenderBpn() {
+		return senderBpn;
+	}
+
 }

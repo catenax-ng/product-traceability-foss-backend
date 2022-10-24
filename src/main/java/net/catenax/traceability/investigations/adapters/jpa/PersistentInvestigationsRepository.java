@@ -27,9 +27,11 @@ import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEn
 import net.catenax.traceability.infrastructure.jpa.investigation.JpaInvestigationRepository;
 import net.catenax.traceability.infrastructure.jpa.notification.JpaNotificationRepository;
 import net.catenax.traceability.infrastructure.jpa.notification.NotificationEntity;
+import net.catenax.traceability.investigations.domain.model.AffectedPart;
 import net.catenax.traceability.investigations.domain.model.Investigation;
 import net.catenax.traceability.investigations.domain.model.InvestigationId;
 import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
+import net.catenax.traceability.investigations.domain.model.Notification;
 import net.catenax.traceability.investigations.domain.ports.InvestigationsRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -72,19 +74,21 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 		}
 	}
 
+	@Override
+	public void update(Notification notification) {
+		NotificationEntity entity = notificationRepository.findById(notification.getId())
+			.orElseThrow(() -> new IllegalArgumentException(String.format("Notification with id %s not found!", notification.getId())));
+
+		update(entity, notification);
+
+		notificationRepository.save(entity);
+	}
+
 	private InvestigationId merge(Investigation investigation) {
-		List<AssetEntity> assets = assetsRepository.findByIdIn(investigation.getAssetIds());
+		InvestigationEntity investigationEntity = investigationRepository.findById(investigation.getId().value())
+			.orElseThrow(() -> new IllegalArgumentException(String.format("Investigation with id %s not found!", investigation.getId().value())));
 
-		InvestigationEntity investigationEntity = new InvestigationEntity(
-			investigation.getId().value(),
-			assets,
-			investigation.getBpn(),
-			investigation.getInvestigationStatus(),
-			investigation.getDescription(),
-			investigation.getCreationTime(),
-			clock.instant()
-		);
-
+		update(investigationEntity, investigation);
 		investigationRepository.save(investigationEntity);
 
 		return investigation.getId();
@@ -92,7 +96,6 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 
 	private InvestigationId saveNew(Investigation investigation) {
 		List<String> assetIds = investigation.getAssetIds();
-
 		List<AssetEntity> assets = assetsRepository.findByIdIn(assetIds);
 
 		if (!assets.isEmpty()) {
@@ -127,14 +130,54 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 			.map(this::toInvestigation);
 	}
 
+	private void update(InvestigationEntity investigationEntity, Investigation investigation) {
+		investigationEntity.setStatus(investigation.getInvestigationStatus());
+
+		investigationEntity.getNotifications().forEach(notification -> {
+			investigation.getNotification(notification.getId()).ifPresent(data -> {
+				update(notification, data);
+			});
+		});
+	}
+
+	private void update(NotificationEntity notificationEntity, Notification notification) {
+		notificationEntity.setEdcUrl(notification.getEdcUrl());
+		notificationEntity.setContractAgreementId(notification.getContractAgreementId());
+	}
+
 	private Investigation toInvestigation(InvestigationEntity investigationEntity) {
+		List<Notification> notifications = investigationEntity.getNotifications().stream()
+			.map(this::toNotification)
+			.toList();
+
+		List<String> assetIds = investigationEntity.getAssets().stream()
+			.map(AssetEntity::getId)
+			.toList();
+
 		return new Investigation(
 			new InvestigationId(investigationEntity.getId()),
 			new BPN(investigationEntity.getBpn()),
 			investigationEntity.getStatus(),
 			investigationEntity.getDescription(),
 			investigationEntity.getCreated(),
-			investigationEntity.getAssets().stream().map(AssetEntity::getId).toList()
+			assetIds,
+			notifications
+		);
+	}
+
+	private Notification toNotification(NotificationEntity notificationEntity) {
+		InvestigationEntity investigation = notificationEntity.getInvestigation();
+
+		return new Notification(
+			notificationEntity.getId(),
+			notificationEntity.getBpnNumber(),
+			notificationEntity.getEdcUrl(),
+			notificationEntity.getContractAgreementId(),
+			investigation.getDescription(),
+			investigation.getStatus(),
+			notificationEntity.getAssets().stream()
+				.map(asset -> new AffectedPart(asset.getId(), asset.getQualityType()))
+				.toList()
 		);
 	}
 }

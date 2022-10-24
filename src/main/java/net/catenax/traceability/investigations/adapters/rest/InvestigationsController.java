@@ -76,6 +76,12 @@ public class InvestigationsController {
 		return investigationsService.findInvestigation(investigationId);
 	}
 
+	@PostMapping("/{investigationId}/approve")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void approveInvestigation(@PathVariable Long investigationId) {
+		investigationsService.approveInvestigation(traceabilityProperties.getBpn(), investigationId);
+	}
+
 	@PostMapping("/{investigationId}/cancel")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void cancelInvestigation(@PathVariable Long investigationId) {

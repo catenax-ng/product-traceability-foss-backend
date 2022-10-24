@@ -20,14 +20,17 @@
 package net.catenax.traceability.investigations.domain.service;
 
 import net.catenax.traceability.common.model.BPN;
-import net.catenax.traceability.investigations.domain.model.InvestigationId;
-import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 import net.catenax.traceability.common.model.PageResult;
+import net.catenax.traceability.infrastructure.edc.blackbox.InvestigationsEDCFacade;
 import net.catenax.traceability.investigations.adapters.rest.model.InvestigationData;
 import net.catenax.traceability.investigations.domain.model.Investigation;
+import net.catenax.traceability.investigations.domain.model.InvestigationId;
+import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
+import net.catenax.traceability.investigations.domain.model.Notification;
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationNotFoundException;
 import net.catenax.traceability.investigations.domain.ports.InvestigationsRepository;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -37,11 +40,14 @@ import java.util.Set;
 @Service
 public class InvestigationsService {
 
+	private final InvestigationsEDCFacade edcFacade;
+
 	private final InvestigationsRepository repository;
 
 	private final Clock clock;
 
-	public InvestigationsService(InvestigationsRepository repository, Clock clock) {
+	public InvestigationsService(InvestigationsEDCFacade edcFacade, InvestigationsRepository repository, Clock clock) {
+		this.edcFacade = edcFacade;
 		this.repository = repository;
 		this.clock = clock;
 	}
@@ -50,6 +56,12 @@ public class InvestigationsService {
 		Investigation investigation = Investigation.startInvestigation(clock, bpn, assetIds, description);
 
 		return repository.save(investigation);
+	}
+
+	@Async
+	public void transferToEDC(Notification notification) {
+		edcFacade.startEDCTransfer(notification);
+		repository.update(notification);
 	}
 
 	public InvestigationData findInvestigation(Long id) {
@@ -88,5 +100,17 @@ public class InvestigationsService {
 		investigation.cancel(bpn);
 
 		repository.save(investigation);
+	}
+
+	public void approveInvestigation(BPN bpn, Long id) {
+		InvestigationId investigationId = new InvestigationId(id);
+
+		Investigation investigation = repository.findById(investigationId)
+			.orElseThrow(() -> new InvestigationNotFoundException(investigationId));
+
+		investigation.approve(bpn);
+		repository.save(investigation);
+
+		investigation.getNotifications().forEach(this::transferToEDC);
 	}
 }

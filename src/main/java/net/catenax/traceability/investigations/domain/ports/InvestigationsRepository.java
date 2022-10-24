@@ -19,10 +19,11 @@
 
 package net.catenax.traceability.investigations.domain.ports;
 
-import net.catenax.traceability.investigations.domain.model.InvestigationId;
-import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 import net.catenax.traceability.common.model.PageResult;
 import net.catenax.traceability.investigations.domain.model.Investigation;
+import net.catenax.traceability.investigations.domain.model.InvestigationId;
+import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
+import net.catenax.traceability.investigations.domain.model.Notification;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
@@ -32,4 +33,5 @@ public interface InvestigationsRepository {
 	InvestigationId save(Investigation investigation);
 	PageResult<Investigation> getInvestigations(Set<InvestigationStatus> investigationStatuses, Pageable pageable);
 	Optional<Investigation> findById(InvestigationId investigationId);
+	void update(Notification notification);
 }

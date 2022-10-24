@@ -28,6 +28,7 @@ import net.catenax.traceability.common.support.InvestigationsSupport
 import net.catenax.traceability.common.support.IrsApiSupport
 import net.catenax.traceability.common.support.NotificationsSupport
 import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity
+import net.catenax.traceability.infrastructure.jpa.notification.NotificationEntity
 import net.catenax.traceability.investigations.domain.model.InvestigationStatus
 import org.hamcrest.Matchers
 
@@ -273,6 +274,54 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 				.body("content.description", Matchers.containsInRelativeOrder("4", "2", "3", "1"))
 				.body("content.createdBy", Matchers.hasItems(testBpn))
 				.body("content.createdDate", Matchers.hasItems(isIso8601DateTime()))
+	}
+
+	def "should approve investigation status"() {
+		given:
+			List<String> partIds = [
+				"urn:uuid:fe99da3d-b0de-4e80-81da-882aebcca978", // BPN: BPNL00000003AYRE
+				"urn:uuid:0ce83951-bc18-4e8f-892d-48bad4eb67ef"  // BPN: BPNL00000003AXS3
+			]
+			String description = "at least 15 characters long investigation description"
+			InvestigationStatus status = InvestigationStatus.APPROVED
+
+		and:
+			defaultAssetsStored()
+
+		when:
+			def investigationId = given()
+				.contentType(ContentType.JSON)
+				.body(asJson([
+					partIds    : partIds,
+					description: description
+				]))
+				.header(jwtAuthorization(ADMIN))
+				.when()
+				.post("/api/investigations")
+				.then()
+				.statusCode(201)
+				.extract().path("id")
+
+		then:
+			assertInvestigationsSize(1)
+
+		when:
+			given()
+				.contentType(ContentType.JSON)
+				.header(jwtAuthorization(ADMIN))
+				.when()
+				.post("/api/investigations/{investigationId}/approve", investigationId)
+				.then()
+				.statusCode(204)
+
+		then:
+			eventually {
+				assertNotificationsSize(2)
+				assertNotifications { NotificationEntity notification ->
+					assert notification.edcUrl != null
+					assert notification.contractAgreementId != null
+				}
+			}
 	}
 
 	def "should not return investigation without authentication"() {

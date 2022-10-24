@@ -52,7 +52,8 @@ sonarqube {
 				"src/main/java/net/catenax/traceability/common/**",
 				"src/main/java/net/catenax/traceability/assets/domain/model/**",
 				"src/main/java/net/catenax/traceability/assets/infrastructure/**",
-				"src/main/java/net/catenax/traceability/assets/config/**"
+				"src/main/java/net/catenax/traceability/assets/config/**",
+				"src/main/java/net/catenax/traceability/infrastructure/edc/blackbox/**"
 			)
 		)
 	}
@@ -106,6 +107,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.postgresql:postgresql")
 	implementation("org.flywaydb:flyway-core")
+
+	implementation("com.auth0:java-jwt:3.19.2")
+	implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
 
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 	implementation("io.github.openfeign:feign-okhttp:$feignVersion")

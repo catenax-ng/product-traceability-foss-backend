@@ -23,6 +23,12 @@ import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEn
 
 trait InvestigationsSupport implements InvestigationsRepositoryProvider {
 
+	void assertInvestigationsSize(int size) {
+		List<InvestigationEntity> investigations = jpaInvestigationRepository().findAll()
+
+		assert investigations.size() == size
+	}
+
 	void storedInvestigations(InvestigationEntity... investigations) {
 		investigations.each {
 			jpaInvestigationRepository().save(it)

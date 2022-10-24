@@ -19,8 +19,9 @@
 
 package net.catenax.traceability.infrastructure.jpa.investigation;
 
-import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.AssetEntity;
+import net.catenax.traceability.infrastructure.jpa.notification.NotificationEntity;
+import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -30,6 +31,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.Instant;
 import java.util.List;
@@ -48,6 +50,10 @@ public class InvestigationEntity {
 		inverseJoinColumns = @JoinColumn(name = "asset_id")
 	)
 	private List<AssetEntity> assets;
+
+	@OneToMany(mappedBy = "investigation")
+	private List<NotificationEntity> notifications;
+
 	private String bpn;
 	private InvestigationStatus status;
 	private String description;
@@ -134,5 +140,13 @@ public class InvestigationEntity {
 
 	public void setUpdated(Instant updated) {
 		this.updated = updated;
+	}
+
+	public List<NotificationEntity> getNotifications() {
+		return notifications;
+	}
+
+	public void setNotifications(List<NotificationEntity> notifications) {
+		this.notifications = notifications;
 	}
 }
