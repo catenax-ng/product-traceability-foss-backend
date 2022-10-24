@@ -29,6 +29,20 @@ registry:
   enabled: true
 
   registry:
+    idpIssuerUri: https://centralidp.int.demo.catena-x.net/auth/realms/CX-Central
+    host: trace-x-registry.int.demo.catena-x.net
+    ingress:
+      hosts:
+        - host: trace-x-registry.int.demo.catena-x.net
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
+      enabled: true
+      tls:
+        - hosts:
+            - trace-x-registry.int.demo.catena-x.net
+          # Default secret for certificate creation already provided to your namespace
+          secretName: tls-secret
     dataSource:
       url: jdbc:postgresql://tracex-registry-postgresql-hl/registry
       user: <path:traceability-foss/data/int/aasregistry#username>
@@ -84,7 +98,7 @@ edc-controlplane:
     ## Public / Internet facing Ingress
     - enabled: true
       # -- The hostname to be used to precisely map incoming traffic onto the underlying network service
-      hostname: tracex-edc-provider-controlplane.int.demo.catena-x.net
+      hostname: trace-x-edc.int.demo.catena-x.net
       # -- Additional ingress annotations to add
       annotations:
         nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
@@ -137,19 +151,19 @@ edc-controlplane:
       edc.datasource.transferprocess.name=transferprocess
       edc.datasource.transferprocess.url=jdbc:postgresql://tracex-edc-provider-postgresql-hl:5432/edc?currentSchema=edc
       edc.datasource.transferprocess.user=<path:traceability-foss/data/int/edc/database#user>
-      edc.hostname=tracex-edc-provider-controlplane.int.demo.catena-x.net
+      edc.hostname=trace-x-edc.int.demo.catena-x.net
       edc.ids.catalog.id=urn:catalog:default
       edc.ids.description="Eclipse Dataspace Connector"
-      edc.ids.endpoint=https://tracex-edc-provider-controlplane.int.demo.catena-x.net/api/v1/ids
-      edc.ids.endpoint.audience=https://tracex-edc-provider-controlplane.int.demo.catena-x.net/api/v1/ids/data
-      ids.webhook.address=https://tracex-edc-provider-controlplane.int.demo.catena-x.net
+      edc.ids.endpoint=https://trace-x-edc.int.demo.catena-x.net/api/v1/ids
+      edc.ids.endpoint.audience=https://trace-x-edc.int.demo.catena-x.net/api/v1/ids/data
+      ids.webhook.address=https://trace-x-edc.int.demo.catena-x.net
       edc.ids.id=urn:connector:edc
       edc.ids.security.profile=base
       edc.ids.title="Eclipse Dataspace Connector"
       # the value below is mandatory but not used for the provider
       edc.receiver.http.endpoint=http://tracex-api-wrapper:9192/callback/endpoint-data-reference
       edc.transfer.dataplane.sync.endpoint=http://tracex-edc-provider-dataplane:8185/api/public
-      edc.transfer.proxy.endpoint=https://tracex-edc-provider-dataplane.int.demo.catena-x.net/api/public
+      edc.transfer.proxy.endpoint=https://trace-x-edc-dataplane.int.demo.catena-x.net/api/public
       edc.transfer.proxy.token.verifier.publickey.alias=token-signer-cert-int
       edc.transfer.proxy.token.signer.privatekey.alias=token-signer-cert-key-int
       edc.dataplane.selector.provider.url=http://tracex-edc-provider-dataplane:9999/api/dataplane/control
@@ -200,7 +214,7 @@ edc-dataplane:
     ## Public / Internet facing Ingress
     - enabled: true
       # -- The hostname to be used to precisely map incoming traffic onto the underlying network service
-      hostname: tracex-edc-provider-dataplane.int.demo.catena-x.net
+      hostname: trace-x-edc-dataplane.int.demo.catena-x.net
       annotations:
         nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
         nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
@@ -233,7 +247,7 @@ edc-dataplane:
       web.http.control.path=/api/dataplane/control
       edc.api.control.auth.apikey.key=X-Api-Key
       edc.dataplane.token.validation.endpoint=http://tracex-edc-provider-controlplane:8182/validation/token
-      edc.hostname=tracex-edc-provider-dataplane.int.demo.catena-x.net
+      edc.hostname=trace-x-edc-dataplane.int.demo.catena-x.net
       edc.vault.hashicorp.url=https://vault.demo.catena-x.net
       edc.vault.hashicorp.health.check.enabled=true
       edc.vault.hashicorp.health.check.standby.ok=true
