@@ -132,7 +132,6 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 
 	private void update(InvestigationEntity investigationEntity, Investigation investigation) {
 		investigationEntity.setStatus(investigation.getInvestigationStatus());
-		investigationEntity.setUpdated(clock.instant());
 
 		investigationEntity.getNotifications().forEach(notification -> {
 			investigation.getNotification(notification.getId()).ifPresent(data -> {
@@ -180,5 +179,10 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 				.map(asset -> new AffectedPart(asset.getId(), asset.getQualityType()))
 				.toList()
 		);
+	}
+
+	@Override
+	public long countPendingInvestigations() {
+		return investigationRepository.countAllByStatusEquals(InvestigationStatus.RECEIVED);
 	}
 }

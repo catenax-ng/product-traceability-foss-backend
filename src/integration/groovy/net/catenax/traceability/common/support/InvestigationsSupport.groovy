@@ -22,7 +22,15 @@ package net.catenax.traceability.common.support
 import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity
 import net.catenax.traceability.investigations.domain.model.InvestigationStatus
 
+import java.time.Instant
+
 trait InvestigationsSupport implements InvestigationsRepositoryProvider {
+
+	void defaultReceivedInvestigationStored() {
+		InvestigationEntity entity = new InvestigationEntity([], "BPN000001", InvestigationStatus.RECEIVED, "some-description", Instant.now())
+
+		storedInvestigation(entity)
+	}
 
 	void assertInvestigationsSize(int size) {
 		List<InvestigationEntity> investigations = jpaInvestigationRepository().findAll()

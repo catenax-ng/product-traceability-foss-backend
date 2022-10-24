@@ -30,4 +30,5 @@ import java.util.Set;
 @Repository
 public interface JpaInvestigationRepository extends JpaRepository<InvestigationEntity, Long> {
 	Page<InvestigationEntity> findAllByStatusIn(Set<InvestigationStatus> statuses, Pageable pageable);
+	long countAllByStatusEquals(InvestigationStatus status);
 }
