@@ -87,4 +87,11 @@ public class InvestigationsController {
 	public void cancelInvestigation(@PathVariable Long investigationId) {
 		investigationsService.cancelInvestigation(traceabilityProperties.getBpn(), investigationId);
 	}
+
+	@PostMapping("/{investigationId}/close")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void closeInvestigation(@PathVariable Long investigationId) {
+		investigationsService.closeInvestigation(traceabilityProperties.getBpn(), investigationId);
+	}
 }
+

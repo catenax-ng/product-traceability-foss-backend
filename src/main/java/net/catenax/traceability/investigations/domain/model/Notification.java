@@ -1,5 +1,7 @@
 package net.catenax.traceability.investigations.domain.model;
 
+import net.catenax.traceability.investigations.domain.model.exception.NotificationStatusTransitionNotAllowed;
+
 import java.util.List;
 
 public class Notification {
@@ -19,6 +21,16 @@ public class Notification {
 		this.description = description;
 		this.investigationStatus = investigationStatus;
 		this.affectedParts = affectedParts;
+	}
+
+	void changeStatusTo(InvestigationStatus to) {
+		boolean transitionAllowed = investigationStatus.transitionAllowed(to);
+
+		if (!transitionAllowed) {
+			throw new NotificationStatusTransitionNotAllowed(id, investigationStatus, to);
+		}
+
+		this.investigationStatus = to;
 	}
 
 	public Long getId() {

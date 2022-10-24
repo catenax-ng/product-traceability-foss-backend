@@ -17,32 +17,13 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.common.support
+package net.catenax.traceability.investigations.domain.model.exception;
 
-import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity
-import net.catenax.traceability.investigations.domain.model.InvestigationStatus
+import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 
-trait InvestigationsSupport implements InvestigationsRepositoryProvider {
+public class NotificationStatusTransitionNotAllowed extends RuntimeException {
 
-	void assertInvestigationsSize(int size) {
-		List<InvestigationEntity> investigations = jpaInvestigationRepository().findAll()
-
-		assert investigations.size() == size
-	}
-
-	void assertInvestigationStatus(InvestigationStatus investigationStatus) {
-		jpaInvestigationRepository().findAll().each {
-			assert it.status == investigationStatus
-		}
-	}
-
-	void storedInvestigations(InvestigationEntity... investigations) {
-		investigations.each {
-			jpaInvestigationRepository().save(it)
-		}
-	}
-
-	Long storedInvestigation(InvestigationEntity investigation) {
-		return jpaInvestigationRepository().save(investigation).id
+	public NotificationStatusTransitionNotAllowed(Long notificationId, InvestigationStatus from, InvestigationStatus to) {
+		super("Can't transit from %s status to %s status for %s notification id".formatted(from.name(), to.name(), notificationId));
 	}
 }

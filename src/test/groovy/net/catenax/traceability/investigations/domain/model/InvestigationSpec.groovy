@@ -59,6 +59,48 @@ class InvestigationSpec extends Specification {
 			investigationStatus << [RECEIVED, ACKNOWLEDGED, DECLINED, ACCEPTED, CLOSED]
 	}
 
+	@Unroll
+	def "should not allow to approve investigation with #investigationStatus status"() {
+		given:
+			BPN bpn = new BPN("BPNL000000000001")
+
+		and:
+			Investigation investigation = investigationWithStatus(bpn, investigationStatus)
+
+		when:
+			investigation.approve(bpn)
+
+		then:
+			thrown(InvestigationStatusTransitionNotAllowed)
+
+		and:
+			investigation.getInvestigationStatus() == investigationStatus
+
+		where:
+			investigationStatus << [APPROVED, SENT, RECEIVED, ACKNOWLEDGED, ACCEPTED, DECLINED, CLOSED]
+	}
+
+	@Unroll
+	def "should not allow to close investigation with #investigationStatus status"() {
+		given:
+			BPN bpn = new BPN("BPNL000000000001")
+
+		and:
+			Investigation investigation = investigationWithStatus(bpn, investigationStatus)
+
+		when:
+			investigation.cancel(bpn)
+
+		then:
+			thrown(InvestigationStatusTransitionNotAllowed)
+
+		and:
+			investigation.getInvestigationStatus() == investigationStatus
+
+		where:
+			investigationStatus << [RECEIVED, ACKNOWLEDGED, ACCEPTED, DECLINED, CLOSED]
+	}
+
 	def "should not allow to cancel investigation for different bpn"() {
 		given:
 			BPN bpn = new BPN("BPNL000000000001")
@@ -79,8 +121,86 @@ class InvestigationSpec extends Specification {
 			investigationStatus << InvestigationStatus.values().toList()
 	}
 
+	def "should not allow to approve investigation for different bpn"() {
+		given:
+			BPN bpn = new BPN("BPNL000000000001")
+
+		and:
+			Investigation investigation = investigationWithStatus(bpn, investigationStatus)
+
+		when:
+			investigation.approve(new BPN("BPNL000000000002"))
+
+		then:
+			thrown(InvestigationIllegalUpdate)
+
+		and:
+			investigation.getInvestigationStatus() == investigationStatus
+
+		where:
+			investigationStatus << InvestigationStatus.values().toList()
+	}
+
+	def "should not allow to close investigation for different bpn"() {
+		given:
+			BPN bpn = new BPN("BPNL000000000001")
+
+		and:
+			Investigation investigation = investigationWithStatus(bpn, investigationStatus)
+
+		when:
+			investigation.close(new BPN("BPNL000000000002"))
+
+		then:
+			thrown(InvestigationIllegalUpdate)
+
+		and:
+			investigation.getInvestigationStatus() == investigationStatus
+
+		where:
+			investigationStatus << InvestigationStatus.values().toList()
+	}
+
+	def "should allow to approve investigation"() {
+		given:
+			BPN bpn = new BPN("BPNL000000000001")
+
+		and:
+			Investigation investigation = investigationWithStatus(bpn, CREATED)
+
+		when:
+			investigation.cancel(bpn)
+
+		then:
+			noExceptionThrown()
+
+		and:
+			investigation.getInvestigationStatus() == CLOSED
+	}
+
 	@Unroll
 	def "should allow to cancel investigation with #investigationStatus status"() {
+		given:
+			BPN bpn = new BPN("BPNL000000000001")
+
+		and:
+			Investigation investigation = investigationWithStatus(bpn, investigationStatus)
+
+		when:
+			investigation.cancel(bpn)
+
+		then:
+			noExceptionThrown()
+
+		and:
+			investigation.getInvestigationStatus() == CLOSED
+
+		where:
+			investigationStatus << [CREATED, APPROVED, SENT]
+	}
+
+	@Unroll
+	def "should allow to close investigation with #investigationStatus status"() {
 		given:
 			BPN bpn = new BPN("BPNL000000000001")
 
