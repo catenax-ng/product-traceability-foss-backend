@@ -26,6 +26,8 @@ registryPostgresql:
     database: registry
 
 registry:
+  enabled: true
+
   registry:
     dataSource:
       url: jdbc:postgresql://tracex-registry-postgresql-hl/registry
