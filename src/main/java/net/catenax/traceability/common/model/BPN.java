@@ -28,4 +28,8 @@ public record BPN(String value) {
 			throw new IllegalArgumentException("BPN must be present");
 		}
 	}
+
+	public static BPN of(String value) {
+		return new BPN(value);
+	}
 }

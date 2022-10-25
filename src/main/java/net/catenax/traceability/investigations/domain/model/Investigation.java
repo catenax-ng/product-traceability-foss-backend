@@ -24,7 +24,6 @@ import net.catenax.traceability.investigations.adapters.rest.model.Investigation
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationIllegalUpdate;
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationStatusTransitionNotAllowed;
 
-import java.time.Clock;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,8 +81,22 @@ public class Investigation {
 			.collect(Collectors.toMap(Notification::getId, Function.identity()));;
 	}
 
-	public static Investigation startInvestigation(Clock clock, BPN bpn, List<String> assetIds, String description) {
-		return new Investigation(null, bpn, InvestigationStatus.CREATED, description, clock.instant(), assetIds, Collections.emptyList());
+	public static Investigation startInvestigation(Instant createDate, BPN bpn, List<String> assetIds, String description) {
+		return new Investigation(null, bpn, InvestigationStatus.CREATED, description, createDate, assetIds, Collections.emptyList());
+	}
+
+	public static Investigation receiveInvestigation(Instant createDate, Notification notification) {
+		return new Investigation(
+			null,
+			BPN.of(notification.getBpnNumber()),
+			InvestigationStatus.RECEIVED,
+			notification.getDescription(),
+			createDate,
+			notification.getAffectedParts().stream()
+				.map(AffectedPart::assetId)
+				.toList(),
+			Collections.emptyList()
+		);
 	}
 
 	public List<String> getAssetIds() {

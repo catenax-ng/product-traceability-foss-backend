@@ -5,7 +5,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import net.catenax.traceability.infrastructure.edc.blackbox.Constants;
 import net.catenax.traceability.infrastructure.edc.blackbox.asset.Asset;
 import net.catenax.traceability.infrastructure.edc.blackbox.cache.EndpointDataReference;
-import net.catenax.traceability.infrastructure.edc.blackbox.cache.InMemoryEndpointDataReferenceCache;
 import net.catenax.traceability.infrastructure.edc.blackbox.catalog.Catalog;
 import net.catenax.traceability.infrastructure.edc.blackbox.model.EDCNotification;
 import net.catenax.traceability.infrastructure.edc.blackbox.notification.ContractNegotiationDto;
@@ -15,9 +14,11 @@ import net.catenax.traceability.infrastructure.edc.blackbox.offer.ContractOffer;
 import net.catenax.traceability.infrastructure.edc.blackbox.policy.Policy;
 import net.catenax.traceability.infrastructure.edc.blackbox.transfer.TransferRequestDto;
 import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
+import org.apache.groovy.util.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,13 +40,13 @@ public class EDCReceiverController {
 
 	private static final Logger logger = LoggerFactory.getLogger(EDCReceiverController.class);
 
-	private final InMemoryEndpointDataReferenceCache endpointDataReferenceCache;
+	private final TestRestTemplate restTemplate;
 
 	@Value("${server.port}")
 	private int port;
 
-	public EDCReceiverController(InMemoryEndpointDataReferenceCache endpointDataReferenceCache) {
-		this.endpointDataReferenceCache = endpointDataReferenceCache;
+	public EDCReceiverController(TestRestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
 	}
 
 	@GetMapping("/data/catalog")
@@ -91,13 +92,16 @@ public class EDCReceiverController {
 		logger.info("Returning contract negotiations");
 		String contractAgreementId = "contract-agreement-id";
 
-		endpointDataReferenceCache.put(contractAgreementId, EndpointDataReference.Builder.newInstance()
+		restTemplate.postForEntity("/endpoint-data-reference",
+			EndpointDataReference.Builder.newInstance()
 			.authCode(JWT.create()
 				.withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)))
 				.sign(Algorithm.HMAC256("test-token")))
 			.authKey("auth-key")
 			.endpoint("http://localhost:" + port + "/api/edc/receive-notification")
-			.build()
+			.properties(Maps.of("cid", contractAgreementId))
+			.build(),
+			Void.class
 		);
 
 		return ContractNegotiationDto.Builder.newInstance()
