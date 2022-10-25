@@ -118,21 +118,31 @@ public class Investigation {
 	}
 
 	public void cancel(BPN callerBpn) {
-		if (!callerBpn.equals(this.bpn)) {
-			throw new InvestigationIllegalUpdate("%s bpn has no permissions to update investigation with %s id.".formatted(callerBpn.value(), investigationId.value()));
-		}
+		close(callerBpn);
+	}
+
+	public void close(BPN callerBpn) {
+		validateBPN(callerBpn);
 
 		changeStatusTo(InvestigationStatus.CLOSED);
 	}
 
 	public void approve(BPN callerBpn) {
-		if (!callerBpn.equals(this.bpn)) {
-			throw new InvestigationIllegalUpdate("%s bpn has no permissions to update investigation with %s id.".formatted(callerBpn.value(), investigationId.value()));
-		}
+		validateBPN(callerBpn);
+
 		changeStatusTo(InvestigationStatus.APPROVED);
 	}
 
+	private void validateBPN(BPN callerBpn) {
+		if (!callerBpn.equals(this.bpn)) {
+			throw new InvestigationIllegalUpdate("%s bpn has no permissions to update investigation with %s id.".formatted(callerBpn.value(), investigationId.value()));
+		}
+	}
+
 	private void changeStatusTo(InvestigationStatus to) {
+		notifications.values()
+			.forEach(notification -> notification.changeStatusTo(to));
+
 		boolean transitionAllowed = investigationStatus.transitionAllowed(to);
 
 		if (!transitionAllowed) {

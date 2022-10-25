@@ -72,6 +72,11 @@ swagger:
       params:
         investigationId: "Investigation ID"
       authorizations: "#components/securitySchemes/bearerAuth"
+    api.investigations.investigationId.close:
+      summary: "Closes given investigation"
+      params:
+        investigationId: "Investigation ID"
+      authorizations: "#components/securitySchemes/bearerAuth"
     api.dashboard:
       summary: "Returns dashboard related data"
       notes: "The endpoint can return limited data based on the user role"

@@ -21,16 +21,13 @@ package net.catenax.traceability.investigations.domain.service;
 
 import net.catenax.traceability.common.model.BPN;
 import net.catenax.traceability.common.model.PageResult;
-import net.catenax.traceability.infrastructure.edc.blackbox.InvestigationsEDCFacade;
 import net.catenax.traceability.investigations.adapters.rest.model.InvestigationData;
 import net.catenax.traceability.investigations.domain.model.Investigation;
 import net.catenax.traceability.investigations.domain.model.InvestigationId;
 import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
-import net.catenax.traceability.investigations.domain.model.Notification;
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationNotFoundException;
 import net.catenax.traceability.investigations.domain.ports.InvestigationsRepository;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -40,14 +37,12 @@ import java.util.Set;
 @Service
 public class InvestigationsService {
 
-	private final InvestigationsEDCFacade edcFacade;
-
+	private final NotificationsService notificationsService;
 	private final InvestigationsRepository repository;
-
 	private final Clock clock;
 
-	public InvestigationsService(InvestigationsEDCFacade edcFacade, InvestigationsRepository repository, Clock clock) {
-		this.edcFacade = edcFacade;
+	public InvestigationsService(NotificationsService notificationsService, InvestigationsRepository repository, Clock clock) {
+		this.notificationsService = notificationsService;
 		this.repository = repository;
 		this.clock = clock;
 	}
@@ -58,18 +53,12 @@ public class InvestigationsService {
 		return repository.save(investigation);
 	}
 
-	@Async
-	public void transferToEDC(Notification notification) {
-		edcFacade.startEDCTransfer(notification);
-		repository.update(notification);
-	}
-
 	public InvestigationData findInvestigation(Long id) {
 		InvestigationId investigationId = new InvestigationId(id);
 
-		return repository.findById(investigationId)
-			.map(Investigation::toData)
-			.orElseThrow(() -> new InvestigationNotFoundException(investigationId));
+		Investigation investigation = loadInvestigation(investigationId);
+
+		return investigation.toData();
 	}
 
 	public PageResult<InvestigationData> getCreatedInvestigations(Pageable pageable) {
@@ -94,8 +83,7 @@ public class InvestigationsService {
 	public void cancelInvestigation(BPN bpn, Long id) {
 		InvestigationId investigationId = new InvestigationId(id);
 
-		Investigation investigation = repository.findById(investigationId)
-			.orElseThrow(() -> new InvestigationNotFoundException(investigationId));
+		Investigation investigation = loadInvestigation(investigationId);
 
 		investigation.cancel(bpn);
 
@@ -105,12 +93,29 @@ public class InvestigationsService {
 	public void approveInvestigation(BPN bpn, Long id) {
 		InvestigationId investigationId = new InvestigationId(id);
 
-		Investigation investigation = repository.findById(investigationId)
-			.orElseThrow(() -> new InvestigationNotFoundException(investigationId));
+		Investigation investigation = loadInvestigation(investigationId);
 
 		investigation.approve(bpn);
+
 		repository.save(investigation);
 
-		investigation.getNotifications().forEach(this::transferToEDC);
+		investigation.getNotifications().forEach(notificationsService::updateAsync);
+	}
+
+	public void closeInvestigation(BPN bpn, Long id) {
+		InvestigationId investigationId = new InvestigationId(id);
+
+		Investigation investigation = loadInvestigation(investigationId);
+
+		investigation.close(bpn);
+
+		repository.save(investigation);
+
+		investigation.getNotifications().forEach(notificationsService::updateAsync);
+	}
+
+	private Investigation loadInvestigation(InvestigationId investigationId) {
+		return repository.findById(investigationId)
+			.orElseThrow(() -> new InvestigationNotFoundException(investigationId));
 	}
 }

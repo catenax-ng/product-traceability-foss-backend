@@ -38,6 +38,12 @@ trait InvestigationsSupport implements InvestigationsRepositoryProvider {
 		assert investigations.size() == size
 	}
 
+	void assertInvestigationStatus(InvestigationStatus investigationStatus) {
+		jpaInvestigationRepository().findAll().each {
+			assert it.status == investigationStatus
+		}
+	}
+
 	void storedInvestigations(InvestigationEntity... investigations) {
 		investigations.each {
 			jpaInvestigationRepository().save(it)
