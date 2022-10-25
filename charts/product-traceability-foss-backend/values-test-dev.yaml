@@ -1,6 +1,9 @@
 image:
   tag: $ARGOCD_APP_REVISION
 
+nameOverride: "product-traceability-foss-test-backend"
+fullnameOverride: "product-traceability-foss-test-backend"
+
 springprofile: dev
 
 ingress:
@@ -144,7 +147,7 @@ irs:
       annotations:
         nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
       hosts:
-        - host: "tracex-irs-aas-wrapper.dev.demo.catena-x.net"
+        - host: "tracex-test-irs-aas-wrapper.dev.demo.catena-x.net"
           paths:
             - path: /
               pathType: Prefix
@@ -155,7 +158,7 @@ irs:
                     number: 9191
       tls:
         - hosts:
-            - "tracex-irs-aas-wrapper.dev.demo.catena-x.net"
+            - "tracex-test-irs-aas-wrapper.dev.demo.catena-x.net"
           # Default secret for certificate creation already provided to your namespace
           secretName: tls-secret
 
@@ -338,15 +341,15 @@ irs:
 
         edc.receiver.http.endpoint=http://tracex-test-irs-aaswrapper:9192/callback/endpoint-data-reference
 
-        edc.transfer.dataplane.sync.endpoint=http://tracex-consumer-dataplane:8185/api/public
-        edc.transfer.proxy.endpoint=https://tracex-consumer-dataplane.dev.demo.catena-x.net/api/public
+        edc.transfer.dataplane.sync.endpoint=http://tracex-test-consumer-dataplane:8185/api/public
+        edc.transfer.proxy.endpoint=https://tracex-test-consumer-dataplane.dev.demo.catena-x.net/api/public
         edc.transfer.proxy.token.signer.privatekey.alias=token-signer-cert-key-dev
         edc.transfer.proxy.token.verifier.publickey.alias=token-signer-cert-dev
 
-        edc.dataplane.selector.consumer.url=http://tracex-consumer-dataplane:9999/api/dataplane/control
+        edc.dataplane.selector.consumer.url=http://tracex-test-consumer-dataplane:9999/api/dataplane/control
         edc.dataplane.selector.consumer.sourcetypes=HttpData
         edc.dataplane.selector.consumer.destinationtypes=HttpProxy
-        edc.dataplane.selector.consumer.properties={ "publicApiUrl": "https://tracex-consumer-dataplane.dev.demo.catena-x.net/api/public" }
+        edc.dataplane.selector.consumer.properties={ "publicApiUrl": "https://tracex-test-consumer-dataplane.dev.demo.catena-x.net/api/public" }
 
         edc.oauth.client.id=3A:F4:B9:17:B7:01:BC:4D:A7:8B:58:19:18:30:7F:65:30:BB:90:62:keyid:3A:F4:B9:17:B7:01:BC:4D:A7:8B:58:19:18:30:7F:65:30:BB:90:62
         edc.oauth.public.key.alias=daps-cert-edc-test-provider-dev
@@ -389,8 +392,8 @@ irs:
 
   # Values for consumer edc-dataplane.
   edc-dataplane:
-    nameOverride: "tracex-consumer-dataplane"
-    fullnameOverride: "tracex-consumer-dataplane"
+    nameOverride: "tracex-test-consumer-dataplane"
+    fullnameOverride: "tracex-test-consumer-dataplane"
 
     image:
       tag: "0.1.1"
@@ -399,7 +402,7 @@ irs:
 
     ingresses:
       - enabled: true
-        hostname: "tracex-consumer-dataplane.dev.demo.catena-x.net"
+        hostname: "tracex-test-consumer-dataplane.dev.demo.catena-x.net"
         annotations:
           nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
         endpoints:
@@ -407,7 +410,7 @@ irs:
         className: "nginx"
         tls:
           - hosts:
-              - "tracex-consumer-dataplane.dev.demo.catena-x.net"
+              - "tracex-test-consumer-dataplane.dev.demo.catena-x.net"
             secretName: tls-secret
 
     resources:
