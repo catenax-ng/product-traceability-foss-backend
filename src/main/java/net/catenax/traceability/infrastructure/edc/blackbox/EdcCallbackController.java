@@ -25,7 +25,6 @@ public class EdcCallbackController {
 	@PostMapping
 	public void receiveEdcCallback(@RequestBody EndpointDataReference dataReference) {
 		var contractAgreementId = dataReference.getProperties().get("cid");
-		logger.info("EdcCallbackController [receiveEdcCallback] callBackId:{}, contractAgreementId:{}", dataReference.getId(),contractAgreementId);
 		endpointDataReferenceCache.put(contractAgreementId, dataReference);
 	}
 }
