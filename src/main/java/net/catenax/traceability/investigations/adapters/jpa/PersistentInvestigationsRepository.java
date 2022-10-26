@@ -100,7 +100,7 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 				.collect(Collectors.groupingBy(AssetEntity::getManufacturerId));
 
 			List<NotificationEntity> notifications = manufacturerAssets.entrySet().stream()
-				.map((entry) -> new NotificationEntity(investigationEntity, entry.getKey(), entry.getValue()))
+				.map(entry -> new NotificationEntity(investigationEntity, entry.getKey(), entry.getValue()))
 				.toList();
 
 			notificationRepository.saveAll(notifications);
