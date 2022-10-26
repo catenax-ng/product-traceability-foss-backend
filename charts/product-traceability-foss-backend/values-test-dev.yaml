@@ -1,6 +1,9 @@
 image:
   tag: $ARGOCD_APP_REVISION
 
+nameOverride: product-traceability-foss-backend-test
+fullnameOverride: product-traceability-foss-backend-test
+
 springprofile: dev
 
 ingress:
@@ -200,11 +203,9 @@ irs-helm:
         edc.oauth.provider.audience=idsc:IDS_CONNECTORS_ALL
         edc.oauth.provider.jwks.url=https://daps1.int.demo.catena-x.net/.well-known/jwks.json
         edc.oauth.token.url=https://daps1.int.demo.catena-x.net/token
-
         edc.vault.hashicorp.url=https://vault.demo.catena-x.net
         edc.vault.hashicorp.token=<path:traceability-foss/data/dev/edc#edc.vault.hashicorp.token>
         edc.vault.hashicorp.api.secret.path=/v1/traceability-foss
-
         edc.data.encryption.keys.alias=edc-data-encryption-keys-alias
         edc.data.encryption.algorithm=AES
 
@@ -255,7 +256,6 @@ irs-helm:
         edc.oauth.provider.audience=idsc:IDS_CONNECTORS_ALL
         edc.oauth.provider.jwks.url=https://daps1.int.demo.catena-x.net/.well-known/jwks.json
         edc.oauth.token.url=https://daps1.int.demo.catena-x.net/token
-
         edc.vault.hashicorp.url=https://vault.demo.catena-x.net
         edc.vault.hashicorp.token=<path:traceability-foss/data/dev/edc#edc.vault.hashicorp.token>
         edc.vault.hashicorp.api.secret.path=/v1/traceability-foss
