@@ -120,7 +120,6 @@ irs-helm:
       jwkSetUri: https://centralidp.dev.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/certs
 
   aasWrapper:
-#    host: http://tracex-irs-aaswrapper:9191/api/service
     username: tracefoss
     password: <path:traceability-foss/data/dev/edc/api-wrapper#wrapper.auth.basic.tracefoss>
 
