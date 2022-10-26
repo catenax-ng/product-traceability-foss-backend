@@ -66,15 +66,6 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 	}
 
 	@Override
-	public InvestigationId save(Investigation investigation) {
-		if (investigation.hasIdentity()) {
-			return merge(investigation);
-		} else {
-			return saveNew(investigation);
-		}
-	}
-
-	@Override
 	public void update(Notification notification) {
 		NotificationEntity entity = notificationRepository.findById(notification.getId())
 			.orElseThrow(() -> new IllegalArgumentException(String.format("Notification with id %s not found!", notification.getId())));
@@ -84,7 +75,8 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 		notificationRepository.save(entity);
 	}
 
-	private InvestigationId merge(Investigation investigation) {
+	@Override
+	public InvestigationId update(Investigation investigation) {
 		InvestigationEntity investigationEntity = investigationRepository.findById(investigation.getId().value())
 			.orElseThrow(() -> new IllegalArgumentException(String.format("Investigation with id %s not found!", investigation.getId().value())));
 
@@ -94,24 +86,26 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 		return investigation.getId();
 	}
 
-	private InvestigationId saveNew(Investigation investigation) {
+	@Override
+	public InvestigationId save(Investigation investigation) {
 		List<String> assetIds = investigation.getAssetIds();
 		List<AssetEntity> assets = assetsRepository.findByIdIn(assetIds);
 
 		if (!assets.isEmpty()) {
 			InvestigationEntity investigationEntity = new InvestigationEntity(assets, investigation.getBpn(), investigation.getDescription(), investigation.getInvestigationStatus(), investigation.getCreationTime());
-			InvestigationEntity savedInvestigation = investigationRepository.save(investigationEntity);
+
+			investigationRepository.save(investigationEntity);
 
 			Map<String, List<AssetEntity>> manufacturerAssets = assets.stream()
 				.collect(Collectors.groupingBy(AssetEntity::getManufacturerId));
 
 			List<NotificationEntity> notifications = manufacturerAssets.entrySet().stream()
-				.map((entry) -> new NotificationEntity(savedInvestigation, entry.getKey(), entry.getValue()))
+				.map((entry) -> new NotificationEntity(investigationEntity, entry.getKey(), entry.getValue()))
 				.toList();
 
 			notificationRepository.saveAll(notifications);
 
-			return new InvestigationId(savedInvestigation.getId());
+			return new InvestigationId(investigationEntity.getId());
 		} else {
 			throw new IllegalArgumentException("No assets found for %s asset ids".formatted(String.join(", ", assetIds)));
 		}

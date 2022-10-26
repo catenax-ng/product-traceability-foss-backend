@@ -58,7 +58,6 @@ public class InvestigationsService {
 		Investigation investigation = Investigation.receiveInvestigation(clock.instant(), notification);
 
 		return repository.save(investigation);
-
 	}
 
 	public InvestigationData findInvestigation(Long id) {
@@ -95,7 +94,7 @@ public class InvestigationsService {
 
 		investigation.cancel(bpn);
 
-		repository.save(investigation);
+		repository.update(investigation);
 	}
 
 	public void approveInvestigation(BPN bpn, Long id) {
@@ -105,7 +104,7 @@ public class InvestigationsService {
 
 		investigation.approve(bpn);
 
-		repository.save(investigation);
+		repository.update(investigation);
 
 		investigation.getNotifications().forEach(notificationsService::updateAsync);
 	}
@@ -117,7 +116,7 @@ public class InvestigationsService {
 
 		investigation.close(bpn);
 
-		repository.save(investigation);
+		repository.update(investigation);
 
 		investigation.getNotifications().forEach(notificationsService::updateAsync);
 	}
