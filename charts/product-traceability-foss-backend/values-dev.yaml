@@ -38,6 +38,7 @@ oauth2:
 
 postgresql:
   enabled: true
+  nameOverride: "tracex-backend-postgresql"
   fullnameOverride: "tracex-backend-postgresql"
   auth:
     postgresPassword: "<path:traceability-foss/data/dev/database#postgresPassword>"
