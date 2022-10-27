@@ -138,7 +138,6 @@ public class PersistentAssetsRepository implements AssetRepository {
 	}
 
 	private Asset toAsset(AssetEntity entity) {
-		entity.getInvestigations().size();
 		return new Asset(
 			entity.getId(), entity.getIdShort(),
 			entity.getNameAtManufacturer(),

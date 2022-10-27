@@ -12,7 +12,8 @@ trait DatabaseSupport implements DatabaseProvider {
 		"shell_descriptor",
 		"bpn_storage",
 		"notification",
-		"investigation"
+		"investigation",
+		"registry_lookup_metrics"
 	]
 
 	void clearAllTables() {
