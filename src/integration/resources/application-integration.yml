@@ -16,8 +16,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 ################################################################################
-SPRING_JPA_HIBERNATE_DDLAUTO: CREATE-DROP
-
 traceability:
   bpn: BPNL00000003AXS3
 
