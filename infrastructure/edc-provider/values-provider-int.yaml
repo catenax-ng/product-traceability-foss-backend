@@ -51,6 +51,7 @@ registry:
 edc-controlplane:
   replicaCount: 1
 
+  nameOverride: "tracex-edc-provider-controlplane"
   fullnameOverride: "tracex-edc-provider-controlplane"
 
   ## EDC endpoints exposed by the control-plane
@@ -207,6 +208,7 @@ edc-controlplane:
 edc-dataplane:
   replicaCount: 1
 
+  nameOverride: "tracex-edc-provider-dataplane"
   fullnameOverride: "tracex-edc-provider-dataplane"
 
   ## Ingress declaration to expose the network service.

@@ -106,7 +106,7 @@ irs-helm:
         secretName: tls-secret
 
   digitalTwinRegistry:
-    url: https://tracex-aas-registry.dev.demo.catena-x.net
+    url: https://trace-x-registry.dev.demo.catena-x.net
   semanticsHub:
     url: https://semantics.dev.demo.catena-x.net/hub/api/v1
   bpdm:
@@ -166,12 +166,12 @@ irs-helm:
     logging:
       # -- EDC logging.properties configuring the [java.util.logging subsystem](https://docs.oracle.com/javase/7/docs/technotes/guides/logging/overview.html#a1.8)
       properties: |-
-        .level=INFO
-        org.eclipse.dataspaceconnector.level=INFO
+        .level=FINE
+        org.eclipse.dataspaceconnector.level=FINE
         net.catenax.edc.hashicorpvault.level=INFO
         handlers=java.util.logging.ConsoleHandler
         java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter
-        java.util.logging.ConsoleHandler.level=INFO
+        java.util.logging.ConsoleHandler.level=FINE
         java.util.logging.SimpleFormatter.format=[%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS] [%4$-7s] %5$s%6$s%n
 
     edc:
