@@ -25,6 +25,7 @@ import net.catenax.traceability.investigations.adapters.rest.model.Investigation
 import net.catenax.traceability.investigations.domain.model.Investigation;
 import net.catenax.traceability.investigations.domain.model.InvestigationId;
 import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
+import net.catenax.traceability.investigations.domain.model.Notification;
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationNotFoundException;
 import net.catenax.traceability.investigations.domain.ports.InvestigationsRepository;
 import org.springframework.data.domain.Pageable;
@@ -48,7 +49,13 @@ public class InvestigationsService {
 	}
 
 	public InvestigationId startInvestigation(BPN bpn, List<String> assetIds, String description) {
-		Investigation investigation = Investigation.startInvestigation(clock, bpn, assetIds, description);
+		Investigation investigation = Investigation.startInvestigation(clock.instant(), bpn, assetIds, description);
+
+		return repository.save(investigation);
+	}
+
+	public InvestigationId receiveNotification(Notification notification) {
+		Investigation investigation = Investigation.receiveInvestigation(clock.instant(), notification);
 
 		return repository.save(investigation);
 	}
@@ -87,7 +94,7 @@ public class InvestigationsService {
 
 		investigation.cancel(bpn);
 
-		repository.save(investigation);
+		repository.update(investigation);
 	}
 
 	public void approveInvestigation(BPN bpn, Long id) {
@@ -97,7 +104,7 @@ public class InvestigationsService {
 
 		investigation.approve(bpn);
 
-		repository.save(investigation);
+		repository.update(investigation);
 
 		investigation.getNotifications().forEach(notificationsService::updateAsync);
 	}
@@ -109,7 +116,7 @@ public class InvestigationsService {
 
 		investigation.close(bpn);
 
-		repository.save(investigation);
+		repository.update(investigation);
 
 		investigation.getNotifications().forEach(notificationsService::updateAsync);
 	}

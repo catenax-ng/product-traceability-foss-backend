@@ -2,6 +2,7 @@ package net.catenax.traceability.investigations.domain.model;
 
 import net.catenax.traceability.investigations.domain.model.exception.NotificationStatusTransitionNotAllowed;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Notification {
@@ -9,7 +10,7 @@ public class Notification {
 	private String bpnNumber;
 	private String edcUrl;
 	private String contractAgreementId;
-	private List<AffectedPart> affectedParts;
+	private List<AffectedPart> affectedParts = new ArrayList<>();
 	private String description;
 	private InvestigationStatus investigationStatus;
 
@@ -20,7 +21,10 @@ public class Notification {
 		this.contractAgreementId = contractAgreementId;
 		this.description = description;
 		this.investigationStatus = investigationStatus;
-		this.affectedParts = affectedParts;
+
+		if (affectedParts != null) {
+			this.affectedParts = affectedParts;
+		}
 	}
 
 	void changeStatusTo(InvestigationStatus to) {
