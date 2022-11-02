@@ -56,6 +56,7 @@ public class InvestigationEntity {
 
 	private String bpn;
 	private InvestigationStatus status;
+	private String closeReason;
 	private String description;
 	private Instant created;
 	private Instant updated;
@@ -63,24 +64,26 @@ public class InvestigationEntity {
 	public InvestigationEntity() {
 	}
 
-	public InvestigationEntity(Long id, List<AssetEntity> assets, String bpn, InvestigationStatus status, String description, Instant created, Instant updated) {
+	public InvestigationEntity(Long id, List<AssetEntity> assets, String bpn, InvestigationStatus status, String closeReason, String description, Instant created, Instant updated) {
 		this.id = id;
 		this.assets = assets;
 		this.bpn = bpn;
 		this.status = status;
+		this.closeReason = closeReason;
 		this.description = description;
 		this.created = created;
 		this.updated = updated;
 	}
 
 	public InvestigationEntity(List<AssetEntity> assets, String bpn, String description, InvestigationStatus status, Instant created) {
-		this(assets, bpn, status, description, created);
+		this(assets, bpn, status, "", description, created);
 	}
 
-	public InvestigationEntity(List<AssetEntity> assets, String bpn, InvestigationStatus status, String description, Instant created) {
+	public InvestigationEntity(List<AssetEntity> assets, String bpn, InvestigationStatus status, String closeReason, String description, Instant created) {
 		this.assets = assets;
 		this.bpn = bpn;
 		this.status = status;
+		this.closeReason = closeReason;
 		this.description = description;
 		this.created = created;
 		this.updated = created;
@@ -116,6 +119,14 @@ public class InvestigationEntity {
 
 	public void setStatus(InvestigationStatus status) {
 		this.status = status;
+	}
+
+	public String getCloseReason() {
+		return closeReason;
+	}
+
+	public void setCloseReason(String closeReason) {
+		this.closeReason = closeReason;
 	}
 
 	public String getDescription() {

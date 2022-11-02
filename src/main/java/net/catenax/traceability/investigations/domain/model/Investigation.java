@@ -63,10 +63,12 @@ public class Investigation {
 	private final Instant createdAt;
 	private final List<String> assetIds;
 	private Map<Long, Notification> notifications;
+	private String closeReason;
 
 	public Investigation(InvestigationId investigationId,
 						 BPN bpn,
 						 InvestigationStatus investigationStatus,
+						 String closeReason,
 						 String description,
 						 Instant createdAt,
 						 List<String> assetIds,
@@ -75,6 +77,7 @@ public class Investigation {
 		this.investigationId = investigationId;
 		this.bpn = bpn;
 		this.investigationStatus = investigationStatus;
+		this.closeReason = closeReason;
 		this.description = description;
 		this.createdAt = createdAt;
 		this.assetIds = assetIds;
@@ -83,7 +86,7 @@ public class Investigation {
 	}
 
 	public static Investigation startInvestigation(Clock clock, BPN bpn, List<String> assetIds, String description) {
-		return new Investigation(null, bpn, InvestigationStatus.CREATED, description, clock.instant(), assetIds, Collections.emptyList());
+		return new Investigation(null, bpn, InvestigationStatus.CREATED, "", description, clock.instant(), assetIds, Collections.emptyList());
 	}
 
 	public List<String> getAssetIds() {
@@ -118,13 +121,15 @@ public class Investigation {
 	}
 
 	public void cancel(BPN callerBpn) {
-		close(callerBpn);
+		close(callerBpn, "canceled");
 	}
 
-	public void close(BPN callerBpn) {
+	public void close(BPN callerBpn, String reason) {
 		validateBPN(callerBpn);
 
 		changeStatusTo(InvestigationStatus.CLOSED);
+
+		this.closeReason = reason;
 	}
 
 	public void approve(BPN callerBpn) {

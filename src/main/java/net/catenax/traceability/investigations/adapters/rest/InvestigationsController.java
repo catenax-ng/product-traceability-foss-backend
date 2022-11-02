@@ -21,6 +21,7 @@ package net.catenax.traceability.investigations.adapters.rest;
 
 import net.catenax.traceability.common.model.PageResult;
 import net.catenax.traceability.common.properties.TraceabilityProperties;
+import net.catenax.traceability.investigations.adapters.rest.model.CloseInvestigationRequest;
 import net.catenax.traceability.investigations.adapters.rest.model.InvestigationData;
 import net.catenax.traceability.investigations.adapters.rest.model.StartInvestigationRequest;
 import net.catenax.traceability.investigations.adapters.rest.model.StartInvestigationResponse;
@@ -90,8 +91,8 @@ public class InvestigationsController {
 
 	@PostMapping("/{investigationId}/close")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void closeInvestigation(@PathVariable Long investigationId) {
-		investigationsService.closeInvestigation(traceabilityProperties.getBpn(), investigationId);
+	public void closeInvestigation(@PathVariable Long investigationId, @RequestBody CloseInvestigationRequest closeInvestigationRequest) {
+		investigationsService.closeInvestigation(traceabilityProperties.getBpn(), investigationId, closeInvestigationRequest.reason());
 	}
 }
 

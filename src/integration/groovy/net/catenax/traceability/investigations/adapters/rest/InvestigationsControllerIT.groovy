@@ -252,6 +252,10 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 		when:
 			given()
 				.contentType(ContentType.JSON)
+				.body(asJson([
+					reason    : "Out of date",
+					description: description
+				]))
 				.header(jwtAuthorization(ADMIN))
 				.when()
 				.post("/api/investigations/{investigationId}/close", investigationId)
@@ -344,11 +348,11 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 
 		and:
 			storedInvestigations(
-				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "1", now.minusSeconds(10L)),
-				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "2", now.plusSeconds(21L)),
-				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "3", now),
-				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "4", now.plusSeconds(20L)),
-				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "5", now.plusSeconds(40L))
+				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "", "1", now.minusSeconds(10L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "", "2", now.plusSeconds(21L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "", "3", now),
+				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "", "4", now.plusSeconds(20L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "", "5", now.plusSeconds(40L))
 			)
 
 		expect:
@@ -376,11 +380,11 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 
 		and:
 			storedInvestigations(
-				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "1", now.minusSeconds(5L)),
-				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "2", now.plusSeconds(2L)),
-				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "3", now),
-				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "4", now.plusSeconds(20L)),
-				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "5", now.plusSeconds(40L))
+				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "", "1", now.minusSeconds(5L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "",  "2", now.plusSeconds(2L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "", "3", now),
+				new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "", "4", now.plusSeconds(20L)),
+				new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "", "5", now.plusSeconds(40L))
 			)
 
 		expect:
