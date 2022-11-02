@@ -17,23 +17,12 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.investigations.domain.ports;
+package net.catenax.traceability.assets.infrastructure.adapters.metrics;
 
 import net.catenax.traceability.common.model.PageResult;
-import net.catenax.traceability.investigations.domain.model.Investigation;
-import net.catenax.traceability.investigations.domain.model.InvestigationId;
-import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
-import net.catenax.traceability.investigations.domain.model.Notification;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
-import java.util.Set;
-
-public interface InvestigationsRepository {
-	InvestigationId save(Investigation investigation);
-	InvestigationId update(Investigation investigation);
-	PageResult<Investigation> getInvestigations(Set<InvestigationStatus> investigationStatuses, Pageable pageable);
-	Optional<Investigation> findById(InvestigationId investigationId);
-	void update(Notification notification);
-	long countPendingInvestigations();
+public interface RegistryLookupMeterRegistry {
+	void save(RegistryLookupMetric registryLookupMetric);
+	PageResult<RegistryLookupMetric> getMetrics(Pageable pageable);
 }

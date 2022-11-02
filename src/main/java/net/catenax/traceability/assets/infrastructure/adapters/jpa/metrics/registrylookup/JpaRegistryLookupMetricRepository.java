@@ -17,19 +17,11 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.common.model;
+package net.catenax.traceability.assets.infrastructure.adapters.jpa.metrics.registrylookup;
 
-import org.springframework.util.StringUtils;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public record BPN(String value) {
-
-	public BPN {
-		if (!StringUtils.hasText(value)) {
-			throw new IllegalArgumentException("BPN must be present");
-		}
-	}
-
-	public static BPN of(String value) {
-		return new BPN(value);
-	}
+@Repository
+public interface JpaRegistryLookupMetricRepository extends JpaRepository<RegistryLookupMetricEntity, Long> {
 }
