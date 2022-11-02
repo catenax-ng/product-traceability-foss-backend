@@ -17,17 +17,17 @@
 # SPDX-License-Identifier: Apache-2.0
 ################################################################################
 traceability:
-  bpn: BPNL00000003CML1
+  bpn: ${TRACEABILITY_BPN}
   registry.manufacturerIdKey: manufacturerId
 
 edc:
-  ids: "/BPNL00000003CML1/api/v1/ids/data"
+  ids: "/${traceability.bpn}/api/v1/ids/data"
   negotiation: "/data/contractnegotiations"
   transfer: "/data/transferprocess"
   catalog: "/data/catalog?providerUrl="
   api:
     auth:
-      key: "edc-api-key"
+      key: ${EDC_API_KEY}
 
 server:
   servlet:

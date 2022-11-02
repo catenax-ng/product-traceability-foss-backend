@@ -19,6 +19,11 @@
 traceability:
   bpn: BPNL00000003AXS3
 
+edc:
+  api:
+    auth:
+      key: "integration-tests"
+
 spring:
   security:
     oauth2:

@@ -21,6 +21,9 @@ ingress:
       - "traceability-test.dev.demo.catena-x.net"
       secretName: tls-secret
 
+traceability:
+  bpn: "BPNL00000003AYRE"
+
 mailserver:
   host: "smtp.office365.com"
   port: "587"
@@ -38,6 +41,9 @@ oauth2:
   clientTokenUri: "https://centralidp.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token"
   jwkSetUri: "https://centralidp.dev.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/certs"
   resourceClient: "Cl10-CX-Part"
+
+edc:
+  apiKey: "<path:traceability-foss/data/dev/edc/controlplane#edc.api.control.auth.apikey.value>"
 
 postgresql:
   enabled: true

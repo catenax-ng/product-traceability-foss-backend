@@ -15,8 +15,10 @@ public class MockEDCUrlProvider implements EDCUrlProvider {
 		"man-1", "https://consumer-controlplane.dev.demo.ftcpro.co",
 		"BPNL00000003AXS3", "https://consumer-controlplane-3.dev.demo.ftcpro.co",
 		"BPNL00000002AXS2", "https://consumer-controlplane.dev.demo.ftcpro.co",
-		"BPNL00000001AXS1", "https://trace-consumer-controlplane.dev.demo.ftcpro.co",
-		"BPNL00000003CML1", "https://trace-consumer-controlplane.dev.demo.ftcpro.co"
+		"BPNL00000001AXS1", "trace-x-edc.dev.demo.catena-x.net",
+		"BPNL00000003CML1", "trace-x-edc.dev.demo.catena-x.net",
+		"BPNL00000003CNKC", "trace-x-test-edc.dev.demo.catena-x.net",
+		"BPNL00000003AYRE", "trace-x-test-edc.dev.demo.catena-x.net"
 	);
 
 	@Value("${traceability.bpn}")
