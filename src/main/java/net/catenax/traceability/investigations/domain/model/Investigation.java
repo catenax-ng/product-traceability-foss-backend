@@ -86,7 +86,7 @@ public class Investigation {
 	}
 
 	public static Investigation startInvestigation(Instant createDate, BPN bpn, List<String> assetIds, String description) {
-		return new Investigation(null, bpn, InvestigationStatus.CREATED, "", description, createDate, assetIds, Collections.emptyList());
+		return new Investigation(null, bpn, InvestigationStatus.CREATED, null, description, createDate, assetIds, Collections.emptyList());
 	}
 
 	public static Investigation receiveInvestigation(Instant createDate, Notification notification) {
@@ -94,6 +94,7 @@ public class Investigation {
 			null,
 			BPN.of(notification.getBpnNumber()),
 			InvestigationStatus.RECEIVED,
+			null,
 			notification.getDescription(),
 			createDate,
 			notification.getAffectedParts().stream()
