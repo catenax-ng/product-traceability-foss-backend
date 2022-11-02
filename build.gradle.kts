@@ -50,9 +50,12 @@ sonarqube {
 				"src/main/java/net/catenax/traceability/openapi/**",
 				"src/main/java/net/catenax/traceability/TraceabilityApplication.java",
 				"src/main/java/net/catenax/traceability/common/**",
+				"src/main/java/net/catenax/traceability/infrastructure/**",
 				"src/main/java/net/catenax/traceability/assets/domain/model/**",
 				"src/main/java/net/catenax/traceability/assets/infrastructure/**",
 				"src/main/java/net/catenax/traceability/assets/config/**",
+				"src/main/java/net/catenax/traceability/investigations/domain/model/**",
+				"src/main/java/net/catenax/traceability/investigations/adapters/**",
 				"src/main/java/net/catenax/traceability/infrastructure/edc/blackbox/**"
 			)
 		)

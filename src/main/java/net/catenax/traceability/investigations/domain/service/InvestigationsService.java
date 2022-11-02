@@ -31,6 +31,7 @@ import net.catenax.traceability.investigations.domain.ports.InvestigationsReposi
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotBlank;
 import java.time.Clock;
 import java.util.List;
 import java.util.Set;
@@ -109,12 +110,12 @@ public class InvestigationsService {
 		investigation.getNotifications().forEach(notificationsService::updateAsync);
 	}
 
-	public void closeInvestigation(BPN bpn, Long id) {
+	public void closeInvestigation(BPN bpn, Long id, String reason) {
 		InvestigationId investigationId = new InvestigationId(id);
 
 		Investigation investigation = loadInvestigation(investigationId);
 
-		investigation.close(bpn);
+		investigation.close(bpn, reason);
 
 		repository.update(investigation);
 

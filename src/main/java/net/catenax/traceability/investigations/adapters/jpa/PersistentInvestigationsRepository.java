@@ -153,6 +153,7 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 			new InvestigationId(investigationEntity.getId()),
 			new BPN(investigationEntity.getBpn()),
 			investigationEntity.getStatus(),
+			investigationEntity.getCloseReason(),
 			investigationEntity.getDescription(),
 			investigationEntity.getCreated(),
 			assetIds,

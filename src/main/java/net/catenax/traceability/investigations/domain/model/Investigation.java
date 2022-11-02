@@ -24,6 +24,7 @@ import net.catenax.traceability.investigations.adapters.rest.model.Investigation
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationIllegalUpdate;
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationStatusTransitionNotAllowed;
 
+import java.time.Clock;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,10 +63,12 @@ public class Investigation {
 	private final Instant createdAt;
 	private final List<String> assetIds;
 	private Map<Long, Notification> notifications;
+	private String closeReason;
 
 	public Investigation(InvestigationId investigationId,
 						 BPN bpn,
 						 InvestigationStatus investigationStatus,
+						 String closeReason,
 						 String description,
 						 Instant createdAt,
 						 List<String> assetIds,
@@ -74,6 +77,7 @@ public class Investigation {
 		this.investigationId = investigationId;
 		this.bpn = bpn;
 		this.investigationStatus = investigationStatus;
+		this.closeReason = closeReason;
 		this.description = description;
 		this.createdAt = createdAt;
 		this.assetIds = assetIds;
@@ -82,7 +86,7 @@ public class Investigation {
 	}
 
 	public static Investigation startInvestigation(Instant createDate, BPN bpn, List<String> assetIds, String description) {
-		return new Investigation(null, bpn, InvestigationStatus.CREATED, description, createDate, assetIds, Collections.emptyList());
+		return new Investigation(null, bpn, InvestigationStatus.CREATED, null, description, createDate, assetIds, Collections.emptyList());
 	}
 
 	public static Investigation receiveInvestigation(Instant createDate, Notification notification) {
@@ -90,6 +94,7 @@ public class Investigation {
 			null,
 			BPN.of(notification.getBpnNumber()),
 			InvestigationStatus.RECEIVED,
+			null,
 			notification.getDescription(),
 			createDate,
 			notification.getAffectedParts().stream()
@@ -131,13 +136,15 @@ public class Investigation {
 	}
 
 	public void cancel(BPN callerBpn) {
-		close(callerBpn);
+		close(callerBpn, "canceled");
 	}
 
-	public void close(BPN callerBpn) {
+	public void close(BPN callerBpn, String reason) {
 		validateBPN(callerBpn);
 
 		changeStatusTo(InvestigationStatus.CLOSED);
+
+		this.closeReason = reason;
 	}
 
 	public void approve(BPN callerBpn) {

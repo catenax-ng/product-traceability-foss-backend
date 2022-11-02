@@ -27,7 +27,7 @@ import java.time.Instant
 trait InvestigationsSupport implements InvestigationsRepositoryProvider {
 
 	void defaultReceivedInvestigationStored() {
-		InvestigationEntity entity = new InvestigationEntity([], "BPN000001", InvestigationStatus.RECEIVED, "some-description", Instant.now())
+		InvestigationEntity entity = new InvestigationEntity([], "BPN000001", InvestigationStatus.RECEIVED, "",  "some-description", Instant.now())
 
 		storedInvestigation(entity)
 	}
