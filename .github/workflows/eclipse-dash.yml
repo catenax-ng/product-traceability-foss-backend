@@ -1,0 +1,28 @@
+name: "Eclipse DASH IP Check"
+
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore:
+      - 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Gradle and check dependencies with dash
+        run: ./gradlew dependencies | grep -Poh "(?<=\s)[\w\.-]+:[\w\.-]+:[^:\s]+" | grep -v "^org\.eclipse" | sort | uniq  | java -jar org.eclipse.dash.licenses-0.0.1-20221104.055037-598.jar -  | grep restricted > RESTRICTED_DEPENDENCIES
+
+      - name: upload results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          path: 'RESTRICTED_DEPENDENCIES'
