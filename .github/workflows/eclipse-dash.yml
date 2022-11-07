@@ -27,4 +27,4 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          path: 'RESTRICTED_DEPENDENCIES'
+          path: 'DEPENDENCIES'
