@@ -1,10 +1,9 @@
-name: "Eclipse DASH IP Check"
+name: "Eclipse Dash Create IP Ticket"
 
 on:
   workflow_dispatch:
-  push:
-    branches-ignore:
-      - 'main'
+  schedule:
+    - cron:  "0 0 * * 1-5" # "At 00:00 on every day-of-week from Monday through Friday."
 
 jobs:
   build:
@@ -18,13 +17,18 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build with Gradle and check dependencies with dash
+      - name: Build with Maven and check dependencies with dash
+        env:
+          ECLIPSE_DASH_TOKEN: ${{ secrets.ORG_TRACE_X_ECLIPSE_DASH_TOKEN }}
         run: |
           ./gradlew dependencies | grep -Poh "(?<=\s)[\w\.-]+:[\w\.-]+:[^:\s]+" | grep -v "^org\.eclipse" | sort | uniq  > DEPENDENCIES
-
+          java -jar org.eclipse.dash.licenses-0.0.1-20221104.055037-598.jar DEPENDENCIES -summary DEPS_SUMMARY \
+          -project automotive.tractusx -review -token $ECLIPSE_DASH_TOKEN
 
       - name: upload results
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          path: 'DEPENDENCIES'
+          path: 'DEPS_SUMMARY'
+
+
