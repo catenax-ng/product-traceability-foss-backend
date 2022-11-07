@@ -36,11 +36,11 @@ datasource:
   password: <path:traceability-foss/data/dev/database#tracePassword>
 
 oauth2:
-  clientId: <path:traceability-foss/data/dev/keycloak/oauth2#clientId>
+  clientId: <path:traceability-foss/data/int/keycloak/oauth2#clientId>
   clientSecret: <path:traceability-foss/data/int/keycloak/oauth2#clientSecret>
   clientTokenUri: "https://centralidp.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token"
   jwkSetUri: "https://centralidp.dev.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/certs"
-  resourceClient: "Cl10-CX-Part"
+  resourceClient: "Cl17-CX-Part"
 
 edc:
   apiKey: "<path:traceability-foss/data/dev/edc/controlplane#edc.api.control.auth.apikey.value>"
