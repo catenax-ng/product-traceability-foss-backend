@@ -22,6 +22,7 @@ package net.catenax.traceability.assets.infrastructure.adapters.openapi.registry
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.catenax.traceability.assets.domain.model.ShellDescriptor;
+import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.model.AssetsConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +34,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static net.catenax.traceability.assets.infrastructure.adapters.openapi.registry.RegistryService.AssetIdType.BATCH_ID;
+import static net.catenax.traceability.assets.infrastructure.adapters.openapi.registry.RegistryService.AssetIdType.MANUFACTURER_ID;
+import static net.catenax.traceability.assets.infrastructure.adapters.openapi.registry.RegistryService.AssetIdType.MANUFACTURER_PART_ID;
+import static net.catenax.traceability.assets.infrastructure.adapters.openapi.registry.RegistryService.AssetIdType.PART_INSTANCE_ID;
 
 @Component
 public class RegistryService {
@@ -41,12 +48,35 @@ public class RegistryService {
 
 	private final ObjectMapper objectMapper;
 	private final RegistryApiClient registryApiClient;
+	private final AssetsConverter assetsConverter;
 	private final String bpn;
 	private final String manufacturerIdKey;
 
-	public RegistryService(ObjectMapper objectMapper, RegistryApiClient registryApiClient, @Value("${traceability.bpn}") String bpn, @Value("${traceability.registry.manufacturerIdKey}") String manufacturerIdKey) {
+	enum AssetIdType {
+		MANUFACTURER_PART_ID("manufacturerPartId"),
+		PART_INSTANCE_ID("partInstanceId"),
+		MANUFACTURER_ID("manufacturerId"),
+		BATCH_ID("batchId");
+
+		private final String value;
+
+		AssetIdType(String value) {
+			this.value = value;
+		}
+
+		public String asKey() {
+			return this.value.toLowerCase();
+		}
+	}
+
+	public RegistryService(ObjectMapper objectMapper,
+						   RegistryApiClient registryApiClient,
+						   AssetsConverter assetsConverter,
+						   @Value("${traceability.bpn}") String bpn,
+						   @Value("${traceability.registry.manufacturerIdKey}") String manufacturerIdKey) {
 		this.objectMapper = objectMapper;
 		this.registryApiClient = registryApiClient;
+		this.assetsConverter = assetsConverter;
 		this.bpn = bpn;
 		this.manufacturerIdKey = manufacturerIdKey;
 	}
@@ -68,8 +98,7 @@ public class RegistryService {
 
 		List<ShellDescriptor> shellDescriptors = descriptors.getItems().stream()
 			.filter(it -> Objects.nonNull(it.getGlobalAssetId()))
-			.map(this::logIncomingDescriptor)
-			.map(i -> new ShellDescriptor(i.getIdentification(), i.getGlobalAssetId().getValue().get(0)))
+			.map(this::toShellDescriptor)
 			.toList();
 
 		logger.info("Found {} shell descriptors containing a global asset ID.", shellDescriptors.size());
@@ -77,7 +106,25 @@ public class RegistryService {
 		return shellDescriptors;
 	}
 
-	private AssetAdministrationShellDescriptor logIncomingDescriptor(AssetAdministrationShellDescriptor descriptor) {
+	private ShellDescriptor toShellDescriptor(AssetAdministrationShellDescriptor aasDescriptor) {
+		logIncomingDescriptor(aasDescriptor);
+
+		String shellDescriptorId = aasDescriptor.getIdentification();
+		String globalAssetId = aasDescriptor.getGlobalAssetId().getValue().stream()
+			.findFirst()
+			.orElse(null);
+		Map<String, String> assetIdsMap = aasDescriptor.getSpecificAssetIds().stream()
+			.collect(Collectors.toMap(entry -> entry.getKey().toLowerCase(), IdentifierKeyValuePair::getValue));
+
+		String manufacturerPartId = assetIdsMap.get(MANUFACTURER_PART_ID.asKey());
+		String partInstanceId = assetIdsMap.get(PART_INSTANCE_ID.asKey());
+		String manufacturerId = assetIdsMap.get(MANUFACTURER_ID.asKey());
+		String batchId = assetIdsMap.get(BATCH_ID.asKey());
+
+		return new ShellDescriptor(shellDescriptorId, globalAssetId, aasDescriptor.getIdShort(), partInstanceId, manufacturerPartId, manufacturerId, batchId);
+	}
+
+	private void logIncomingDescriptor(AssetAdministrationShellDescriptor descriptor) {
 		if (logger.isDebugEnabled()) {
 			try {
 				String rawDescriptor = objectMapper.writeValueAsString(descriptor);
@@ -86,7 +133,6 @@ public class RegistryService {
 				logger.warn("Failed to write rawDescriptor {} as string", descriptor, e);
 			}
 		}
-		return descriptor;
 	}
 
 	private String getFilterValue(String key, String value) {
