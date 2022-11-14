@@ -20,12 +20,10 @@
 package net.catenax.traceability.investigations.domain.model;
 
 import net.catenax.traceability.common.model.BPN;
-import net.catenax.traceability.infrastructure.edc.blackbox.model.EDCNotification;
 import net.catenax.traceability.investigations.adapters.rest.model.InvestigationData;
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationIllegalUpdate;
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationStatusTransitionNotAllowed;
 
-import java.time.Clock;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -143,7 +141,11 @@ public class Investigation {
 	}
 
 	public void cancel(BPN callerBpn) {
-		close(callerBpn, "canceled");
+		validateBPN(callerBpn);
+
+		changeStatusTo(InvestigationStatus.CANCELED);
+
+		this.closeReason = "canceled";
 	}
 
 	public void close(BPN callerBpn, String reason) {

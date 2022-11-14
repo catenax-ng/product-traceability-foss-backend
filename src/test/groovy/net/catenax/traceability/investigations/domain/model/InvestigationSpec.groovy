@@ -30,6 +30,7 @@ import java.time.Instant
 import static net.catenax.traceability.investigations.domain.model.InvestigationStatus.ACCEPTED
 import static net.catenax.traceability.investigations.domain.model.InvestigationStatus.ACKNOWLEDGED
 import static net.catenax.traceability.investigations.domain.model.InvestigationStatus.APPROVED
+import static net.catenax.traceability.investigations.domain.model.InvestigationStatus.CANCELED
 import static net.catenax.traceability.investigations.domain.model.InvestigationStatus.CLOSED
 import static net.catenax.traceability.investigations.domain.model.InvestigationStatus.CREATED
 import static net.catenax.traceability.investigations.domain.model.InvestigationStatus.DECLINED
@@ -89,7 +90,7 @@ class InvestigationSpec extends Specification {
 			Investigation investigation = investigationWithStatus(bpn, investigationStatus)
 
 		when:
-			investigation.cancel(bpn)
+			investigation.close(bpn, "some-reason")
 
 		then:
 			thrown(InvestigationStatusTransitionNotAllowed)
@@ -98,7 +99,7 @@ class InvestigationSpec extends Specification {
 			investigation.getInvestigationStatus() == investigationStatus
 
 		where:
-			investigationStatus << [RECEIVED, ACKNOWLEDGED, ACCEPTED, DECLINED, CLOSED]
+			investigationStatus << [CREATED, CLOSED, CANCELED]
 	}
 
 	def "should not allow to cancel investigation for different bpn"() {
@@ -169,22 +170,21 @@ class InvestigationSpec extends Specification {
 			Investigation investigation = investigationWithStatus(bpn, CREATED)
 
 		when:
-			investigation.cancel(bpn)
+			investigation.approve(bpn)
 
 		then:
 			noExceptionThrown()
 
 		and:
-			investigation.getInvestigationStatus() == CLOSED
+			investigation.getInvestigationStatus() == APPROVED
 	}
 
-	@Unroll
-	def "should allow to cancel investigation with #investigationStatus status"() {
+	def "should allow to cancel investigation status"() {
 		given:
 			BPN bpn = new BPN("BPNL000000000001")
 
 		and:
-			Investigation investigation = investigationWithStatus(bpn, investigationStatus)
+			Investigation investigation = investigationWithStatus(bpn, CREATED)
 
 		when:
 			investigation.cancel(bpn)
@@ -193,10 +193,7 @@ class InvestigationSpec extends Specification {
 			noExceptionThrown()
 
 		and:
-			investigation.getInvestigationStatus() == CLOSED
-
-		where:
-			investigationStatus << [CREATED, APPROVED, SENT]
+			investigation.getInvestigationStatus() == CANCELED
 	}
 
 	@Unroll
@@ -208,7 +205,7 @@ class InvestigationSpec extends Specification {
 			Investigation investigation = investigationWithStatus(bpn, investigationStatus)
 
 		when:
-			investigation.cancel(bpn)
+			investigation.close(bpn, "some-reason")
 
 		then:
 			noExceptionThrown()
@@ -217,7 +214,7 @@ class InvestigationSpec extends Specification {
 			investigation.getInvestigationStatus() == CLOSED
 
 		where:
-			investigationStatus << [CREATED, APPROVED, SENT]
+			investigationStatus << [APPROVED, SENT, RECEIVED, ACKNOWLEDGED, ACCEPTED, DECLINED]
 	}
 
 	private Investigation investigationWithStatus(BPN bpn, InvestigationStatus status) {

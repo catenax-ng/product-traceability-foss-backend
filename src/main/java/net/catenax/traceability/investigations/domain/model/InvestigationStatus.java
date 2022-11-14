@@ -34,7 +34,7 @@ public enum InvestigationStatus {
 	ACKNOWLEDGED(InvestigationSide.RECEIVER, of(InvestigationSide.RECEIVER)),
 	ACCEPTED(InvestigationSide.RECEIVER, of(InvestigationSide.RECEIVER)),
 	DECLINED(InvestigationSide.RECEIVER, of(InvestigationSide.RECEIVER)),
-	CANCELED(InvestigationSide.SENDER, emptySet()),
+	CANCELED(InvestigationSide.SENDER, of(InvestigationSide.SENDER)),
 	CLOSED(InvestigationSide.SENDER, of(InvestigationSide.SENDER, InvestigationSide.RECEIVER));
 
 	private final InvestigationSide investigationSide;
