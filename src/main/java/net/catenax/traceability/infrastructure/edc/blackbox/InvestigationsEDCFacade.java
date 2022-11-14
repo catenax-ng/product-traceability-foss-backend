@@ -60,9 +60,8 @@ public class InvestigationsEDCFacade {
 		Map<String, String> header = new HashMap<>();
 		header.put("x-api-key", apiAuthKey);
 		try {
-			String receiverEdcUrl = edcUrlProvider.getEdcUrl(notification.getBpnNumber());
+			String receiverEdcUrl = edcUrlProvider.getEdcUrl(notification.getReceiverBpnNumber());
 			String senderEdcUrl = edcUrlProvider.getSenderUrl();
-			String senderBPN = edcUrlProvider.getSenderBpn();
 
 			notification.setEdcUrl(receiverEdcUrl);
 
@@ -111,7 +110,7 @@ public class InvestigationsEDCFacade {
 				dataReference = getDataReference(agreementId);
 			}
 
-			EDCNotification edcNotification = new EDCNotification(senderBPN, senderEdcUrl, notification);
+			EDCNotification edcNotification = new EDCNotification(senderEdcUrl, notification);
 			String body = objectMapper.writeValueAsString(edcNotification);
 			HttpUrl url = httpCallService.getUrl(dataReference.getEndpoint(), null, null);
 			Request request = new Request.Builder()
