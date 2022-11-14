@@ -13,10 +13,10 @@ import net.catenax.traceability.investigations.domain.model.Notification
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
-class InvestigationsServiceIT extends IntegrationSpecification implements IrsApiSupport, AssetsSupport, InvestigationsSupport, NotificationsSupport, BpnSupport {
+class InvestigationsPublisherServiceIT extends IntegrationSpecification implements IrsApiSupport, AssetsSupport, InvestigationsSupport, NotificationsSupport, BpnSupport {
 
 	@Autowired
-	InvestigationsService investigationsService
+	InvestigationsPublisherService investigationsService
 
 	@Transactional
 	def "should receive notification"() {

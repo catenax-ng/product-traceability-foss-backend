@@ -34,7 +34,8 @@ public enum InvestigationStatus {
 	ACKNOWLEDGED(InvestigationSide.RECEIVER, of(InvestigationSide.RECEIVER)),
 	ACCEPTED(InvestigationSide.RECEIVER, of(InvestigationSide.RECEIVER)),
 	DECLINED(InvestigationSide.RECEIVER, of(InvestigationSide.RECEIVER)),
-	CLOSED(InvestigationSide.SENDER, of(InvestigationSide.SENDER));
+	CANCELED(InvestigationSide.SENDER, emptySet()),
+	CLOSED(InvestigationSide.SENDER, of(InvestigationSide.SENDER, InvestigationSide.RECEIVER));
 
 	private final InvestigationSide investigationSide;
 	private final Set<InvestigationSide> allowedTransitionFromSide;
@@ -50,14 +51,15 @@ public enum InvestigationStatus {
 
 	static {
 		STATE_MACHINE = Map.of(
-			CREATED, of(APPROVED, CLOSED),
+			CREATED, of(APPROVED, CANCELED),
 			APPROVED, of(SENT, CLOSED),
 			SENT, of(RECEIVED, CLOSED),
 			RECEIVED, of(ACKNOWLEDGED, CLOSED),
 			ACKNOWLEDGED, of(DECLINED, ACCEPTED, CLOSED),
 			ACCEPTED, of(CLOSED),
 			DECLINED, of(CLOSED),
-			CLOSED, NO_TRANSITION_ALLOWED
+			CLOSED, NO_TRANSITION_ALLOWED,
+			CANCELED, NO_TRANSITION_ALLOWED
 		);
 	}
 

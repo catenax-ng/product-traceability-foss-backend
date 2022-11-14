@@ -20,6 +20,7 @@
 package net.catenax.traceability.investigations.domain.model;
 
 import net.catenax.traceability.common.model.BPN;
+import net.catenax.traceability.infrastructure.edc.blackbox.model.EDCNotification;
 import net.catenax.traceability.investigations.adapters.rest.model.InvestigationData;
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationIllegalUpdate;
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationStatusTransitionNotAllowed;
@@ -62,7 +63,7 @@ public class Investigation {
 	private final String description;
 	private final Instant createdAt;
 	private final List<String> assetIds;
-	private Map<Long, Notification> notifications;
+	private final Map<String, Notification> notifications;
 	private String closeReason;
 
 	public Investigation(InvestigationId investigationId,
@@ -85,22 +86,28 @@ public class Investigation {
 			.collect(Collectors.toMap(Notification::getId, Function.identity()));;
 	}
 
-	public static Investigation startInvestigation(Instant createDate, BPN bpn, List<String> assetIds, String description) {
-		return new Investigation(null, bpn, InvestigationStatus.CREATED, null, description, createDate, assetIds, Collections.emptyList());
+	public static Investigation startInvestigation(Instant createDate, BPN bpn, String description) {
+		return new Investigation(null,
+			bpn,
+			InvestigationStatus.CREATED,
+			null,
+			description,
+			createDate,
+			new ArrayList<>(),
+			new ArrayList<>()
+		);
 	}
 
-	public static Investigation receiveInvestigation(Instant createDate, Notification notification) {
+	public static Investigation receiveInvestigation(Instant createDate, BPN bpn, String description) {
 		return new Investigation(
 			null,
-			BPN.of(notification.getBpnNumber()),
+			bpn,
 			InvestigationStatus.RECEIVED,
 			null,
-			notification.getDescription(),
+			description,
 			createDate,
-			notification.getAffectedParts().stream()
-				.map(AffectedPart::assetId)
-				.toList(),
-			Collections.emptyList()
+			new ArrayList<>(),
+			new ArrayList<>()
 		);
 	}
 
@@ -184,7 +191,15 @@ public class Investigation {
 		return new ArrayList<>(notifications.values());
 	}
 
-	public Optional<Notification> getNotification(Long notificationId) {
+	public Optional<Notification> getNotification(String notificationId) {
 		return Optional.ofNullable(notifications.get(notificationId));
+	}
+
+	public void addNotification(Notification notification) {
+		notifications.put(notification.getId(), notification);
+
+		notification.getAffectedParts().stream()
+			.map(AffectedPart::assetId)
+			.forEach(assetIds::add);
 	}
 }

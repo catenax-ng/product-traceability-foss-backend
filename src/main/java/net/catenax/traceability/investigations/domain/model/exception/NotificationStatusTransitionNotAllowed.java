@@ -23,7 +23,7 @@ import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 
 public class NotificationStatusTransitionNotAllowed extends RuntimeException {
 
-	public NotificationStatusTransitionNotAllowed(Long notificationId, InvestigationStatus from, InvestigationStatus to) {
+	public NotificationStatusTransitionNotAllowed(String notificationId, InvestigationStatus from, InvestigationStatus to) {
 		super("Can't transit from %s status to %s status for %s notification id".formatted(from.name(), to.name(), notificationId));
 	}
 }
