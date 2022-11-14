@@ -372,7 +372,7 @@ irs:
         edc.vault.hashicorp.api.secret.path=/v1/traceability-foss
 
         edc.data.encryption.keys.alias=edc-data-encryption-keys-alias
-        edc.data.encryption.algorithm=AES
+        edc.data.encryption.algorithm=NONE
 
         # Postgresql related configuration
         edc.datasource.asset.name=asset
