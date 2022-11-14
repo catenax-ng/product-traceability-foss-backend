@@ -125,6 +125,8 @@ public class InvestigationsEDCFacade {
 
 			logger.info(":::: EDC Data Transfer Completed :::::");
 		} catch (IOException e) {
+			logger.error("EDC Data Transfer fail", e);
+
 			throw new BadRequestException("EDC Data Transfer fail");
 		} catch (InterruptedException e) {
 			logger.error("Exception", e);
