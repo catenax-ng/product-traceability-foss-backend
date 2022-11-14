@@ -13,7 +13,6 @@ import net.catenax.traceability.infrastructure.edc.blackbox.notification.Transfe
 import net.catenax.traceability.infrastructure.edc.blackbox.offer.ContractOffer;
 import net.catenax.traceability.infrastructure.edc.blackbox.policy.Policy;
 import net.catenax.traceability.infrastructure.edc.blackbox.transfer.TransferRequestDto;
-import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 import org.apache.groovy.util.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +91,7 @@ public class EDCReceiverController {
 		logger.info("Returning contract negotiations");
 		String contractAgreementId = "contract-agreement-id";
 
-		restTemplate.postForEntity("/endpoint-data-reference",
+		restTemplate.postForEntity("/callback/endpoint-data-reference",
 			EndpointDataReference.Builder.newInstance()
 			.authCode(JWT.create()
 				.withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)))
@@ -106,7 +105,7 @@ public class EDCReceiverController {
 
 		return ContractNegotiationDto.Builder.newInstance()
 			.contractAgreementId(contractAgreementId)
-			.state(InvestigationStatus.ACKNOWLEDGED.name())
+			.state("CONFIRMED")
 			.build();
 	}
 

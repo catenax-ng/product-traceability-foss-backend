@@ -19,12 +19,10 @@
 
 package net.catenax.traceability.investigations.domain.model;
 
-import net.catenax.traceability.common.model.BPN;
 import net.catenax.traceability.investigations.domain.model.exception.NotificationStatusTransitionNotAllowed;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static java.util.Objects.requireNonNullElseGet;
 
