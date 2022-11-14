@@ -22,7 +22,6 @@ package net.catenax.traceability.assets.infrastructure.adapters.openapi.registry
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.catenax.traceability.assets.domain.model.ShellDescriptor;
-import net.catenax.traceability.assets.infrastructure.adapters.feign.irs.model.AssetsConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,7 +47,6 @@ public class RegistryService {
 
 	private final ObjectMapper objectMapper;
 	private final RegistryApiClient registryApiClient;
-	private final AssetsConverter assetsConverter;
 	private final String bpn;
 	private final String manufacturerIdKey;
 
@@ -71,12 +69,10 @@ public class RegistryService {
 
 	public RegistryService(ObjectMapper objectMapper,
 						   RegistryApiClient registryApiClient,
-						   AssetsConverter assetsConverter,
 						   @Value("${traceability.bpn}") String bpn,
 						   @Value("${traceability.registry.manufacturerIdKey}") String manufacturerIdKey) {
 		this.objectMapper = objectMapper;
 		this.registryApiClient = registryApiClient;
-		this.assetsConverter = assetsConverter;
 		this.bpn = bpn;
 		this.manufacturerIdKey = manufacturerIdKey;
 	}
