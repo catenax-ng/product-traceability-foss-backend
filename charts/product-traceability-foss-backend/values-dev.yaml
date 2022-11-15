@@ -437,7 +437,7 @@ irs:
 
         edc.dataplane.token.validation.endpoint=http://tracex-consumer-controlplane:8182/validation/token
 
-        edc.receiver.http.endpoint=https://traceability.dev.demo.catena-x.net/api/callback/endpoint-data-reference
+        edc.receiver.http.endpoint=http://tracex-irs-aaswrapper:9192/callback/endpoint-data-reference
 
         edc.oauth.client.id=60:99:BC:FC:9B:F9:5D:58:C4:94:1D:02:65:3E:88:B6:F9:C7:23:B3:keyid:60:99:BC:FC:9B:F9:5D:58:C4:94:1D:02:65:3E:88:B6:F9:C7:23:B3
         edc.oauth.public.key.alias=daps-cert-dev
