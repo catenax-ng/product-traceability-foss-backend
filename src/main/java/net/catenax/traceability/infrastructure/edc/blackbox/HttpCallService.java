@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.String.format;
 
@@ -31,9 +32,17 @@ public class HttpCallService {
 	String catalogPath;
 
 	public HttpCallService(OkHttpClient httpClient, ObjectMapper objectMapper) {
-		this.httpClient = httpClient;
+		this.httpClient = withIncreasedTimeout(httpClient);
 		this.objectMapper = objectMapper;
 		objectMapper.registerSubtypes(AtomicConstraint.class, LiteralExpression.class);
+	}
+
+	private static OkHttpClient withIncreasedTimeout(OkHttpClient httpClient) {
+		return httpClient.newBuilder()
+			.connectTimeout(2, TimeUnit.SECONDS)
+			.readTimeout(5, TimeUnit.SECONDS)
+			.writeTimeout(10, TimeUnit.SECONDS)
+			.build();
 	}
 
 
