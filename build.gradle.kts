@@ -2,7 +2,7 @@ plugins {
 	id("java")
 	id("groovy")
 	id("jacoco")
-	id("org.springframework.boot") version "2.7.4"
+	id("org.springframework.boot") version "2.7.5"
 	id("io.spring.dependency-management") version "1.0.14.RELEASE"
 	id("com.autonomousapps.dependency-analysis") version "1.13.1"
 	id("com.google.cloud.tools.jib") version "3.2.1"
@@ -61,13 +61,13 @@ sonarqube {
 val commonsCodecVersion = "1.15"
 val commonsIoVersion = "2.11.0"
 val groovyVersion = "3.0.13"
-val spockBomVersion = "2.3-groovy-4.0"
+val spockBomVersion = "2.1-groovy-3.0"
 val greenmailVersion = "1.6.11"
 val springfoxVersion = "3.0.0"
 val feignVersion = "11.10"
 val springCloudVersion = "2021.0.5"
 val springBootSecurityOauth2Version = "2.6.8"
-val jacksonDatabindNullableVersion = "0.2.3"
+val jacksonDatabindNullableVersion = "0.2.4"
 val scribejavaVersion = "8.3.2"
 val findBugsVersion = "3.0.2"
 val restitoVersion = "1.1.0"
