@@ -327,6 +327,9 @@ irs:
       # -- EDC logging.properties configuring the [java.util.logging subsystem](https://docs.oracle.com/javase/7/docs/technotes/guides/logging/overview.html#a1.8)
       properties: |-
         .level=FINEST
+        okhttp3=FINEST
+        okhttp3.internal.concurrent.TaskRunner=FINEST
+        okhttp3.internal.http2.Http2=FINEST
         org.eclipse.dataspaceconnector.level=FINEST
         net.catenax.edc.hashicorpvault.level=INFO
         handlers=java.util.logging.ConsoleHandler
@@ -431,6 +434,9 @@ irs:
       # -- EDC logging.properties configuring the [java.util.logging subsystem](https://docs.oracle.com/javase/7/docs/technotes/guides/logging/overview.html#a1.8)
       properties: |-
         .level=FINEST
+        okhttp3=FINEST
+        okhttp3.internal.concurrent.TaskRunner=FINEST
+        okhttp3.internal.http2.Http2=FINEST
         org.eclipse.dataspaceconnector.level=FINEST
         net.catenax.edc.hashicorpvault.level=INFO
         handlers=java.util.logging.ConsoleHandler
