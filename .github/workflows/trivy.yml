@@ -6,7 +6,6 @@ on:
   workflow_run:
     workflows: [Publish docker image]
     types: [completed]
-    branches: [main]
 
 jobs:
   prepare-env:
