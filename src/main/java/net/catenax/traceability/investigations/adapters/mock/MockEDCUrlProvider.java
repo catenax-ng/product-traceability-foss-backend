@@ -18,7 +18,7 @@ public class MockEDCUrlProvider implements EDCUrlProvider {
 		"BPNL00000001AXS1", "https://trace-x-edc.dev.demo.catena-x.net/api/v1/data/catalog",
 		"BPNL00000003CML1", "https://tracex-consumer-controlplane.dev.demo.catena-x.net",
 		"BPNL00000003CNKC", "http://provider-controlplane:8282",
-		"BPNL00000003AYRE", "https://tracex-test-consumer-controlplane.dev.demo.catena-x.net"
+		"BPNL00000003AYRE", "https://trace-x-test-edc.dev.demo.catena-x.net"
 	);
 
 	@Value("${traceability.bpn}")
