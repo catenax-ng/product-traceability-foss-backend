@@ -21,6 +21,7 @@ package net.catenax.traceability.assets.infrastructure.adapters.jpa.shelldescrip
 import net.catenax.traceability.assets.domain.model.ShellDescriptor;
 import net.catenax.traceability.assets.domain.ports.ShellDescriptorRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
@@ -43,6 +44,7 @@ public class PersistentShellDescriptorsRepository implements ShellDescriptorRepo
 	}
 
 	@Override
+	@Transactional
 	public void update(ShellDescriptor shellDescriptor) {
 		repository.findByShellDescriptorId(shellDescriptor.shellDescriptorId()).ifPresent(entity -> {
 			entity.setUpdated(ZonedDateTime.now());
@@ -68,11 +70,25 @@ public class PersistentShellDescriptorsRepository implements ShellDescriptorRepo
 	}
 
 	private ShellDescriptor toShellDescriptor(ShellDescriptorEntity descriptor) {
-		return new ShellDescriptor(descriptor.getShellDescriptorId(), descriptor.getGlobalAssetId());
+		return new ShellDescriptor(
+			descriptor.getShellDescriptorId(),
+			descriptor.getGlobalAssetId(),
+			descriptor.getIdShort(),
+			descriptor.getPartInstanceId(),
+			descriptor.getManufacturerPartId(),
+			descriptor.getManufacturerId(),
+			descriptor.getBatchId()
+		);
 	}
 
 	private ShellDescriptorEntity toNewEntity(ShellDescriptor descriptor) {
-		return ShellDescriptorEntity.newEntity(descriptor.shellDescriptorId(), descriptor.globalAssetId());
+		return ShellDescriptorEntity.newEntity(
+			descriptor.shellDescriptorId(),
+			descriptor.globalAssetId(),
+			descriptor.idShort(),
+			descriptor.partInstanceId(), descriptor.manufacturerId(), descriptor.manufacturerPartId(),
+			descriptor.batchId()
+		);
 	}
 
 }
