@@ -109,7 +109,7 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 
 	@Override
 	public PageResult<Investigation> getInvestigations(Set<InvestigationStatus> investigationStatuses, Pageable pageable) {
-		Page<InvestigationEntity> entities = investigationRepository.findAllByStatusIn(investigationStatuses, pageable);
+		Page<InvestigationEntity> entities = investigationRepository.findAllByStatusInOrderByCreatedDesc(investigationStatuses, pageable);
 
 		return new PageResult<>(entities, this::toInvestigation);
 	}
