@@ -30,19 +30,23 @@ mailserver:
   password: <path:traceability-foss/data/int#mailserverPassword>
 
 datasource:
-  url: jdbc:postgresql://product-traceability-foss-backend-postgresql:5432/trace
+  url: jdbc:postgresql://tracex-backend-pen-postgresql-hl:5432/trace
   username: trace
   password: <path:traceability-foss/data/pen/database#tracePassword>
 
 oauth2:
   clientId: <path:traceability-foss/data/pen/keycloak/oauth2#clientId>
   clientSecret: <path:traceability-foss/data/pen/keycloak/oauth2#clientSecret>
-  clientTokenUri: " https://centralidp-pen.dev.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token"
-  jwkSetUri: " https://centralidp-pen.dev.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/certs"
+  clientTokenUri: "https://centralidp-pen.dev.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token"
+  jwkSetUri: "https://centralidp-pen.dev.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/certs"
   resourceClient: "Cl17-CX-Part"
 
 postgresql:
   enabled: true
+
+  nameOverride: "tracex-backend-pen-postgresql"
+  fullnameOverride: "tracex-backend-pen-postgresql"
+
   auth:
     postgresPassword: "<path:traceability-foss/data/pen/database#postgresPassword>"
     password: "<path:traceability-foss/data/pen/database#tracePassword>"
