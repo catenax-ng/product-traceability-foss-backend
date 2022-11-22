@@ -14,13 +14,13 @@ ingress:
 
 
   hosts:
-    - host: "traceability-pen-portal.int.demo.catena-x.net"
+    - host: "traceability-pen.int.demo.catena-x.net"
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - hosts:
-      - "traceability-pen-portal.int.demo.catena-x.net"
+      - "traceability-pen.int.demo.catena-x.net"
       secretName: tls-secret
 
 mailserver:
