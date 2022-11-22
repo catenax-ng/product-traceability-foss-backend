@@ -3,6 +3,9 @@ image:
 
 springprofile: int #will be set as int
 
+nameOverride: "product-traceability-foss-pen-backend"
+fullnameOverride: "product-traceability-foss-pen-backend"
+
 ingress:
   enabled: true
   className: "nginx"
