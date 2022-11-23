@@ -1,6 +1,8 @@
 image:
   tag: $ARGOCD_APP_REVISION
 
+namespace: product-traceability-foss-pen
+
 springprofile: int #will be set as int
 
 nameOverride: "product-traceability-foss-pen-backend"
@@ -30,7 +32,7 @@ mailserver:
   password: <path:traceability-foss/data/int#mailserverPassword>
 
 datasource:
-  url: jdbc:postgresql://product-traceability-foss-pen-backend-postgresql:5432/trace
+  url: jdbc:postgresql://tracex-backend-pen-postgresql:5432/trace
   username: trace
   password: <path:traceability-foss/data/pen/database#tracePassword>
 
@@ -43,6 +45,10 @@ oauth2:
 
 postgresql:
   enabled: true
+
+  nameOverride: "tracex-backend-pen-postgresql"
+  fullnameOverride: "tracex-backend-pen-postgresql"
+
   auth:
     postgresPassword: "<path:traceability-foss/data/pen/database#postgresPassword>"
     password: "<path:traceability-foss/data/pen/database#tracePassword>"
