@@ -140,7 +140,7 @@ public class InvestigationsEDCFacade {
 		while (dataReference == null && waitTimeout > 0) {
 			ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 			ScheduledFuture<EndpointDataReference> scheduledFuture =
-				scheduler.schedule(() -> endpointDataReferenceCache.get(agreementId),1000, TimeUnit.MILLISECONDS);
+				scheduler.schedule(() -> endpointDataReferenceCache.get(agreementId),30, TimeUnit.SECONDS);
 			try {
 				dataReference = scheduledFuture.get();
 				waitTimeout--;
@@ -154,7 +154,7 @@ public class InvestigationsEDCFacade {
 			}
 		}
 		if (dataReference == null) {
-			throw new BadRequestException("Did not receive callback within 10 seconds from consumer edc.");
+			throw new BadRequestException("Did not receive callback within 30 seconds from consumer edc.");
 		}
 		return dataReference;
 	}
