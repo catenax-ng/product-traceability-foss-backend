@@ -39,9 +39,9 @@ public class HttpCallService {
 
 	private static OkHttpClient withIncreasedTimeout(OkHttpClient httpClient) {
 		return httpClient.newBuilder()
-			.connectTimeout(2, TimeUnit.SECONDS)
-			.readTimeout(5, TimeUnit.SECONDS)
-			.writeTimeout(10, TimeUnit.SECONDS)
+			.connectTimeout(10, TimeUnit.SECONDS)
+			.readTimeout(25, TimeUnit.SECONDS)
+			.writeTimeout(50, TimeUnit.SECONDS)
 			.build();
 	}
 
