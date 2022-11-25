@@ -319,15 +319,12 @@ irs:
     logging:
       # -- EDC logging.properties configuring the [java.util.logging subsystem](https://docs.oracle.com/javase/7/docs/technotes/guides/logging/overview.html#a1.8)
       properties: |-
-        .level=FINEST
-        okhttp3=FINEST
-        okhttp3.internal.concurrent.TaskRunner=FINEST
-        okhttp3.internal.http2.Http2=FINEST
-        org.eclipse.dataspaceconnector.level=FINEST
+        .level=INFO
+        org.eclipse.dataspaceconnector.level=INFO
         net.catenax.edc.hashicorpvault.level=INFO
         handlers=java.util.logging.ConsoleHandler
         java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter
-        java.util.logging.ConsoleHandler.level=FINEST
+        java.util.logging.ConsoleHandler.level=INFO
         java.util.logging.SimpleFormatter.format=[%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS] [%4$-7s] %5$s%6$s%n
 
     configuration:
@@ -426,15 +423,12 @@ irs:
     logging:
       # -- EDC logging.properties configuring the [java.util.logging subsystem](https://docs.oracle.com/javase/7/docs/technotes/guides/logging/overview.html#a1.8)
       properties: |-
-        .level=FINEST
-        okhttp3=FINEST
-        okhttp3.internal.concurrent.TaskRunner=FINEST
-        okhttp3.internal.http2.Http2=FINEST
-        org.eclipse.dataspaceconnector.level=FINEST
+        .level=INFO
+        org.eclipse.dataspaceconnector.level=INFO
         net.catenax.edc.hashicorpvault.level=INFO
         handlers=java.util.logging.ConsoleHandler
         java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter
-        java.util.logging.ConsoleHandler.level=FINEST
+        java.util.logging.ConsoleHandler.level=INFO
         java.util.logging.SimpleFormatter.format=[%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS] [%4$-7s] %5$s%6$s%n
 
     configuration:
