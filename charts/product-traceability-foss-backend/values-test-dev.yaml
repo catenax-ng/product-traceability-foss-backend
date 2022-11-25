@@ -85,7 +85,7 @@ pgadmin4:
       cpu: 1000m
       memory: 1Gi
     requests:
-      cpu: 500m
+      cpu: 256m
       memory: 512Mi
 
 irs:
@@ -320,7 +320,7 @@ irs:
         cpu: 2
         memory: 4Gi
       requests:
-        cpu: 500m
+        cpu: 256m
         memory: 2Gi
 
     logging:
@@ -424,7 +424,7 @@ irs:
         cpu: 1
         memory: 1Gi
       requests:
-        cpu: 500m
+        cpu: 256m
         memory: 512Mi
 
     logging:
