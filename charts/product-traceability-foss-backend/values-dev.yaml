@@ -313,7 +313,7 @@ irs:
         cpu: 2
         memory: 4Gi
       requests:
-        cpu: 256m
+        cpu: 500m
         memory: 2Gi
 
     logging:
@@ -417,7 +417,7 @@ irs:
         cpu: 1
         memory: 1Gi
       requests:
-        cpu: 256m
+        cpu: 500m
         memory: 512Mi
 
     logging:
