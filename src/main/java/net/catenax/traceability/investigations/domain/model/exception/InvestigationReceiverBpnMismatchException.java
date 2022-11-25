@@ -17,24 +17,13 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package net.catenax.traceability.common.model;
+package net.catenax.traceability.investigations.domain.model.exception;
 
-import org.springframework.util.StringUtils;
+import net.catenax.traceability.common.model.BPN;
 
-public record BPN(String value) {
+public class InvestigationReceiverBpnMismatchException extends IllegalArgumentException {
 
-	public BPN {
-		if (!StringUtils.hasText(value)) {
-			throw new IllegalArgumentException("BPN must be present");
-		}
-	}
-
-	public static BPN of(String value) {
-		return new BPN(value);
-	}
-
-	@Override
-	public String toString() {
-		return value;
+	public InvestigationReceiverBpnMismatchException(BPN actual, BPN receiver, String investigationId) {
+		super("%s BPN is not eligible to handle %s BPN %s investigation".formatted(actual, receiver, investigationId));
 	}
 }

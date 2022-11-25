@@ -19,79 +19,68 @@
 
 package net.catenax.traceability.investigations.domain.service;
 
+import net.catenax.traceability.assets.domain.model.Asset;
+import net.catenax.traceability.assets.domain.ports.AssetRepository;
 import net.catenax.traceability.common.model.BPN;
-import net.catenax.traceability.common.model.PageResult;
-import net.catenax.traceability.investigations.adapters.rest.model.InvestigationData;
+import net.catenax.traceability.investigations.domain.model.AffectedPart;
 import net.catenax.traceability.investigations.domain.model.Investigation;
 import net.catenax.traceability.investigations.domain.model.InvestigationId;
 import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 import net.catenax.traceability.investigations.domain.model.Notification;
-import net.catenax.traceability.investigations.domain.model.exception.InvestigationNotFoundException;
 import net.catenax.traceability.investigations.domain.ports.InvestigationsRepository;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotBlank;
 import java.time.Clock;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
-public class InvestigationsService {
+public class InvestigationsPublisherService {
 
 	private final NotificationsService notificationsService;
 	private final InvestigationsRepository repository;
+	private final InvestigationsReadService investigationsReadService;
+	private final AssetRepository assetRepository;
 	private final Clock clock;
 
-	public InvestigationsService(NotificationsService notificationsService, InvestigationsRepository repository, Clock clock) {
+	public InvestigationsPublisherService(NotificationsService notificationsService,
+										  InvestigationsRepository repository,
+										  InvestigationsReadService investigationsReadService,
+										  AssetRepository assetRepository, Clock clock) {
 		this.notificationsService = notificationsService;
 		this.repository = repository;
+		this.investigationsReadService = investigationsReadService;
+		this.assetRepository = assetRepository;
 		this.clock = clock;
 	}
 
 	public InvestigationId startInvestigation(BPN bpn, List<String> assetIds, String description) {
-		Investigation investigation = Investigation.startInvestigation(clock.instant(), bpn, assetIds, description);
+		Investigation investigation = Investigation.startInvestigation(clock.instant(), bpn, description);
+
+		Map<String, List<Asset>> assetsByManufacturer = assetRepository.getAssetsById(assetIds).stream().collect(Collectors.groupingBy(Asset::getManufacturerId));
+
+		assetsByManufacturer.entrySet().stream()
+			.map(it -> new Notification(
+				UUID.randomUUID().toString(),
+				null,
+				bpn.value(),
+				it.getKey(),
+				null,
+				null,
+				description,
+				InvestigationStatus.RECEIVED,
+				it.getValue().stream().map(Asset::getId).map(AffectedPart::new).collect(Collectors.toList())
+			)).forEach(investigation::addNotification);
 
 		return repository.save(investigation);
-	}
-
-	public InvestigationId receiveNotification(Notification notification) {
-		Investigation investigation = Investigation.receiveInvestigation(clock.instant(), notification);
-
-		return repository.save(investigation);
-	}
-
-	public InvestigationData findInvestigation(Long id) {
-		InvestigationId investigationId = new InvestigationId(id);
-
-		Investigation investigation = loadInvestigation(investigationId);
-
-		return investigation.toData();
-	}
-
-	public PageResult<InvestigationData> getCreatedInvestigations(Pageable pageable) {
-		return getInvestigations(pageable, Investigation.CREATED_STATUSES);
-	}
-
-	public PageResult<InvestigationData> getReceivedInvestigations(Pageable pageable) {
-		return getInvestigations(pageable, Investigation.RECEIVED_STATUSES);
-	}
-
-	private PageResult<InvestigationData> getInvestigations(Pageable pageable, Set<InvestigationStatus> statuses) {
-		List<InvestigationData> investigationData = repository.getInvestigations(statuses, pageable)
-			.content()
-			.stream()
-			.sorted(Investigation.COMPARE_BY_NEWEST_INVESTIGATION_CREATION_TIME)
-			.map(Investigation::toData)
-			.toList();
-
-		return new PageResult<>(investigationData);
 	}
 
 	public void cancelInvestigation(BPN bpn, Long id) {
 		InvestigationId investigationId = new InvestigationId(id);
 
-		Investigation investigation = loadInvestigation(investigationId);
+		Investigation investigation = investigationsReadService.loadInvestigation(investigationId);
 
 		investigation.cancel(bpn);
 
@@ -101,7 +90,7 @@ public class InvestigationsService {
 	public void approveInvestigation(BPN bpn, Long id) {
 		InvestigationId investigationId = new InvestigationId(id);
 
-		Investigation investigation = loadInvestigation(investigationId);
+		Investigation investigation = investigationsReadService.loadInvestigation(investigationId);
 
 		investigation.approve(bpn);
 
@@ -113,17 +102,12 @@ public class InvestigationsService {
 	public void closeInvestigation(BPN bpn, Long id, String reason) {
 		InvestigationId investigationId = new InvestigationId(id);
 
-		Investigation investigation = loadInvestigation(investigationId);
+		Investigation investigation = investigationsReadService.loadInvestigation(investigationId);
 
 		investigation.close(bpn, reason);
 
 		repository.update(investigation);
 
 		investigation.getNotifications().forEach(notificationsService::updateAsync);
-	}
-
-	private Investigation loadInvestigation(InvestigationId investigationId) {
-		return repository.findById(investigationId)
-			.orElseThrow(() -> new InvestigationNotFoundException(investigationId));
 	}
 }

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class EDCNotification {
 
-	private Long notificationId;
+	private String notificationId;
 	private String senderBPN;
 	private String senderAddress;
 	private String recipientBPN;
@@ -23,22 +23,22 @@ public class EDCNotification {
 	public EDCNotification() {
 	}
 
-	public EDCNotification(String senderBPN, String senderEDC, Notification notification) {
+	public EDCNotification(String senderEDC, Notification notification) {
 		this.notificationId = notification.getId();
-		this.senderBPN = senderBPN;
+		this.senderBPN = notification.getSenderBpnNumber();
 		this.senderAddress = senderEDC;
-		this.recipientBPN = notification.getEdcUrl();
+		this.recipientBPN = notification.getReceiverBpnNumber();
 		this.information = notification.getDescription();
 		this.listOfAffectedItems = notification.getAffectedParts();
 		this.status = notification.getInvestigationStatus();
 		this.classification = NotificationType.QMINVESTIGATION;
 	}
 
-	public Long getNotificationId() {
+	public String getNotificationId() {
 		return notificationId;
 	}
 
-	public void setNotificationId(Long notificationId) {
+	public void setNotificationId(String notificationId) {
 		this.notificationId = notificationId;
 	}
 

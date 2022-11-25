@@ -2,12 +2,12 @@ package net.catenax.traceability.infrastructure.jpa.notification;
 
 import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.AssetEntity;
 import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -19,9 +19,11 @@ import java.util.List;
 @Entity
 @Table(name = "notification")
 public class NotificationEntity {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue(generator = "system-uuid")
+	@GenericGenerator(name = "system-uuid", strategy = "uuid2")
+	private String id;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "investigation_id")
@@ -35,7 +37,8 @@ public class NotificationEntity {
 	)
 	private List<AssetEntity> assets;
 
-	private String bpnNumber;
+	private String senderBpnNumber;
+	private String receiverBpnNumber;
 	private String edcUrl;
 	private String contractAgreementId;
 	private String notificationReferenceId;
@@ -43,17 +46,19 @@ public class NotificationEntity {
 	public NotificationEntity() {
 	}
 
-	public NotificationEntity(InvestigationEntity investigation, String bpnNumber, List<AssetEntity> assets) {
+	public NotificationEntity(InvestigationEntity investigation, String senderBpnNumber, String receiverBpnNumber, List<AssetEntity> assets, String notificationReferenceId) {
 		this.investigation = investigation;
-		this.bpnNumber = bpnNumber;
+		this.senderBpnNumber = senderBpnNumber;
+		this.receiverBpnNumber = receiverBpnNumber;
 		this.assets = assets;
+		this.notificationReferenceId = notificationReferenceId;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -65,12 +70,20 @@ public class NotificationEntity {
 		this.investigation = investigationsId;
 	}
 
-	public String getBpnNumber() {
-		return bpnNumber;
+	public String getSenderBpnNumber() {
+		return senderBpnNumber;
 	}
 
-	public void setBpnNumber(String bpnNumber) {
-		this.bpnNumber = bpnNumber;
+	public void setSenderBpnNumber(String senderBpnNumber) {
+		this.senderBpnNumber = senderBpnNumber;
+	}
+
+	public String getReceiverBpnNumber() {
+		return receiverBpnNumber;
+	}
+
+	public void setReceiverBpnNumber(String bpnNumber) {
+		this.receiverBpnNumber = bpnNumber;
 	}
 
 	public String getEdcUrl() {

@@ -60,9 +60,8 @@ public class InvestigationsEDCFacade {
 		Map<String, String> header = new HashMap<>();
 		header.put("x-api-key", apiAuthKey);
 		try {
-			String receiverEdcUrl = edcUrlProvider.getEdcUrl(notification.getBpnNumber());
+			String receiverEdcUrl = edcUrlProvider.getEdcUrl(notification.getReceiverBpnNumber());
 			String senderEdcUrl = edcUrlProvider.getSenderUrl();
-			String senderBPN = edcUrlProvider.getSenderBpn();
 
 			notification.setEdcUrl(receiverEdcUrl);
 
@@ -111,7 +110,7 @@ public class InvestigationsEDCFacade {
 				dataReference = getDataReference(agreementId);
 			}
 
-			EDCNotification edcNotification = new EDCNotification(senderBPN, senderEdcUrl, notification);
+			EDCNotification edcNotification = new EDCNotification(senderEdcUrl, notification);
 			String body = objectMapper.writeValueAsString(edcNotification);
 			HttpUrl url = httpCallService.getUrl(dataReference.getEndpoint(), null, null);
 			Request request = new Request.Builder()
@@ -126,6 +125,8 @@ public class InvestigationsEDCFacade {
 
 			logger.info(":::: EDC Data Transfer Completed :::::");
 		} catch (IOException e) {
+			logger.error("EDC Data Transfer fail", e);
+
 			throw new BadRequestException("EDC Data Transfer fail");
 		} catch (InterruptedException e) {
 			logger.error("Exception", e);
@@ -139,7 +140,7 @@ public class InvestigationsEDCFacade {
 		while (dataReference == null && waitTimeout > 0) {
 			ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 			ScheduledFuture<EndpointDataReference> scheduledFuture =
-				scheduler.schedule(() -> endpointDataReferenceCache.get(agreementId),1000, TimeUnit.MILLISECONDS);
+				scheduler.schedule(() -> endpointDataReferenceCache.get(agreementId),30, TimeUnit.SECONDS);
 			try {
 				dataReference = scheduledFuture.get();
 				waitTimeout--;
@@ -153,7 +154,7 @@ public class InvestigationsEDCFacade {
 			}
 		}
 		if (dataReference == null) {
-			throw new BadRequestException("Did not receive callback within 10 seconds from consumer edc.");
+			throw new BadRequestException("Did not receive callback within 30 seconds from consumer edc.");
 		}
 		return dataReference;
 	}

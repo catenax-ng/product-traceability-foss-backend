@@ -61,6 +61,8 @@ public class SecurityConfig {
 			.and()
 			.anonymous().disable()
 			.authorizeRequests()
+			.antMatchers("/api/callback/endpoint-data-reference").permitAll()
+			.antMatchers("/api/qualitynotifications/receive").permitAll()
 			.antMatchers("/api/**").authenticated()
 			.and()
 			.oauth2Client()

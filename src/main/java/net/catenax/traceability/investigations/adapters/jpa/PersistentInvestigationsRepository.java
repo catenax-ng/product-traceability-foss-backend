@@ -39,7 +39,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -89,19 +88,16 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 	@Override
 	public InvestigationId save(Investigation investigation) {
 		List<String> assetIds = investigation.getAssetIds();
-		List<AssetEntity> assets = assetsRepository.findByIdIn(assetIds);
+		List<AssetEntity> assetEntities = assetsRepository.findByIdIn(assetIds);
 
-		if (!assets.isEmpty()) {
-			InvestigationEntity investigationEntity = new InvestigationEntity(assets, investigation.getBpn(), investigation.getDescription(), investigation.getInvestigationStatus(), investigation.getCreationTime());
+		if (!assetEntities.isEmpty()) {
+			InvestigationEntity investigationEntity = new InvestigationEntity(assetEntities, investigation.getBpn(), investigation.getDescription(), investigation.getInvestigationStatus(), investigation.getCreationTime());
 
 			investigationRepository.save(investigationEntity);
 
-			Map<String, List<AssetEntity>> manufacturerAssets = assets.stream()
-				.collect(Collectors.groupingBy(AssetEntity::getManufacturerId));
-
-			List<NotificationEntity> notifications = manufacturerAssets.entrySet().stream()
-				.map(entry -> new NotificationEntity(investigationEntity, entry.getKey(), entry.getValue()))
-				.toList();
+			List<NotificationEntity> notifications = investigation.getNotifications().stream()
+					.map(notification -> toNotificationEntity(investigationEntity, notification, assetEntities))
+						.toList();
 
 			notificationRepository.saveAll(notifications);
 
@@ -113,7 +109,7 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 
 	@Override
 	public PageResult<Investigation> getInvestigations(Set<InvestigationStatus> investigationStatuses, Pageable pageable) {
-		Page<InvestigationEntity> entities = investigationRepository.findAllByStatusIn(investigationStatuses, pageable);
+		Page<InvestigationEntity> entities = investigationRepository.findAllByStatusInOrderByCreatedDesc(investigationStatuses, pageable);
 
 		return new PageResult<>(entities, this::toInvestigation);
 	}
@@ -121,6 +117,17 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 	@Override
 	public Optional<Investigation> findById(InvestigationId investigationId) {
 		return investigationRepository.findById(investigationId.value())
+			.map(this::toInvestigation);
+	}
+
+	@Override
+	public long countPendingInvestigations() {
+		return investigationRepository.countAllByStatusEquals(InvestigationStatus.RECEIVED);
+	}
+
+	@Override
+	public Optional<Investigation> findByNotificationReferenceId(String notificationId) {
+		return investigationRepository.findByNotificationsNotificationReferenceId(notificationId)
 			.map(this::toInvestigation);
 	}
 
@@ -166,19 +173,43 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 
 		return new Notification(
 			notificationEntity.getId(),
-			notificationEntity.getBpnNumber(),
+			notificationEntity.getNotificationReferenceId(),
+			notificationEntity.getSenderBpnNumber(),
+			notificationEntity.getReceiverBpnNumber(),
 			notificationEntity.getEdcUrl(),
 			notificationEntity.getContractAgreementId(),
 			investigation.getDescription(),
 			investigation.getStatus(),
 			notificationEntity.getAssets().stream()
-				.map(asset -> new AffectedPart(asset.getId(), asset.getQualityType()))
+				.map(asset -> new AffectedPart(asset.getId()))
 				.toList()
 		);
 	}
 
-	@Override
-	public long countPendingInvestigations() {
-		return investigationRepository.countAllByStatusEquals(InvestigationStatus.RECEIVED);
+
+	private NotificationEntity toNotificationEntity(InvestigationEntity investigationEntity, Notification notification, List<AssetEntity> investigationAssets) {
+		List<AssetEntity> notificationAssets = filterNotificationAssets(notification, investigationAssets);
+
+		if (notificationAssets.isEmpty()) {
+			throw new IllegalStateException("Investigation with id %s has no notification assets".formatted(investigationEntity.getId()));
+		}
+
+		return new NotificationEntity(
+			investigationEntity,
+			notification.getSenderBpnNumber(),
+			notification.getReceiverBpnNumber(),
+			notificationAssets,
+			notification.getNotificationReferenceId()
+		);
+	}
+
+	private List<AssetEntity> filterNotificationAssets(Notification notification, List<AssetEntity> assets) {
+		Set<String> notificationAffectedAssetIds = notification.getAffectedParts().stream()
+			.map(AffectedPart::assetId)
+			.collect(Collectors.toSet());
+
+		return assets.stream()
+			.filter(it -> notificationAffectedAssetIds.contains(it.getId()))
+			.toList();
 	}
 }

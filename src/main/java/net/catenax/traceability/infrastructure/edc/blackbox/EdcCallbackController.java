@@ -10,7 +10,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @ApiIgnore
-@RequestMapping("/endpoint-data-reference")
+@RequestMapping("/callback/endpoint-data-reference")
 public class EdcCallbackController {
 
 	private final InMemoryEndpointDataReferenceCache endpointDataReferenceCache;

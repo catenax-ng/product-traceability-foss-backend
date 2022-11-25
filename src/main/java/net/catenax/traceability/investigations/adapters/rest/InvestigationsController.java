@@ -26,7 +26,8 @@ import net.catenax.traceability.investigations.adapters.rest.model.Investigation
 import net.catenax.traceability.investigations.adapters.rest.model.StartInvestigationRequest;
 import net.catenax.traceability.investigations.adapters.rest.model.StartInvestigationResponse;
 import net.catenax.traceability.investigations.domain.model.InvestigationId;
-import net.catenax.traceability.investigations.domain.service.InvestigationsService;
+import net.catenax.traceability.investigations.domain.service.InvestigationsPublisherService;
+import net.catenax.traceability.investigations.domain.service.InvestigationsReadService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,54 +46,56 @@ import javax.validation.Valid;
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERVISOR', 'ROLE_USER')")
 public class InvestigationsController {
 
-	private final InvestigationsService investigationsService;
+	private final InvestigationsReadService investigationsReadService;
+	private final InvestigationsPublisherService investigationsPublisherService;
 
 	private final TraceabilityProperties traceabilityProperties;
 
-	public InvestigationsController(InvestigationsService investigationsService, TraceabilityProperties traceabilityProperties) {
-		this.investigationsService = investigationsService;
+	public InvestigationsController(InvestigationsReadService investigationsReadService, InvestigationsPublisherService investigationsPublisherService, TraceabilityProperties traceabilityProperties) {
+		this.investigationsReadService = investigationsReadService;
+		this.investigationsPublisherService = investigationsPublisherService;
 		this.traceabilityProperties = traceabilityProperties;
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public StartInvestigationResponse investigateAssets(@RequestBody @Valid StartInvestigationRequest request) {
-		InvestigationId investigationId = investigationsService.startInvestigation(traceabilityProperties.getBpn(), request.partIds(), request.description());
+		InvestigationId investigationId = investigationsPublisherService.startInvestigation(traceabilityProperties.getBpn(), request.partIds(), request.description());
 
 		return new StartInvestigationResponse(investigationId.value());
 	}
 
 	@GetMapping("/created")
 	public PageResult<InvestigationData> getCreatedInvestigations(Pageable pageable) {
-		return investigationsService.getCreatedInvestigations(pageable);
+		return investigationsReadService.getCreatedInvestigations(pageable);
 	}
 
 	@GetMapping("/received")
 	public PageResult<InvestigationData> getReceivedInvestigations(Pageable pageable) {
-		return investigationsService.getReceivedInvestigations(pageable);
+		return investigationsReadService.getReceivedInvestigations(pageable);
 	}
 
 	@GetMapping("/{investigationId}")
 	public InvestigationData getInvestigation(@PathVariable Long investigationId) {
-		return investigationsService.findInvestigation(investigationId);
+		return investigationsReadService.findInvestigation(investigationId);
 	}
 
 	@PostMapping("/{investigationId}/approve")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void approveInvestigation(@PathVariable Long investigationId) {
-		investigationsService.approveInvestigation(traceabilityProperties.getBpn(), investigationId);
+		investigationsPublisherService.approveInvestigation(traceabilityProperties.getBpn(), investigationId);
 	}
 
 	@PostMapping("/{investigationId}/cancel")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void cancelInvestigation(@PathVariable Long investigationId) {
-		investigationsService.cancelInvestigation(traceabilityProperties.getBpn(), investigationId);
+		investigationsPublisherService.cancelInvestigation(traceabilityProperties.getBpn(), investigationId);
 	}
 
 	@PostMapping("/{investigationId}/close")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void closeInvestigation(@PathVariable Long investigationId, @RequestBody CloseInvestigationRequest closeInvestigationRequest) {
-		investigationsService.closeInvestigation(traceabilityProperties.getBpn(), investigationId, closeInvestigationRequest.reason());
+		investigationsPublisherService.closeInvestigation(traceabilityProperties.getBpn(), investigationId, closeInvestigationRequest.reason());
 	}
 }
 

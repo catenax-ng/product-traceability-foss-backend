@@ -38,7 +38,7 @@ datasource:
 oauth2:
   clientId: <path:traceability-foss/data/int/keycloak/oauth2#clientId>
   clientSecret: <path:traceability-foss/data/int/keycloak/oauth2#clientSecret>
-  clientTokenUri: "https://centralidp.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token"
+  clientTokenUri: "https://centralidp.int.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token"
   jwkSetUri: "https://centralidp.dev.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/certs"
   resourceClient: "Cl17-CX-Part"
 
@@ -85,7 +85,7 @@ pgadmin4:
       cpu: 1000m
       memory: 1Gi
     requests:
-      cpu: 500m
+      cpu: 256m
       memory: 512Mi
 
 irs:
@@ -120,8 +120,8 @@ irs:
     oauth2:
       clientId: <path:traceability-foss/data/int/keycloak/oauth2#clientId>
       clientSecret: <path:traceability-foss/data/int/keycloak/oauth2#clientSecret>
-      clientTokenUri: https://centralidp.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token
-      jwkSetUri: https://centralidp.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/certs
+      clientTokenUri: https://centralidp.int.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token
+      jwkSetUri: https://centralidp.int.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/certs
 
   aasWrapper:
     host: http://tracex-test-irs-aaswrapper:9191/api/service
@@ -320,7 +320,7 @@ irs:
         cpu: 2
         memory: 4Gi
       requests:
-        cpu: 500m
+        cpu: 256m
         memory: 2Gi
 
     logging:
@@ -424,7 +424,7 @@ irs:
         cpu: 1
         memory: 1Gi
       requests:
-        cpu: 500m
+        cpu: 256m
         memory: 512Mi
 
     logging:
