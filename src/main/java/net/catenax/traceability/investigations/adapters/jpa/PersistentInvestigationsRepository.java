@@ -131,6 +131,11 @@ public class PersistentInvestigationsRepository implements InvestigationsReposit
 			.map(this::toInvestigation);
 	}
 
+	@Override
+	public long countInvestigations(Set<InvestigationStatus> statuses) {
+		return investigationRepository.countAllByStatusIn(statuses);
+	}
+
 	private void update(InvestigationEntity investigationEntity, Investigation investigation) {
 		investigationEntity.setStatus(investigation.getInvestigationStatus());
 		investigationEntity.setUpdated(clock.instant());

@@ -26,6 +26,9 @@ import net.catenax.traceability.investigations.domain.model.InvestigationId;
 import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 import net.catenax.traceability.investigations.domain.model.exception.InvestigationNotFoundException;
 import net.catenax.traceability.investigations.domain.ports.InvestigationsRepository;
+import org.springframework.beans.support.PagedListHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -65,7 +68,9 @@ public class InvestigationsReadService {
 			.map(Investigation::toData)
 			.toList();
 
-		return new PageResult<>(investigationData);
+		Page<InvestigationData> investigationDataPage = new PageImpl<>(investigationData, pageable, repository.countInvestigations(statuses));
+
+		return new PageResult<>(investigationDataPage);
 	}
 
 	public Investigation loadInvestigation(InvestigationId investigationId) {
