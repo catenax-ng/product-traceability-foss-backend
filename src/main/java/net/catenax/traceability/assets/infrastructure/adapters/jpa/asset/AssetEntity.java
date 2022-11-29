@@ -23,16 +23,19 @@ import net.catenax.traceability.assets.domain.model.QualityType;
 import net.catenax.traceability.infrastructure.jpa.investigation.InvestigationEntity;
 import net.catenax.traceability.investigations.domain.model.InvestigationStatus;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "asset")
 public class AssetEntity {
 	@Id
 	private String id;
@@ -51,6 +54,7 @@ public class AssetEntity {
 	private QualityType qualityType;
 
 	@ElementCollection
+	@CollectionTable(name = "asset_child_descriptors")
 	private List<ChildDescription> childDescriptors;
 
 	@ManyToMany(mappedBy = "assets")

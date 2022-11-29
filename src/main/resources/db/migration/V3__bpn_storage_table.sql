@@ -1,5 +1,6 @@
-create table bpn_storage (
-	manufacturer_id varchar(255) not null,
+create table bpn_storage
+(
+	manufacturer_id   varchar(255) not null,
 	manufacturer_name varchar(255) not null,
 	primary key (manufacturer_id)
 );
