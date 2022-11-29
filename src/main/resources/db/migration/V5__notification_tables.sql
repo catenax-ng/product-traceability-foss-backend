@@ -35,13 +35,10 @@ create table notification
 );
 
 alter table if exists assets_investigations
-	add constraint fk_asset_entity foreign key (asset_id) references asset_entity;
+	add constraint fk_asset_entity foreign key (asset_id) references asset;
 
 alter table if exists assets_investigations
 	add constraint fk_investigation foreign key (investigation_id) references investigation;
-
-alter table if exists assets_notifications
-	add constraint fk_asset_entity foreign key (asset_id) references asset_entity;
 
 alter table if exists assets_notifications
 	add constraint fk_notification foreign key (notification_id) references notification;
