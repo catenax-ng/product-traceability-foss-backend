@@ -73,7 +73,7 @@ public class AssetService {
 		}
 	}
 
-	public Asset updateAsset(String assetId, QualityType qualityType) {
+	public Asset updateQualityType(String assetId, QualityType qualityType) {
 		Asset foundAsset = assetRepository.getAssetById(assetId);
 
 		if (foundAsset == null) {
@@ -88,5 +88,9 @@ public class AssetService {
 	public Map<String, Long> getAssetsCountryMap() {
 		return assetRepository.getAssets().stream()
 			.collect(Collectors.groupingBy(Asset::getManufacturingCountry, Collectors.counting()));
+	}
+
+	public void saveAssets(List<Asset> assets) {
+		assetRepository.saveAll(assets);
 	}
 }

@@ -22,7 +22,10 @@ package net.catenax.traceability.assets.infrastructure.adapters.openapi.registry
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
+import feign.FeignException;
 import net.catenax.traceability.assets.domain.model.ShellDescriptor;
+import net.catenax.traceability.assets.infrastructure.adapters.metrics.RegistryLookupMeterRegistry;
+import net.catenax.traceability.assets.infrastructure.adapters.metrics.RegistryLookupMetric;
 import net.catenax.traceability.assets.infrastructure.adapters.metrics.RegistryLookupMeterRegistry;
 import net.catenax.traceability.assets.infrastructure.adapters.metrics.RegistryLookupMetric;
 import org.slf4j.Logger;
@@ -33,10 +36,23 @@ import org.springframework.stereotype.Component;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
+import java.time.Clock;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static net.catenax.traceability.assets.infrastructure.adapters.openapi.registry.RegistryService.AssetIdType.BATCH_ID;
+import static net.catenax.traceability.assets.infrastructure.adapters.openapi.registry.RegistryService.AssetIdType.MANUFACTURER_ID;
+import static net.catenax.traceability.assets.infrastructure.adapters.openapi.registry.RegistryService.AssetIdType.MANUFACTURER_PART_ID;
+import static net.catenax.traceability.assets.infrastructure.adapters.openapi.registry.RegistryService.AssetIdType.PART_INSTANCE_ID;
+import java.util.stream.Collectors;
+
+import static net.catenax.traceability.assets.infrastructure.adapters.openapi.registry.RegistryService.AssetIdType.BATCH_ID;
+import static net.catenax.traceability.assets.infrastructure.adapters.openapi.registry.RegistryService.AssetIdType.MANUFACTURER_ID;
+import static net.catenax.traceability.assets.infrastructure.adapters.openapi.registry.RegistryService.AssetIdType.MANUFACTURER_PART_ID;
+import static net.catenax.traceability.assets.infrastructure.adapters.openapi.registry.RegistryService.AssetIdType.PART_INSTANCE_ID;
 
 @Component
 public class RegistryService {
@@ -49,6 +65,23 @@ public class RegistryService {
 	private final String manufacturerIdKey;
 	private final RegistryLookupMeterRegistry registryLookupMeterRegistry;
 	private final Clock clock;
+
+	enum AssetIdType {
+		MANUFACTURER_PART_ID("manufacturerPartId"),
+		PART_INSTANCE_ID("partInstanceId"),
+		MANUFACTURER_ID("manufacturerId"),
+		BATCH_ID("batchId");
+
+		private final String value;
+
+		AssetIdType(String value) {
+			this.value = value;
+		}
+
+		public String asKey() {
+			return this.value.toLowerCase();
+		}
+	}
 
 	public RegistryService(ObjectMapper objectMapper,
 						   RegistryApiClient registryApiClient,
@@ -81,7 +114,6 @@ public class RegistryService {
 
 			throw e;
 		}
-
 		logger.info("Received {} shell descriptor IDs.", assetIds.size());
 
 		logger.info("Fetching shell descriptors.");
@@ -101,8 +133,7 @@ public class RegistryService {
 
 		List<ShellDescriptor> shellDescriptors = descriptors.getItems().stream()
 			.filter(it -> Objects.nonNull(it.getGlobalAssetId()))
-			.map(descriptor -> logIncomingDescriptor(descriptor, registryLookupMetric))
-			.map(i -> new ShellDescriptor(i.getIdentification(), i.getGlobalAssetId().getValue().get(0)))
+			.map(this::toShellDescriptor)
 			.peek(it -> registryLookupMetric.incrementSuccessShellDescriptorsFetchCount())
 			.toList();
 
@@ -115,6 +146,24 @@ public class RegistryService {
 		return shellDescriptors;
 	}
 
+	private ShellDescriptor toShellDescriptor(AssetAdministrationShellDescriptor aasDescriptor) {
+		logIncomingDescriptor(aasDescriptor);
+
+		String shellDescriptorId = aasDescriptor.getIdentification();
+		String globalAssetId = aasDescriptor.getGlobalAssetId().getValue().stream()
+			.findFirst()
+			.orElse(null);
+		Map<String, String> assetIdsMap = aasDescriptor.getSpecificAssetIds().stream()
+			.collect(Collectors.toMap(entry -> entry.getKey().toLowerCase(), IdentifierKeyValuePair::getValue));
+
+		String manufacturerPartId = assetIdsMap.get(MANUFACTURER_PART_ID.asKey());
+		String partInstanceId = assetIdsMap.get(PART_INSTANCE_ID.asKey());
+		String manufacturerId = assetIdsMap.get(MANUFACTURER_ID.asKey());
+		String batchId = assetIdsMap.get(BATCH_ID.asKey());
+
+		return new ShellDescriptor(shellDescriptorId, globalAssetId, aasDescriptor.getIdShort(), partInstanceId, manufacturerPartId, manufacturerId, batchId);
+	}
+
 	private void endMetric(RegistryLookupMetric registryLookupMetric) {
 		registryLookupMetric.incrementFailedShellDescriptorsFetchCount();
 		registryLookupMetric.end(clock);
@@ -122,7 +171,7 @@ public class RegistryService {
 		registryLookupMeterRegistry.save(registryLookupMetric);
 	}
 
-	private AssetAdministrationShellDescriptor logIncomingDescriptor(AssetAdministrationShellDescriptor descriptor, RegistryLookupMetric registryLookupMetric) {
+	private AssetAdministrationShellDescriptor logIncomingDescriptor(AssetAdministrationShellDescriptor descriptor) {
 		if (logger.isDebugEnabled()) {
 			try {
 				String rawDescriptor = objectMapper.writeValueAsString(descriptor);
