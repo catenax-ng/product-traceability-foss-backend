@@ -133,7 +133,7 @@ public class RegistryService {
 
 		List<ShellDescriptor> shellDescriptors = descriptors.getItems().stream()
 			.filter(it -> Objects.nonNull(it.getGlobalAssetId()))
-			.map(this::toShellDescriptor)
+			.map(aasDescriptor -> toShellDescriptor(aasDescriptor, registryLookupMetric))
 			.peek(it -> registryLookupMetric.incrementSuccessShellDescriptorsFetchCount())
 			.toList();
 
@@ -146,8 +146,8 @@ public class RegistryService {
 		return shellDescriptors;
 	}
 
-	private ShellDescriptor toShellDescriptor(AssetAdministrationShellDescriptor aasDescriptor) {
-		logIncomingDescriptor(aasDescriptor);
+	private ShellDescriptor toShellDescriptor(AssetAdministrationShellDescriptor aasDescriptor, RegistryLookupMetric registryLookupMetric) {
+		logIncomingDescriptor(aasDescriptor, registryLookupMetric);
 
 		String shellDescriptorId = aasDescriptor.getIdentification();
 		String globalAssetId = aasDescriptor.getGlobalAssetId().getValue().stream()
@@ -171,7 +171,7 @@ public class RegistryService {
 		registryLookupMeterRegistry.save(registryLookupMetric);
 	}
 
-	private AssetAdministrationShellDescriptor logIncomingDescriptor(AssetAdministrationShellDescriptor descriptor) {
+	private AssetAdministrationShellDescriptor logIncomingDescriptor(AssetAdministrationShellDescriptor descriptor, RegistryLookupMetric registryLookupMetric) {
 		if (logger.isDebugEnabled()) {
 			try {
 				String rawDescriptor = objectMapper.writeValueAsString(descriptor);

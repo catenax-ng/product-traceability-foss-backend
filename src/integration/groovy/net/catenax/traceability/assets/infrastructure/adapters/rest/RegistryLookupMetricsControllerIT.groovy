@@ -53,7 +53,7 @@ class RegistryLookupMetricsControllerIT extends IntegrationSpecification  implem
 
 		then:
 			eventually {
-				assertAssetsSize(14)
+				assertAssetsSize(15)
 			}
 
 		and:
