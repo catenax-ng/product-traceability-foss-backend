@@ -28,6 +28,7 @@ import net.catenax.traceability.investigations.adapters.rest.model.StartInvestig
 import net.catenax.traceability.investigations.domain.model.InvestigationId;
 import net.catenax.traceability.investigations.domain.service.InvestigationsPublisherService;
 import net.catenax.traceability.investigations.domain.service.InvestigationsReadService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,6 +42,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import static net.catenax.traceability.common.config.FeatureFlags.NOTIFICATIONS_ENABLED_PROFILES;
+
+@Profile(NOTIFICATIONS_ENABLED_PROFILES)
 @RestController
 @RequestMapping("/investigations")
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERVISOR', 'ROLE_USER')")
