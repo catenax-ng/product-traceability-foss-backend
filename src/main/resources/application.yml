@@ -29,6 +29,7 @@ edc:
     auth:
       key: ${EDC_API_KEY}
   bpn-provider-url-mappings:
+    {}
 
 server:
   servlet:
