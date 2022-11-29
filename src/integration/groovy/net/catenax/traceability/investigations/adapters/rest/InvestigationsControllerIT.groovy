@@ -368,9 +368,62 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 				.body("page", Matchers.is(0))
 				.body("pageSize", Matchers.is(10))
 				.body("content", Matchers.hasSize(4))
+				.body("totalItems", Matchers.is(4))
 				.body("content.description", Matchers.containsInRelativeOrder("2", "4", "3", "1"))
 				.body("content.createdBy", Matchers.hasItems(testBpn))
 				.body("content.createdDate", Matchers.hasItems(isIso8601DateTime()))
+	}
+
+	def "should return properly paged created investigations"() {
+		given:
+			Instant now = Instant.now()
+			String testBpn = testBpn()
+
+		and:
+			(1..100).each { it ->
+				storedInvestigation(new InvestigationEntity([], testBpn, InvestigationStatus.CREATED, "", "", now))
+			}
+
+		expect:
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.param("page", "2")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/created")
+				.then()
+				.statusCode(200)
+				.body("page", Matchers.is(2))
+				.body("pageSize", Matchers.is(10))
+				.body("content", Matchers.hasSize(10))
+				.body("totalItems", Matchers.is(100))
+	}
+
+	def "should return properly paged received investigations"() {
+		given:
+			Instant now = Instant.now()
+			String testBpn = testBpn()
+
+		and:
+			(101..200).each { it ->
+				storedInvestigation(new InvestigationEntity([], testBpn, InvestigationStatus.RECEIVED, "", "", now))
+			}
+
+		expect:
+			given()
+				.header(jwtAuthorization(ADMIN))
+				.param("page", "2")
+				.param("size", "10")
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/api/investigations/received")
+				.then()
+				.statusCode(200)
+				.body("page", Matchers.is(2))
+				.body("pageSize", Matchers.is(10))
+				.body("content", Matchers.hasSize(10))
+				.body("totalItems", Matchers.is(100))
 	}
 
 	def "should return received investigations sorted by creation time"() {
@@ -400,6 +453,7 @@ class InvestigationsControllerIT extends IntegrationSpecification implements Irs
 				.body("page", Matchers.is(0))
 				.body("pageSize", Matchers.is(10))
 				.body("content", Matchers.hasSize(4))
+				.body("totalItems", Matchers.is(4))
 				.body("content.description", Matchers.containsInRelativeOrder("4", "2", "3", "1"))
 				.body("content.createdBy", Matchers.hasItems(testBpn))
 				.body("content.createdDate", Matchers.hasItems(isIso8601DateTime()))

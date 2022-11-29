@@ -32,5 +32,6 @@ import java.util.Set;
 public interface JpaInvestigationRepository extends JpaRepository<InvestigationEntity, Long> {
 	Page<InvestigationEntity> findAllByStatusInOrderByCreatedDesc(Set<InvestigationStatus> statuses, Pageable pageable);
 	long countAllByStatusEquals(InvestigationStatus status);
+	long countAllByStatusIn(Set<InvestigationStatus> status);
 	Optional<InvestigationEntity> findByNotificationsNotificationReferenceId(String notificationId);
 }
