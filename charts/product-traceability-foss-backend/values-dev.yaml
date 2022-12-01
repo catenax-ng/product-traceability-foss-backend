@@ -19,7 +19,7 @@ ingress:
       secretName: tls-secret
 
 traceability:
-  bpn: "BPNL00000003CML1"
+  bpn: "BPNL00000003AYRE"
 
 mailserver:
   host: "smtp.office365.com"
