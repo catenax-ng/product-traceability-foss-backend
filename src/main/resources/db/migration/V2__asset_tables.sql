@@ -33,7 +33,6 @@ create table shell_descriptor
 	updated              timestamptz not null,
 	shell_descriptor_id  text        not null unique,
 	global_asset_id      text        not null unique,
-	raw_descriptor       text        not null,
 	batch_id             VARCHAR(255),
 	id_short             VARCHAR(255),
 	part_instance_id     VARCHAR(255),
