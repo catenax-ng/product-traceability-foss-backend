@@ -90,6 +90,7 @@ public class PersistentAssetsRepository implements AssetRepository {
 	}
 
 	@Override
+	@Transactional
 	public List<Asset> saveAll(List<Asset> assets) {
 		return toAssets(assetsRepository.saveAll(toEntities(assets)));
 	}
