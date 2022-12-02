@@ -6,7 +6,7 @@ dependencies:
   repository: https://helm.runix.net
   version: 1.13.6
 - name: irs-helm
-  repository: https://catenax-ng.github.io/product-item-relationship-service
+  repository: https://catenax-ng.github.io/tx-item-relationship-service
   version: 2.1.0
-digest: sha256:e7e94348078580f674712d1a99c2dd5a837c495e12db9941175b0e24950d3573
-generated: "2022-12-02T12:44:17.017661+01:00"
+digest: sha256:7242cf4a5086b6ead8ee0847a99af9bb1033912326c192e12aed2d952362a754
+generated: "2022-12-02T13:28:23.353907+01:00"
