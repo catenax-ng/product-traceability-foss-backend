@@ -89,7 +89,7 @@ pgadmin4:
       memory: 512Mi
 
 irs-helm:
-  enabled: true
+  enabled: false
 
   nameOverride: "tracex-test-irs"
   fullnameOverride: "tracex-test-irs"
