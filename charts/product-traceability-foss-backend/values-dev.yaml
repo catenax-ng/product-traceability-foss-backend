@@ -81,7 +81,7 @@ pgadmin4:
       cpu: 256m
       memory: 512Mi
 
-irs:
+irs-helm:
   enabled: true
 
   nameOverride: "tracex-irs"
