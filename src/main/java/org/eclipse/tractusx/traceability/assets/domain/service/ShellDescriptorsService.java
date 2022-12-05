@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.domain.service;
 
 import org.eclipse.tractusx.traceability.assets.domain.model.ShellDescriptor;

@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.domain.model;
 
 public record Dashboard(Long myItems, Long otherParts, Long investigations) {

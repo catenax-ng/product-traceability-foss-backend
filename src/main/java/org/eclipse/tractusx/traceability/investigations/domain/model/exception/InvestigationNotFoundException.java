@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.investigations.domain.model.exception;
 
 import org.eclipse.tractusx.traceability.investigations.domain.model.InvestigationId;

@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.infrastructure.adapters.feign.irs;
 
 import org.eclipse.tractusx.traceability.assets.domain.model.Asset;

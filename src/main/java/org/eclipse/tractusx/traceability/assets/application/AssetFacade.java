@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.application;
 
 import org.eclipse.tractusx.traceability.assets.domain.model.Asset;

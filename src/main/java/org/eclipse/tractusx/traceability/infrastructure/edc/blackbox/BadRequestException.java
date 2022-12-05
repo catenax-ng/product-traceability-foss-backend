@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.infrastructure.edc.blackbox;
 
 public class BadRequestException extends RuntimeException {

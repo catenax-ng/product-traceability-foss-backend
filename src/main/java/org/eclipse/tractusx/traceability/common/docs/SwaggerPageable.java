@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.common.docs;
 
 import io.swagger.annotations.ApiParam;

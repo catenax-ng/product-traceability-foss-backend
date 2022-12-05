@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.infrastructure.adapters.feign.irs.model;
 
 import java.util.Date;

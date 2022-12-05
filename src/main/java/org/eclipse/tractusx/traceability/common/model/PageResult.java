@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.common.model;
 
 import org.springframework.beans.support.PagedListHolder;

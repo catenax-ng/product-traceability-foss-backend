@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.infrastructure.adapters.jpa.bpn;
 
 import javax.persistence.Entity;

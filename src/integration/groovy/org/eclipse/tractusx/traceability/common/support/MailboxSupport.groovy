@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.common.support
 
 import com.icegreen.greenmail.spring.GreenMailBean

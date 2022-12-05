@@ -19,6 +19,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
+
 package org.eclipse.tractusx.traceability.investigations.adapters.mock;
 
 import org.eclipse.tractusx.traceability.common.config.ApplicationProfiles;

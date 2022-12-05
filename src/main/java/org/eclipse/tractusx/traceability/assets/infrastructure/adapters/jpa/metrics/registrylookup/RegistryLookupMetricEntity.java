@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.infrastructure.adapters.jpa.metrics.registrylookup;
 
 import org.eclipse.tractusx.traceability.assets.infrastructure.adapters.metrics.RegistryLookupStatus;

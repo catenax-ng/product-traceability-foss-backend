@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.infrastructure.edc.blackbox.transfer;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

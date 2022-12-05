@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.infrastructure.edc.blackbox.catalog;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

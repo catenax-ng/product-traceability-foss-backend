@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.investigations.adapters.rest.model;
 
 public record StartInvestigationResponse(Long id) {

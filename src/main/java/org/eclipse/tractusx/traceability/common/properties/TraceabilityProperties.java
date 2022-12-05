@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.common.properties;
 
 import org.eclipse.tractusx.traceability.common.model.BPN;

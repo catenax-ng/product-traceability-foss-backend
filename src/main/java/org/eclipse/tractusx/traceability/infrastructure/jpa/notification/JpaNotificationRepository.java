@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.infrastructure.jpa.notification;
 
 import org.springframework.data.jpa.repository.JpaRepository;

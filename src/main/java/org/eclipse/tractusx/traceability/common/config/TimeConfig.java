@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.common.config;
 
 import org.springframework.context.annotation.Bean;

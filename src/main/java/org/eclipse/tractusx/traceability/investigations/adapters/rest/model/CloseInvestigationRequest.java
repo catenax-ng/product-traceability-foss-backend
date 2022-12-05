@@ -19,6 +19,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
+
 ackage org.eclipse.tractusx.traceability.investigations.adapters.rest.model;
 
 import javax.validation.constraints.NotBlank;

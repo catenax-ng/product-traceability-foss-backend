@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.infrastructure.edc.blackbox.notification;
 
 import com.fasterxml.jackson.annotation.JsonCreator;

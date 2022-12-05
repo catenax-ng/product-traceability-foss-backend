@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.infrastructure.adapters.jpa.shelldescriptor;
 
 import org.springframework.data.jpa.repository.JpaRepository;

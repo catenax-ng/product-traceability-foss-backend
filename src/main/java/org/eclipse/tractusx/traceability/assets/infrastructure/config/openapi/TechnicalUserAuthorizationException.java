@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.infrastructure.config.openapi;
 
 public class TechnicalUserAuthorizationException extends RuntimeException {

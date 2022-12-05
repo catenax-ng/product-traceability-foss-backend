@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.infrastructure.jpa.investigation;
 
 import org.eclipse.tractusx.traceability.investigations.domain.model.InvestigationStatus;

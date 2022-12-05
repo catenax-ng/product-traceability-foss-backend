@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.common.security;
 
 import org.jetbrains.annotations.NotNull;

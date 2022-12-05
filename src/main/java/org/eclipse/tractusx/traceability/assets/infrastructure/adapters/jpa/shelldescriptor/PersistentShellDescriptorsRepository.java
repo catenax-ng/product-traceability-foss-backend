@@ -19,6 +19,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
+
 ackage org.eclipse.tractusx.traceability.assets.infrastructure.adapters.jpa.shelldescriptor;
 
 import org.eclipse.tractusx.traceability.assets.domain.model.ShellDescriptor;

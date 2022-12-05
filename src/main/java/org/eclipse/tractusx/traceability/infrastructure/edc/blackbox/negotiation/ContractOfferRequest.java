@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.infrastructure.edc.blackbox.negotiation;
 
 import org.eclipse.tractusx.traceability.infrastructure.edc.blackbox.message.RemoteMessage;

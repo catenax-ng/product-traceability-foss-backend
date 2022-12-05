@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.domain.model;
 
 public class AssetNotFoundException extends RuntimeException {

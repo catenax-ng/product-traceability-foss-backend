@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;

@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.investigations.adapters.rest;
 
 import org.eclipse.tractusx.traceability.common.model.PageResult;

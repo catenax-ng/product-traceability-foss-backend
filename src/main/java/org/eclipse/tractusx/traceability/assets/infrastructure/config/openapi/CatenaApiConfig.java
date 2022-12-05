@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.infrastructure.config.openapi;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;

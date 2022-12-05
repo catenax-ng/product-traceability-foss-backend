@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.infrastructure.adapters.jpa.asset;
 
 import org.eclipse.tractusx.traceability.assets.domain.model.Asset;

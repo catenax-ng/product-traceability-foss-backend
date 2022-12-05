@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.investigations.domain.ports;
 
 public interface EDCUrlProvider {

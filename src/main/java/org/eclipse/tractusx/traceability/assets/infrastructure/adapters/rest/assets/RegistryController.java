@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.infrastructure.adapters.rest.assets;
 
 import org.eclipse.tractusx.traceability.assets.application.RegistryFacade;

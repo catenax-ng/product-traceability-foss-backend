@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.infrastructure.adapters.openapi.registry;
 
 import org.eclipse.tractusx.traceability.assets.infrastructure.config.openapi.CatenaApiConfig;

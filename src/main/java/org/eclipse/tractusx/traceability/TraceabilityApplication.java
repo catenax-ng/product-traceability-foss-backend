@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability;
 
 import org.springframework.boot.SpringApplication;

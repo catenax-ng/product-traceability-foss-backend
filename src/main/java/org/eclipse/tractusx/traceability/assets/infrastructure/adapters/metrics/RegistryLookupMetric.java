@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.infrastructure.adapters.metrics;
 
 import com.fasterxml.jackson.annotation.JsonCreator;

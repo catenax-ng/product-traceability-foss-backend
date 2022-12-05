@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.investigations.domain.ports;
 
 import org.eclipse.tractusx.traceability.common.model.PageResult;

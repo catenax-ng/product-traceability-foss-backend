@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.assets.infrastructure.adapters.scheduler;
 
 import org.eclipse.tractusx.traceability.assets.application.RegistryFacade;

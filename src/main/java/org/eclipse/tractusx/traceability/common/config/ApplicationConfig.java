@@ -20,6 +20,7 @@
  ********************************************************************************/
 
 
+
 package org.eclipse.tractusx.traceability.common.config;
 
 import io.github.resilience4j.core.registry.EntryAddedEvent;
