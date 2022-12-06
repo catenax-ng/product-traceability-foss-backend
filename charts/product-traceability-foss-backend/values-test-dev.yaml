@@ -137,9 +137,6 @@ irs-helm:
     url: http://tracex-test-irs-minio:9000
 
   irs-minio:
-    nameOverride: "tracex-test-irs-minio"
-    fullnameOverride: "tracex-test-irs-minio"
-
     namespace: product-traceability-foss
 
     minioUser: <path:traceability-foss/data/dev/minio#user>
