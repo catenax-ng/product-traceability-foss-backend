@@ -133,7 +133,7 @@ irs-helm:
       jwkSetUri: https://centralidp.int.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/certs
 
   aasWrapper:
-    host: http://tracex-test-irs-aaswrapper:9191/api/service
+    host: http://product-traceability-foss-backend-test-irs-aaswrapper:9191/api/service
     username: tracefoss
     password: <path:traceability-foss/data/dev/edc/api-wrapper#wrapper.auth.basic.tracefoss>
 
@@ -216,7 +216,7 @@ irs-helm:
     namespace: product-traceability-foss
 
     image:
-      tag: "0.1.1"
+      tag: "0.1.2"
 
     ingresses:
       - enabled: true
@@ -323,7 +323,7 @@ irs-helm:
     namespace: product-traceability-foss
 
     image:
-      tag: "0.1.1"
+      tag: "0.1.2"
 
     ingresses:
       - enabled: true
