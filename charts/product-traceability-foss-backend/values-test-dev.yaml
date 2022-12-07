@@ -157,9 +157,6 @@ irs-helm:
 
   # Values for aas wrapper subchart.
   irs-aaswrapper:
-    nameOverride: "tracex-test-irs-aaswrapper"
-    fullnameOverride: "tracex-test-irs-aaswrapper"
-
     namespace: product-traceability-foss
 
     ingress:
