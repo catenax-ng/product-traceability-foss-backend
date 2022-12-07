@@ -216,7 +216,7 @@ irs-helm:
     namespace: product-traceability-foss
 
     image:
-      tag: "0.1.2"
+      tag: "0.1.1"
 
     ingresses:
       - enabled: true
@@ -323,7 +323,7 @@ irs-helm:
     namespace: product-traceability-foss
 
     image:
-      tag: "0.1.2"
+      tag: "0.1.1"
 
     ingresses:
       - enabled: true
