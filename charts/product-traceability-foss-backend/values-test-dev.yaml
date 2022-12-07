@@ -264,7 +264,7 @@ irs-helm:
         edc.ids.endpoint=https://tracex-test-consumer-controlplane.dev.demo.catena-x.net/api/v1/ids
         edc.ids.endpoint.audience=https://tracex-test-consumer-controlplane.dev.demo.catena-x.net/api/v1/ids/data
 
-        edc.receiver.http.endpoint=http://tracex-test-irs-aaswrapper:9192/callback/endpoint-data-reference
+        edc.receiver.http.endpoint=http://product-traceability-foss-backend-test-irs-aaswrapper:9192/callback/endpoint-data-reference
 
         edc.transfer.dataplane.sync.endpoint=http://tracex-test-consumer-dataplane:8185/api/public
         edc.transfer.proxy.endpoint=https://tracex-test-consumer-dataplane.dev.demo.catena-x.net/api/public
@@ -365,7 +365,7 @@ irs-helm:
 
         edc.dataplane.token.validation.endpoint=http://tracex-test-consumer-controlplane:8182/validation/token
 
-        edc.receiver.http.endpoint=http://tracex-test-irs-aaswrapper:9192/callback/endpoint-data-reference
+        edc.receiver.http.endpoint=http://product-traceability-foss-backend-test-irs-aaswrapper:9192/callback/endpoint-data-reference
 
         edc.oauth.client.id=3A:F4:B9:17:B7:01:BC:4D:A7:8B:58:19:18:30:7F:65:30:BB:90:62:keyid:3A:F4:B9:17:B7:01:BC:4D:A7:8B:58:19:18:30:7F:65:30:BB:90:62
         edc.oauth.public.key.alias=daps-cert-edc-test-provider-dev
