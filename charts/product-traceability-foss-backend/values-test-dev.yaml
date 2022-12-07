@@ -218,6 +218,9 @@ irs-helm:
 
     namespace: product-traceability-foss
 
+    image:
+      tag: "0.1.2"
+
     ingresses:
       - enabled: true
         hostname: "tracex-test-consumer-controlplane.dev.demo.catena-x.net"
@@ -321,6 +324,9 @@ irs-helm:
     fullnameOverride: "tracex-test-consumer-dataplane"
 
     namespace: product-traceability-foss
+
+    image:
+      tag: "0.1.2"
 
     ingresses:
       - enabled: true
