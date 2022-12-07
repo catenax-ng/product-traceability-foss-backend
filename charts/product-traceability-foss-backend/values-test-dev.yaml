@@ -215,9 +215,6 @@ irs-helm:
 
   # Values for consumer edc-controlplane.
   edc-controlplane:
-    nameOverride: "tracex-test-consumer-controlplane"
-    fullnameOverride: "tracex-test-consumer-controlplane"
-
     namespace: product-traceability-foss
 
     image:
@@ -322,9 +319,6 @@ irs-helm:
 
   # Values for consumer edc-dataplane.
   edc-dataplane:
-    nameOverride: "tracex-test-consumer-dataplane"
-    fullnameOverride: "tracex-test-consumer-dataplane"
-
     namespace: product-traceability-foss
 
     image:
