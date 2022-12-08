@@ -232,7 +232,7 @@ irs-helm:
         cpu: 2
         memory: 4Gi
       requests:
-        cpu: 500m
+        cpu: 256m
         memory: 2Gi
 
     logging:
