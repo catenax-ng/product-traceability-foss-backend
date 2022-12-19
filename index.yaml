@@ -2,6 +2,29 @@ apiVersion: v1
 entries:
   product-traceability-foss-backend:
   - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2022-12-19T12:44:01.325422427Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.x.x
+    - condition: pgadmin4.enabled
+      name: pgadmin4
+      repository: https://helm.runix.net
+      version: 1.13.6
+    - condition: irs-helm.enabled
+      name: irs-helm
+      repository: https://catenax-ng.github.io/tx-item-relationship-service
+      version: 2.1.0
+    description: A Helm chart for Traceability backend application
+    digest: 8dd3113ca6100fbedb5170bee27a46c186d2d52fb0db522f961a81e88411a914
+    name: product-traceability-foss-backend
+    type: application
+    urls:
+    - https://github.com/catenax-ng/product-traceability-foss-backend/releases/download/helm-charts-1.0.1/product-traceability-foss-backend-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
     appVersion: 1.0.0
     created: "2022-12-09T12:23:10.487168427Z"
     dependencies:
@@ -47,4 +70,4 @@ entries:
     urls:
     - https://github.com/catenax-ng/product-traceability-foss-backend/releases/download/helm-charts-0.1.0/product-traceability-foss-backend-0.1.0.tgz
     version: 0.1.0
-generated: "2022-12-09T12:23:10.487182327Z"
+generated: "2022-12-19T12:44:01.325440827Z"
