@@ -88,6 +88,7 @@ val schedlockVersion = "4.42.0"
 dependencyManagement {
 	imports {
 		mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
+		mavenBom("io.github.resilience4j:resilience4j-bom:$resilience4jVersion")
 	}
 }
 
@@ -182,9 +183,10 @@ dependencies {
 
 	implementation("commons-codec:commons-codec:$commonsCodecVersion")
 
-	implementation("io.github.resilience4j:resilience4j-feign:${resilience4jVersion}")
-	implementation("io.github.resilience4j:resilience4j-retry:${resilience4jVersion}")
-	implementation("io.github.resilience4j:resilience4j-spring-boot2:${resilience4jVersion}")
+	implementation("io.github.resilience4j:resilience4j-feign")
+	implementation("io.github.resilience4j:resilience4j-retry")
+	implementation("io.github.resilience4j:resilience4j-spring-boot2")
+	implementation("org.springframework.boot:spring-boot-starter-aop")
 
 	testImplementation("org.codehaus.groovy:groovy-all:$groovyVersion")
 	testImplementation(platform("org.spockframework:spock-bom:$spockBomVersion"))
