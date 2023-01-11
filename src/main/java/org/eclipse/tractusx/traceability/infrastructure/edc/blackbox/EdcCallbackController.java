@@ -59,10 +59,13 @@ public class EdcCallbackController {
 	@PostMapping
 	public void receiveEdcCallback(@RequestBody EndpointDataReference dataReference) {
 		String contractAgreementId = dataReference.getProperties().get("cid");
+		log.info("Received EDC callback for contract: {}", contractAgreementId);
 
 		if (endpointDataReferenceCache.containsAgreementId(contractAgreementId)) {
+			log.info("Contract {} found!", contractAgreementId);
 			endpointDataReferenceCache.put(contractAgreementId, dataReference);
 		} else {
+			log.info("Contract {} not found, sending the message further!", contractAgreementId);
 			callOtherServices(dataReference);
 		}
 	}
