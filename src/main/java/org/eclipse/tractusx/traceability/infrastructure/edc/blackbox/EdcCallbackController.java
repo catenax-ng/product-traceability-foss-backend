@@ -72,6 +72,7 @@ public class EdcCallbackController {
 
 	private void callOtherServices(EndpointDataReference dataReference) {
 		edcProviderConfiguration.getCallbackUrls().forEach(callbackUrl -> {
+			log.info("Calling callback endpoint: {}", callbackUrl);
 			ResponseEntity<String> response = restTemplate.postForEntity(callbackUrl, dataReference, String.class);
 
 			log.info("Callback respond with HTTP {}", response.getStatusCode());
