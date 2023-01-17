@@ -477,7 +477,7 @@ class AssetsControllerIT extends IntegrationSpecification implements IrsApiSuppo
 				.body(
 					asJson(
 						[
-							assetIds: []
+							assetIds: ["1234"]
 						]
 					)
 				)
