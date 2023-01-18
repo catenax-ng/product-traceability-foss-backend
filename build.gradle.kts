@@ -2,7 +2,7 @@ plugins {
 	id("java")
 	id("groovy")
 	id("jacoco")
-	id("org.springframework.boot") version "2.7.7"
+	id("org.springframework.boot") version "3.0.1"
 	id("com.autonomousapps.dependency-analysis") version "1.13.1"
 	id("com.google.cloud.tools.jib") version "3.3.1"
 	id("com.coditory.integration-test") version "1.4.4"
