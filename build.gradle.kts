@@ -82,7 +82,7 @@ val jose4jVersion = "0.9.2"
 val restAssuredVersion = "5.3.0"
 val resilience4jVersion = "2.0.2"
 val testContainersVersion = "1.17.6"
-val schedlockVersion = "4.42.0"
+val schedlockVersion = "5.1.0"
 
 dependencies {
 	developmentOnly(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
