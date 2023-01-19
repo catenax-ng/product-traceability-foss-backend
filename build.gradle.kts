@@ -2,8 +2,7 @@ plugins {
 	id("java")
 	id("groovy")
 	id("jacoco")
-	id("org.springframework.boot") version "2.7.5"
-	id("io.spring.dependency-management") version "1.0.14.RELEASE"
+	id("org.springframework.boot") version "2.7.7"
 	id("com.autonomousapps.dependency-analysis") version "1.13.1"
 	id("com.google.cloud.tools.jib") version "3.3.1"
 	id("com.coditory.integration-test") version "1.4.4"
@@ -67,10 +66,10 @@ sonarqube {
 
 val commonsCodecVersion = "1.15"
 val commonsIoVersion = "2.11.0"
-val groovyVersion = "3.0.13"
-val spockBomVersion = "2.1-groovy-3.0"
+val groovyVersion = "4.0.7"
+val spockBomVersion = "2.3-groovy-4.0"
 val springfoxVersion = "3.0.0"
-val feignVersion = "12.0"
+val feignVersion = "12.1"
 val springCloudVersion = "2021.0.5"
 val springBootSecurityOauth2Version = "2.6.8"
 val jacksonDatabindNullableVersion = "0.2.4"
@@ -79,73 +78,29 @@ val findBugsVersion = "3.0.2"
 val restitoVersion = "1.1.0"
 // attention when upgrading: grizzly version is linked to restito version
 val grizzlyVersion = "2.3.25"
-val jose4jVersion = "0.9.1"
-val restAssuredVersion = "5.2.0"
-val resilience4jVersion = "1.7.0"
-val testContainersVersion = "1.17.5"
+val jose4jVersion = "0.9.2"
+val restAssuredVersion = "5.3.0"
+val resilience4jVersion = "2.0.2"
+val testContainersVersion = "1.17.6"
 val schedlockVersion = "4.42.0"
 
-dependencyManagement {
-	imports {
-		mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
-	}
-}
-
 dependencies {
+	developmentOnly(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
+	annotationProcessor(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
-	// Upgrade Spring security to 5.7.5, because older versions have a CVE vulnerability
-	// Can be removed when an updated Spring version is available
-	implementation("org.springframework.security:spring-security-config") {
+	implementation("org.springframework:spring-web") {
 		version {
-			require("5.7.5")
+			require("5.3.25")
 			because("previous versions have a bug impacting this application")
 		}
 	}
-	implementation("org.springframework.security:spring-security-core") {
-		version {
-			require("5.7.5")
-			because("previous versions have a bug impacting this application")
-		}
-	}
-	implementation("org.springframework.security:spring-security-crypto") {
-		version {
-			require("5.7.5")
-			because("previous versions have a bug impacting this application")
-		}
-	}
-	implementation("org.springframework.security:spring-security-oauth2-client") {
-		version {
-			require("5.7.5")
-			because("previous versions have a bug impacting this application")
-		}
-	}
-	implementation("org.springframework.security:spring-security-oauth2-core") {
-		version {
-			require("5.7.5")
-			because("previous versions have a bug impacting this application")
-		}
-	}
-	implementation("org.springframework.security:spring-security-oauth2-jose") {
-		version {
-			require("5.7.5")
-			because("previous versions have a bug impacting this application")
-		}
-	}
-	implementation("org.springframework.security:spring-security-oauth2-resource-server") {
-		version {
-			require("5.7.5")
-			because("previous versions have a bug impacting this application")
-		}
-	}
-	implementation("org.springframework.security:spring-security-web") {
-		version {
-			require("5.7.5")
-			because("previous versions have a bug impacting this application")
-		}
-	}
+
+	implementation(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
+	implementation(platform("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"))
+	implementation(platform("io.github.resilience4j:resilience4j-bom:$resilience4jVersion"))
 
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -163,7 +118,7 @@ dependencies {
 	implementation("org.postgresql:postgresql")
 	implementation("org.flywaydb:flyway-core")
 
-	implementation("com.auth0:java-jwt:3.19.2")
+	implementation("com.auth0:java-jwt:4.2.1")
 	implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
 
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
@@ -182,19 +137,21 @@ dependencies {
 
 	implementation("commons-codec:commons-codec:$commonsCodecVersion")
 
-	implementation("io.github.resilience4j:resilience4j-feign:${resilience4jVersion}")
-	implementation("io.github.resilience4j:resilience4j-retry:${resilience4jVersion}")
-	implementation("io.github.resilience4j:resilience4j-spring-boot2:${resilience4jVersion}")
+	implementation("io.github.resilience4j:resilience4j-feign")
+	implementation("io.github.resilience4j:resilience4j-retry")
+	implementation("io.github.resilience4j:resilience4j-spring-boot2")
+	implementation("org.springframework.boot:spring-boot-starter-aop")
 
-	testImplementation("org.codehaus.groovy:groovy-all:$groovyVersion")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	testImplementation(platform("org.apache.groovy:groovy-bom:$groovyVersion"))
+	testImplementation("org.apache.groovy:groovy-json")
 	testImplementation(platform("org.spockframework:spock-bom:$spockBomVersion"))
 	testImplementation("org.spockframework:spock-core")
 	testImplementation("org.spockframework:spock-spring")
 
 	integrationImplementation("org.testcontainers:postgresql:$testContainersVersion")
 	integrationImplementation("org.testcontainers:spock:$testContainersVersion")
-
-	integrationImplementation("org.springframework.boot:spring-boot-starter-test")
 
 	integrationImplementation("com.xebialabs.restito:restito:$restitoVersion")
 	integrationImplementation("org.glassfish.grizzly:grizzly-http:$grizzlyVersion")
@@ -203,7 +160,7 @@ dependencies {
 	integrationImplementation("commons-io:commons-io:$commonsIoVersion")
 
 	integrationImplementation("io.rest-assured:rest-assured:$restAssuredVersion") {
-		exclude("org.apache.groovy")
+		exclude("org.codehaus.groovy")
 	}
 	integrationImplementation("org.bitbucket.b_c:jose4j:$jose4jVersion")
 }
