@@ -57,7 +57,7 @@ edc-controlplane:
 
       edc.receiver.http.endpoint=http://tracex-edc-provider-edc-controlplane:8080/api/service/pull
 
-      edc.transfer.dataplane.sync.endpoint=http://tracex-edc-provider-edc-dataplane:8185/api/public
+      edc.transfer.dataplane.sync.endpoint=http://tracex-edc-provider-edc-dataplane:8185/api/public/
       edc.transfer.proxy.endpoint=https://trace-x-edc-dataplane.dev.demo.catena-x.net/api/public
       edc.transfer.proxy.token.signer.privatekey.alias=token-signer-cert-key-dev
       edc.transfer.proxy.token.verifier.publickey.alias=token-signer-cert-dev
