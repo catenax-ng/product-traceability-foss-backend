@@ -62,10 +62,10 @@ public class EdcCallbackController {
 		log.info("Received EDC callback for contract: {}", contractAgreementId);
 
 		if (endpointDataReferenceCache.containsAgreementId(contractAgreementId)) {
-			log.info("Contract {} found!", contractAgreementId);
+			log.info("Contract {} found! Processing...", contractAgreementId);
 			endpointDataReferenceCache.put(contractAgreementId, dataReference);
 		} else {
-			log.info("Contract {} not found, sending the message further!", contractAgreementId);
+			log.info("Contract {} not found, forwarding message...", contractAgreementId);
 			callOtherServices(dataReference);
 		}
 	}
@@ -75,8 +75,8 @@ public class EdcCallbackController {
 			log.info("Calling callback endpoint: {}", callbackUrl);
 			ResponseEntity<String> response = restTemplate.postForEntity(callbackUrl, dataReference, String.class);
 
-			log.info("Callback respond with HTTP {}", response.getStatusCode());
-			log.debug("Callback response: {}", response.getBody());
+			log.info("Callback response: HTTP {}", response.getStatusCode());
+			log.debug("Body: {}", response.getBody());
 		});
 	}
 }
