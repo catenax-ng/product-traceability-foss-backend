@@ -122,6 +122,12 @@ Following status for a quality investigation (notification) are possible.
 |Requested
 |Created quality investigation that is already sent to the receiver.
 
+|Cancelled
+|Created quality investigation that is not yet send to the receiver and got cancelled on sender side before doing so. It is no longer valid / necessary.
+
+|Received
+|Received notification from a sender which needs to be investigated.
+
 |Acknowledged
 |The receiver acknowledged to work on the received inquiry.
 
