@@ -13,7 +13,7 @@ plugins {
 	id("com.google.cloud.tools.jib") version "3.3.1"
 	id("com.coditory.integration-test") version "1.4.5"
 	id("org.openapi.generator") version "6.2.1"
-	id("org.sonarqube") version "3.4.0.2513"
+	id("org.sonarqube") version "3.5.0.2730"
 	id("checkstyle")
 }
 
